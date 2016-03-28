@@ -6,10 +6,13 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.example.administrator.myplayer.R;
 import com.example.administrator.myplayer.ui.fragment.SplashFragment;
+
+import java.lang.reflect.Field;
 
 
 /**
@@ -72,4 +75,30 @@ public class SplashActivity extends Activity {
         }
     }
 
+    /**
+     * 退出Fragment回退栈
+     */
+    public void popStack() {
+        popStack(null);
+    }
+
+    /**
+     * 退出Fragment回退栈
+     */
+    public void popStack(String tag) {
+        try {
+            FragmentManager supportFragmentManager = this.getFragmentManager();
+            Field mStateSaved = supportFragmentManager.getClass().getDeclaredField("mStateSaved");
+            mStateSaved.setAccessible(true);
+            mStateSaved.set(supportFragmentManager, Boolean.valueOf(false));
+            if (TextUtils.isEmpty(tag)) {
+                supportFragmentManager.popBackStackImmediate();
+            } else {
+                boolean popBackStackImmediate = supportFragmentManager.popBackStackImmediate(tag,
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        } catch (Throwable e) {
+            //异常了
+        }
+    }
 }
