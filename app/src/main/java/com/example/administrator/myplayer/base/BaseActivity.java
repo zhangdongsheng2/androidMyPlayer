@@ -7,7 +7,7 @@ import android.view.View;
 import com.example.administrator.myplayer.util.ToastUtil;
 
 /**
- * Created by Administrator on 2016/3/23.
+ * Activity基类 2016/3/23.
  */
 public abstract class BaseActivity extends FragmentActivity implements View.OnClickListener {
     private static BaseActivity mActivity;
@@ -66,8 +66,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     /**
      * 双击退出
      */
-
-
     private void doubleExit() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             ToastUtil.showToast("再按一次退出程序");
@@ -77,4 +75,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             System.exit(0);
         }
     }
+
+
 }

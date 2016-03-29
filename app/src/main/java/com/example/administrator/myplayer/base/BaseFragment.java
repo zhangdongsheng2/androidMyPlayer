@@ -1,43 +1,23 @@
-package com.example.administrator.myplayer.ui.activity;
+package com.example.administrator.myplayer.base;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.view.WindowManager;
 
 import com.example.administrator.myplayer.R;
-import com.example.administrator.myplayer.ui.fragment.SplashFragment;
+import com.example.administrator.myplayer.util.ExceptionUtil;
 
 import java.lang.reflect.Field;
 
-
 /**
- * Created by Administrator on 2016/3/23.
+ * Created by Administrator on 2016/3/29.
  */
-public class SplashActivity extends Activity {
+public class BaseFragment extends Fragment {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-//        .setStatusBarTintEnabled(false);
-        //透明状态栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //透明导航栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        setContentView(R.layout.activity_splash);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-            }
-        }, 7000);
-        launch(false, R.id.content2, SplashFragment.class, false);
+    public void launch(boolean save, Class clazz, boolean stack) {
+        launch(save, R.id.content,clazz,stack);
     }
-
     /**
      * fragment跳转
      *
@@ -48,9 +28,8 @@ public class SplashActivity extends Activity {
      */
     public void launch(boolean save, int id, Class clazz, boolean stack) {
         try {
-            FragmentManager manager = this.getFragmentManager();
+            FragmentManager manager = BaseActivity.getActivity().getFragmentManager();
             FragmentTransaction beginTransaction = manager.beginTransaction();
-//            beginTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             beginTransaction.setCustomAnimations(R.anim.fragment_my_in,
                     R.anim.fragment_my_out, R.anim.fragment_my_in,
                     R.anim.fragment_my_out);
@@ -61,9 +40,9 @@ public class SplashActivity extends Activity {
             beginTransaction.add(id, fragment);
 
             if (save) {
-//                beginTransaction.hide(this);
+                beginTransaction.hide(this);
             } else {
-//                beginTransaction.remove(this);
+                beginTransaction.remove(this);
             }
             if (stack) {
                 beginTransaction.addToBackStack(tag);
@@ -71,7 +50,7 @@ public class SplashActivity extends Activity {
             beginTransaction.commitAllowingStateLoss();
 
         } catch (Throwable e) {
-
+            ExceptionUtil.printThrowable(e);
         }
     }
 
@@ -98,7 +77,10 @@ public class SplashActivity extends Activity {
                         FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         } catch (Throwable e) {
-            //异常了
+            ExceptionUtil.printThrowable(e);
         }
     }
+
+
+
 }

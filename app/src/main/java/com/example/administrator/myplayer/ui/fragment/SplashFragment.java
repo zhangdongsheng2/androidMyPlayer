@@ -1,7 +1,6 @@
 package com.example.administrator.myplayer.ui.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -17,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.administrator.myplayer.R;
-import com.example.administrator.myplayer.ui.activity.SplashActivity;
+import com.example.administrator.myplayer.base.BaseFragment;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -25,7 +24,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 /**
  * Created by Administrator on 2016/3/24.
  */
-public class SplashFragment extends Fragment {
+public class SplashFragment extends BaseFragment {
     private android.widget.ImageView ivsplashbg;
     private android.widget.ImageView ivsplashlogo;
     private android.widget.ImageView ivsplashleft;
@@ -274,7 +273,6 @@ public class SplashFragment extends Fragment {
                         ivsplashright.getMeasuredWidth()),
                 ObjectAnimator.ofFloat(ivsplashleft, "alpha", 1, 0),
                 ObjectAnimator.ofFloat(ivsplashright, "alpha", 1, 0));
-//                ObjectAnimator.ofFloat(mLlResultContainer, "alpha", 0, 1));
         set.setDuration(1000);
         set.addListener(new Animator.AnimatorListener() {
             @Override
@@ -284,8 +282,7 @@ public class SplashFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-//                ((SplashActivity) getActivity()).launch(false,MainFragment.class,false);
-                ((SplashActivity) getActivity()).launch(false, R.id.content2, MainFragment.class, false);
+               SplashFragment.this.launch(false, MainFragment.class, false);
             }
 
             @Override
