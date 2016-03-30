@@ -1,4 +1,4 @@
-package com.example.administrator.myplayer.util;
+package com.example.myplayer.util;
 
 import android.annotation.SuppressLint;
 

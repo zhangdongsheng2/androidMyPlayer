@@ -1,4 +1,4 @@
-package com.example.administrator.myplayer;
+package com.example.myplayer;
 
 import org.junit.Test;
 

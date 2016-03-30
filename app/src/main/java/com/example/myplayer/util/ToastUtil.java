@@ -1,11 +1,11 @@
-package com.example.administrator.myplayer.util;
+package com.example.myplayer.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.Toast;
 
-import com.example.administrator.myplayer.base.BaseActivity;
+import com.example.myplayer.base.BaseActivity;
 
 /**
  * Created by Administrator on 2016/3/23.

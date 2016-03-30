@@ -1,11 +1,11 @@
-package com.example.administrator.myplayer.util;
+package com.example.myplayer.util;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 
-import com.example.administrator.myplayer.base.BaseActivity;
+import com.example.myplayer.base.BaseActivity;
 
 import java.io.BufferedWriter;
 import java.io.File;

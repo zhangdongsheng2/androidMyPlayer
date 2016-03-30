@@ -1,48 +1,25 @@
-package com.example.administrator.myplayer.base;
+package com.example.myplayer.base;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
 
-import com.example.administrator.myplayer.util.ToastUtil;
+import com.example.myplayer.util.ToastUtil;
 
 /**
  * Activity基类 2016/3/23.
  */
-public abstract class BaseActivity extends FragmentActivity implements View.OnClickListener {
+public abstract class BaseActivity extends FragmentActivity {
     private static BaseActivity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mActivity = this;
-        initView();
-        initListener();
-        initData();
+
     }
-
-    protected abstract void initView();
-
-    protected abstract void initListener();
-
-    protected abstract void initData();
-
     public static BaseActivity getActivity() {
         return mActivity;
     }
-
-    /**
-     * 处理共同按钮点击事件
-     *
-     * @param view
-     */
-    protected abstract void processClick(View view);
-
-    @Override
-    public void onClick(View v) {
-        processClick(v);
-    }
-
     @Override
     public void onBackPressed() {
         if (isLastFragment()) {
@@ -51,7 +28,6 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             super.onBackPressed();
         }
     }
-
     private long exitTime = 0L;
 
     /**
