@@ -23,7 +23,7 @@ public class VideoListFragment extends BaseFragment{
 
     @Override
     protected void initData() {
-
+//        RecyclerView listView = mRootView.findViewById()
     }
 
     @Override

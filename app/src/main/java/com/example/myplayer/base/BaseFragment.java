@@ -19,13 +19,16 @@ import java.lang.reflect.Field;
  * Fragment 的基类 2016/3/29.
  */
 public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+
+    protected View mRootView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = initView();
+        mRootView = initView();
         initListener();
         initData();
-        return view;
+        return mRootView;
     }
 
     protected abstract View initView();
