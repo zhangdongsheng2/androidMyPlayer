@@ -13,6 +13,7 @@ import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.ui.fragment.play.AudioListFragment;
 import com.example.myplayer.ui.fragment.play.VideoListFragment;
 import com.example.myplayer.ui.view.StatusBarLinearLayout;
+import com.example.myplayer.ui.view.ZoomOutPageTransformer;
 import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
@@ -96,6 +97,7 @@ public class MainFragment extends BaseFragment {
 
         adapter = new MainPagerAdapter(getFragmentManager(), fragments);
         viewpager.setAdapter(adapter);
+        viewpager.setPageTransformer(true,new ZoomOutPageTransformer());
         linghtAndScaleTabTitle();
     }
 
@@ -108,8 +110,8 @@ public class MainFragment extends BaseFragment {
 
     private void linghtAndScaleTabTitle() {
         int currentPage = viewpager.getCurrentItem();
-        tabvideo.setTextColor(currentPage == 0 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.gray_white));
-        tabaudio.setTextColor(currentPage == 1 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.gray_white));
+        tabvideo.setTextColor(currentPage == 0 ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white));
+        tabaudio.setTextColor(currentPage == 1 ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white));
         ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
         ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
         ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));

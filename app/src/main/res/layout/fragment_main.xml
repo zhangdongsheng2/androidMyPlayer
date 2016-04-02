@@ -23,7 +23,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/main_video"
-                android:textColor="@color/indicate_line"
+                android:textColor="@color/black"
                 android:textSize="15sp"/>
 
             <TextView
