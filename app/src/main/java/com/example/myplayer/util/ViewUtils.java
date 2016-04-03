@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 
 import com.example.myplayer.R;
@@ -53,7 +54,7 @@ public class ViewUtils {
      * @param stack 是否要加入到回退栈
      * @param save  是否要保存自己
      */
-    public static void launch(boolean save, int id, Class clazz, boolean stack, Fragment thisFragment) {
+    public static void launch(boolean save, int id, Class clazz, boolean stack, Fragment thisFragment, Bundle bundle) {
         try {
             FragmentManager manager = BaseActivity.getActivity().getFragmentManager();
             FragmentTransaction beginTransaction = manager.beginTransaction();
@@ -63,6 +64,7 @@ public class ViewUtils {
 
             Fragment fragment = null;
             fragment = (Fragment) clazz.newInstance();
+            fragment.setArguments(bundle);
             beginTransaction.add(id, fragment);
             if (null != thisFragment) {
                 String tag = thisFragment.getClass().getName();

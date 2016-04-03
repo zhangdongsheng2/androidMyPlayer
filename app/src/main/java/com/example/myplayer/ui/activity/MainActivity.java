@@ -20,6 +20,6 @@ public class MainActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_main);
-        ViewUtils.launch(false, R.id.content, SplashFragment.class, false, null);
+        ViewUtils.launch(false, R.id.content, SplashFragment.class, false, null,null);
     }
 }

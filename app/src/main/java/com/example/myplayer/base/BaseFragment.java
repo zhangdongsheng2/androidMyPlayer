@@ -2,6 +2,7 @@ package com.example.myplayer.base;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -44,8 +45,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      *
      * @param clazz 要跳转到的fragment
      */
-    public void launch(Class clazz) {
-        launch(false, R.id.content, clazz, true);
+    public void launch(Class clazz, Bundle bundle) {
+        launch(false, R.id.content, clazz, true, bundle);
     }
 
     /**
@@ -54,8 +55,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param clazz 要跳转到的fragment
      * @param save  是否要保存自己
      */
-    public void launch(boolean save, Class clazz) {
-        launch(save, R.id.content, clazz, true);
+    public void launch(boolean save, Class clazz, Bundle bundle) {
+        launch(save, R.id.content, clazz, true, bundle);
     }
 
     /**
@@ -64,8 +65,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param clazz 要跳转到的fragment
      * @param stack 是否加入到回退栈
      */
-    public void launch(Class clazz, boolean stack) {
-        launch(false, R.id.content, clazz, stack);
+    public void launch(Class clazz, boolean stack, Bundle bundle) {
+        launch(false, R.id.content, clazz, stack, bundle);
     }
 
     /**
@@ -76,8 +77,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param stack 是否要加入到回退栈
      * @param save  是否要保存自己
      */
-    public void launch(boolean save, int id, Class clazz, boolean stack) {
-        ViewUtils.launch(save, id, clazz, stack, this);
+    public void launch(boolean save, int id, Class clazz, boolean stack, Bundle bundle) {
+        ViewUtils.launch(save, id, clazz, stack, this, bundle);
     }
 
     /**
@@ -118,5 +119,19 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         processClick(v);
+    }
+
+    /**
+     * Activity 跳转
+     *
+     * @param bundle
+     * @param targetActivity
+     */
+    protected void enterActivity(Bundle bundle, Class<?> targetActivity) {
+        Intent intent = new Intent(getActivity(), targetActivity);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        getActivity().startActivity(intent);
     }
 }

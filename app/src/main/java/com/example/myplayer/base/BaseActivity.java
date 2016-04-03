@@ -36,7 +36,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * @return
      */
     private boolean isLastFragment() {
-        return getSupportFragmentManager().getBackStackEntryCount() == 0;
+        return getFragmentManager().getBackStackEntryCount() == 0;
     }
 
     /**

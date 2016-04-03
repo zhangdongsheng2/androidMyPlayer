@@ -163,7 +163,7 @@ public class SplashFragment extends BaseFragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                SplashFragment.this.launch(MainFragment.class, false);
+                SplashFragment.this.launch(MainFragment.class, false,null);
             }
 
             @Override
