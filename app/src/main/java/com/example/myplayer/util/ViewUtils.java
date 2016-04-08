@@ -1,10 +1,10 @@
 package com.example.myplayer.util;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.example.myplayer.R;
@@ -12,9 +12,31 @@ import com.example.myplayer.base.BaseActivity;
 
 import java.lang.reflect.Field;
 
-/**
- * Created by Administrator on 2016/3/27.
- */
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         佛祖保佑       永无BUG
+----------------------------------------------
+           6666
+           @author ZDS
+           create on 2016/4/6 20:37 */
 public class ViewUtils {
     /**
      * 获状态栏高度
@@ -56,11 +78,11 @@ public class ViewUtils {
      */
     public static void launch(boolean save, int id, Class clazz, boolean stack, Fragment thisFragment, Bundle bundle) {
         try {
-            FragmentManager manager = BaseActivity.getActivity().getFragmentManager();
+            FragmentManager manager = BaseActivity.getActivity().getSupportFragmentManager();
             FragmentTransaction beginTransaction = manager.beginTransaction();
-            beginTransaction.setCustomAnimations(R.anim.fragment_my_in,
-                    R.anim.fragment_my_out, R.anim.fragment_my_in,
-                    R.anim.fragment_my_out);
+            beginTransaction.setCustomAnimations(R.anim.my_scale_action,
+                    R.anim.my_alpha_action, R.anim.my_scale_action,
+                    R.anim.my_translation_out);
 
             Fragment fragment = null;
             fragment = (Fragment) clazz.newInstance();
@@ -80,6 +102,7 @@ public class ViewUtils {
             beginTransaction.commitAllowingStateLoss();
 
         } catch (Throwable e) {
+            e.printStackTrace();
             ExceptionUtil.printThrowable(e);
         }
     }

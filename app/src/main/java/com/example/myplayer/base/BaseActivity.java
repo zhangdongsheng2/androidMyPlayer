@@ -17,9 +17,11 @@ public abstract class BaseActivity extends FragmentActivity {
         this.mActivity = this;
 
     }
+
     public static BaseActivity getActivity() {
         return mActivity;
     }
+
     @Override
     public void onBackPressed() {
         if (isLastFragment()) {
@@ -28,6 +30,7 @@ public abstract class BaseActivity extends FragmentActivity {
             super.onBackPressed();
         }
     }
+
     private long exitTime = 0L;
 
     /**
@@ -36,7 +39,7 @@ public abstract class BaseActivity extends FragmentActivity {
      * @return
      */
     private boolean isLastFragment() {
-        return getFragmentManager().getBackStackEntryCount() == 0;
+        return getSupportFragmentManager().getBackStackEntryCount() == 0;
     }
 
     /**

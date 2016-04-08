@@ -29,6 +29,10 @@ public class SplashFragment extends BaseFragment {
     private android.widget.LinearLayout lvanimContainer;
     private RelativeLayout rlsplash;
 
+    public SplashFragment() {
+
+    }
+
     @Override
     protected View initView() {
         View inflate = ViewUtils.inflateView(R.layout.fragment_splash);
@@ -163,7 +167,7 @@ public class SplashFragment extends BaseFragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                SplashFragment.this.launch(MainFragment.class, false,null);
+                SplashFragment.this.launch(MainFragment.class, false, null);
             }
 
             @Override

@@ -1,6 +1,6 @@
 package com.example.myplayer.ui.fragment;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
@@ -95,7 +95,7 @@ public class MainFragment extends BaseFragment {
 
         calculateIndicateLineWidth();
 
-        adapter = new MainPagerAdapter(getFragmentManager(), fragments);
+        adapter = new MainPagerAdapter(BaseActivity.getActivity().getSupportFragmentManager(), fragments);
         viewpager.setAdapter(adapter);
         viewpager.setPageTransformer(true,new ZoomOutPageTransformer());
         linghtAndScaleTabTitle();

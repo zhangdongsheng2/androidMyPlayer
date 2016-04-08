@@ -1,9 +1,9 @@
 package com.example.myplayer.adapter;
 
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
@@ -33,23 +33,24 @@ import java.util.ArrayList;
             create on 2016/4/1  22:25 */
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
-    private ArrayList<android.app.Fragment> fragments;
+    private ArrayList<Fragment> fragments;
 
-    public MainPagerAdapter(FragmentManager fm, ArrayList<android.app.Fragment> fragments) {
+    public MainPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
         super(fm);
         this.fragments = fragments;
     }
 
-    @Override
-    public Fragment getItem(int position) {
-        return fragments.get(position);
-    }
 
     @Override
     public int getCount() {
         return fragments.size();
     }
 
+
+    @Override
+    public Fragment getItem(int position) {
+        return fragments.get(position);
+    }
 
     @Override
     public long getItemId(int position) {
