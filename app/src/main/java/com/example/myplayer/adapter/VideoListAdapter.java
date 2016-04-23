@@ -12,7 +12,8 @@ import android.widget.TextView;
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
-import com.example.myplayer.ui.fragment.play.VoidPlayFragment;
+import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
+import com.example.myplayer.ui.activity.VoidPlayActivity;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
 
@@ -72,7 +73,7 @@ public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter
                 Bundle bundle = new Bundle();
                 bundle.putInt("currentPosition", position);
                 bundle.putSerializable("videoList", cursorToList(getCursor()));
-                mBaseFragment.launch(true,VoidPlayFragment.class, bundle);
+                mBaseFragment.launch(true,VoidPlayActivity.class, bundle);
             }
         });
     }

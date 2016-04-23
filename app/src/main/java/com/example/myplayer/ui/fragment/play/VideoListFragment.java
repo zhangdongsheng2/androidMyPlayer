@@ -11,6 +11,7 @@ import com.example.myplayer.adapter.VideoListAdapter;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.db.SimpleQueryHandler;
+import com.example.myplayer.recyclerview.DividerItemDecoration;
 import com.example.myplayer.util.ViewUtils;
 
 import java.util.ArrayList;
@@ -58,10 +59,12 @@ public class VideoListFragment extends BaseFragment {
 
     @Override
     protected void initData() {
+
         SimpleQueryHandler queryHandler = new SimpleQueryHandler(getActivity().getContentResolver());
         listView = ((RecyclerView) mRootView.findViewById(R.id.listview));
-        adapter = new VideoListAdapter(getActivity(), null, 0,this);
+        adapter = new VideoListAdapter(getActivity(), null, 0, this);
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         listView.setAdapter(adapter);
         String[] projection = {Media._ID, Media.TITLE, Media.SIZE, Media.DURATION, Media.DATA};
         queryHandler.startQuery(0, adapter, Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
@@ -70,15 +73,17 @@ public class VideoListFragment extends BaseFragment {
     @Override
     protected void processClick(View view) {
     }
+
     /**
      * 将cursor中的数据取出来放入集合当中
+     *
      * @param cursor
      * @return
      */
-    private ArrayList<VideoItem> cursorToList(Cursor cursor){
+    private ArrayList<VideoItem> cursorToList(Cursor cursor) {
         ArrayList<VideoItem> list = new ArrayList<VideoItem>();
         cursor.moveToPosition(-1);
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             list.add(VideoItem.fromCursor(cursor));
         }
         return list;

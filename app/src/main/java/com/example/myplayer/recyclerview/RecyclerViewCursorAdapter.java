@@ -1,4 +1,4 @@
-package com.example.myplayer.adapter;
+package com.example.myplayer.recyclerview;
 
 import android.content.Context;
 import android.database.ContentObserver;

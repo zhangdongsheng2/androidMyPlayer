@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -11,7 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.myplayer.R;
+import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
+import com.example.myplayer.util.ExceptionUtil;
 import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
@@ -167,7 +173,26 @@ public class SplashFragment extends BaseFragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                SplashFragment.this.launch(MainFragment.class, false, null);
+                try {
+                    FragmentManager manager = BaseActivity.getActivity().getSupportFragmentManager();
+                    final FragmentTransaction beginTransaction = manager.beginTransaction();
+                    beginTransaction.setCustomAnimations(R.anim.my_scale_action,
+                            R.anim.my_alpha_action, R.anim.my_scale_action,
+                            R.anim.my_translation_out);
+                    Fragment fragment = (Fragment) MainFragment.class.newInstance();
+                    beginTransaction.add(R.id.content, fragment);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            beginTransaction.remove(SplashFragment.this);
+                        }
+                    }, 1000);
+                    beginTransaction.commitAllowingStateLoss();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    ExceptionUtil.printThrowable(e);
+                }
+
             }
 
             @Override

@@ -1,26 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="@android:style/Theme.Translucent.NoTitleBar">
         <!-- Customize your theme here. -->
+        <item name="android:listDivider">@drawable/item_divider</item>
         <item name="windowNoTitle">true</item>
 
-    </style>
-
-    <style name="animation_translucent_translate" parent="@android:style/Animation.Translucent">
-        <item name="android:windowEnterAnimation">@anim/my_alpha_action</item>
-        <item name="android:windowExitAnimation">@anim/my_scale_action</item>
-    </style>
-
-
-    <style name="MyTheme">
-        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
-    </style>
-
-    <style name="ActivityAnimation">
-        <item name="android:activityOpenEnterAnimation">@anim/my_scale_action</item>
-        <item name="android:activityOpenExitAnimation">@anim/my_alpha_action</item>
-        <item name="android:activityCloseEnterAnimation">@anim/my_scale_action</item>
-        <item name="android:activityCloseExitAnimation">@anim/my_scale_action</item>
     </style>
 </resources>

@@ -1,14 +1,10 @@
-package com.example.myplayer.ui.fragment.play;
+package com.example.myplayer.ui.activity;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseFragment;
-import com.example.myplayer.bean.VideoItem;
-import com.example.myplayer.util.ViewUtils;
-
-import java.util.ArrayList;
 
 /*
                    _ooOoo_
@@ -35,29 +31,34 @@ import java.util.ArrayList;
            视频播放页面
            @author ZDS
            create on 2016/4/3 19:18 */
-public class VoidPlayFragment extends BaseFragment {
-    @Override
-    protected View initView() {
-        return ViewUtils.inflateView(R.layout.fragment_video_play);
+public class VoidPlayActivity extends Activity {
+    /**
+     * 初始化View 控件
+     */
+    private void initView() {
+        setContentView(R.layout.fragment_video_play);
     }
 
     @Override
-    protected void initListener() {
-
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
     }
 
-    @Override
+
     protected void initData() {
-        int currentPosition = getArguments().getInt("currentPosition");
-        ArrayList<VideoItem> videoList = (ArrayList<VideoItem>) getArguments().getSerializable("videoList");
-
-        TextView viewById = (TextView) mRootView.findViewById(R.id.tv_demo);
-        viewById.setText(currentPosition + "===" + videoList.size());
+//        int currentPosition = getArguments().getInt("currentPosition");
+//        ArrayList<VideoItem> videoList = (ArrayList<VideoItem>) getArguments().getSerializable("videoList");
 
     }
 
-    @Override
+
     protected void processClick(View view) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

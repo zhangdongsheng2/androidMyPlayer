@@ -4,7 +4,7 @@ import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.database.Cursor;
 
-import com.example.myplayer.adapter.RecyclerViewCursorAdapter;
+import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
 
 
 /**

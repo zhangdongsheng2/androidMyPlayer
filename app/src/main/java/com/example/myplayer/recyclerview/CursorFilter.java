@@ -1,4 +1,4 @@
-package com.example.myplayer.adapter;
+package com.example.myplayer.recyclerview;
 
 /**
  * 作者：Administrator on 2016/4/2 18:52

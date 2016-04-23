@@ -9,4 +9,5 @@
     <color name="indicate_line">#0000ff</color>
     <color name="list_pressed">#22ffffff</color>
     <color name="gray_white">#66ffffff</color>
+    <color name="trans_gray_white">#66000000</color>
 </resources>
