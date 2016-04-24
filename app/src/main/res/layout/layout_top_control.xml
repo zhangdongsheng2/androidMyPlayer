@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="名称"
+            android:text="@string/title_name"
             android:textColor="@color/white"
             android:textSize="14sp"/>
 
@@ -26,14 +26,14 @@
             android:id="@+id/iv_battery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_battery_0"/>
+            android:src="@drawable/ic_battery_0"/>
 
         <TextView
             android:id="@+id/tv_system_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="时间"
+            android:text="@string/title_time"
             android:textColor="@color/white"
             android:textSize="14sp"/>
     </LinearLayout>
@@ -41,6 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:background="@null"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -49,19 +50,19 @@
             android:id="@+id/iv_voice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_btn_voice"/>
+            android:layout_marginLeft="35dp"
+            android:src="@drawable/selector_btn_voice"/>
 
         <SeekBar
             android:id="@+id/voice_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="25dp"
+            android:layout_marginRight="50dp"
             android:maxHeight="6dp"
             android:minHeight="6dp"
             android:progressDrawable="@drawable/voice_progress_drawable"
             android:thumb="@drawable/video_progress_thumb"
             />
-
     </LinearLayout>
 
 </LinearLayout>

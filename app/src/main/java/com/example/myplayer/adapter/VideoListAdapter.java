@@ -1,6 +1,7 @@
 package com.example.myplayer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
+import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
-import com.example.myplayer.ui.activity.VoidPlayActivity;
+import com.example.myplayer.ui.activity.VideoPlayerActivity;
+import com.example.myplayer.ui.activity.VitamioPlayActivity;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
 
@@ -70,10 +73,14 @@ public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Intent intent = new Intent(BaseActivity.getActivity(), Video。PlayerActivity.class);
+                Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
+//                Intent intent = new Intent(BaseActivity.getActivity(), VideoViewDemo.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt("currentPosition", position);
-                bundle.putSerializable("videoList", cursorToList(getCursor()));
-                mBaseFragment.launch(true,VoidPlayActivity.class, bundle);
+                bundle.putInt(VideoPlayerActivity.POSITION, position);
+                bundle.putSerializable(VideoPlayerActivity.VIDEOLIST, cursorToList(getCursor()));
+                intent.putExtras(bundle);
+                mBaseFragment.startActivity(intent);
             }
         });
     }

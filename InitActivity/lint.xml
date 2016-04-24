@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="NewApi">
+        <ignore path="src\io\vov\vitamio\activity\InitActivity.java" />
+        <ignore path="src\io\vov\vitamio\utils\ScreenResolution.java" />
+        <ignore path="src\io\vov\vitamio\widget\VideoView.java" />
+    </issue>
+</lint>

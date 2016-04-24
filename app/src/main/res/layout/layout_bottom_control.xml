@@ -7,6 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
         android:background="@color/trans_gray_white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -17,7 +18,8 @@
             android:id="@+id/tv_current_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="起始时间"
+            android:layout_marginLeft="50dp"
+            android:text="@string/title_starttime"
             android:textColor="@color/white"
             android:textSize="14sp"/>
 
@@ -25,8 +27,8 @@
             android:id="@+id/video_seekbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:layout_weight="1"
             android:maxHeight="6dp"
             android:minHeight="6dp"
@@ -37,7 +39,8 @@
             android:id="@+id/tv_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="总时间"
+            android:layout_marginRight="50dp"
+            android:text="@string/title_counttime"
             android:textColor="@color/white"
             android:textSize="14sp"/>
     </LinearLayout>
@@ -45,6 +48,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:background="@color/trans_gray_white"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -54,35 +58,35 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_btn_exit"/>
+            android:src="@drawable/selector_btn_exit"/>
 
         <ImageView
             android:id="@+id/btn_pre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_btn_pre"/>
+            android:src="@drawable/selector_btn_pre"/>
 
         <ImageView
             android:id="@+id/btn_play"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_btn_play"/>
+            android:src="@drawable/selector_btn_play"/>
 
         <ImageView
             android:id="@+id/btn_next"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_btn_next"/>
+            android:src="@drawable/selector_btn_next"/>
 
         <ImageView
             android:id="@+id/btn_screen"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_btn_fullscreen"/>
+            android:src="@drawable/selector_btn_fullscreen"/>
 
     </LinearLayout>
 
