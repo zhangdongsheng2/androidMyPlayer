@@ -3,7 +3,6 @@ package com.example.myplayer.ui.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.animation.CycleInterpolator;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
@@ -97,7 +96,7 @@ public class MainFragment extends BaseFragment {
 
         adapter = new MainPagerAdapter(BaseActivity.getActivity().getSupportFragmentManager(), fragments);
         viewpager.setAdapter(adapter);
-        viewpager.setPageTransformer(true,new ZoomOutPageTransformer());
+        viewpager.setPageTransformer(true, new ZoomOutPageTransformer());
         linghtAndScaleTabTitle();
     }
 
@@ -110,12 +109,16 @@ public class MainFragment extends BaseFragment {
 
     private void linghtAndScaleTabTitle() {
         int currentPage = viewpager.getCurrentItem();
-        tabvideo.setTextColor(currentPage == 0 ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white));
-        tabaudio.setTextColor(currentPage == 1 ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white));
-        ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
-        ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
-        ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
-        ViewPropertyAnimator.animate(tabaudio).scaleY(currentPage == 1 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
+        tabvideo.setTextColor(currentPage == 0 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.white));
+        tabaudio.setTextColor(currentPage == 1 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.white));
+//        ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
+//        ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
+//        ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
+//        ViewPropertyAnimator.animate(tabaudio).scaleY(currentPage == 1 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
+        ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200);
+        ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200);
+        ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200);
+        ViewPropertyAnimator.animate(tabaudio).scaleY(currentPage == 1 ? 1.2f : 1).setDuration(200);
     }
 
     @Override
