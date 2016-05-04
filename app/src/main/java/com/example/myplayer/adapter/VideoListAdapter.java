@@ -75,7 +75,6 @@ public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter
             public void onClick(View v) {
 //                Intent intent = new Intent(BaseActivity.getActivity(), Video。PlayerActivity.class);
                 Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
-//                Intent intent = new Intent(BaseActivity.getActivity(), VideoViewDemo.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt(VideoPlayerActivity.POSITION, position);
                 bundle.putSerializable(VideoPlayerActivity.VIDEOLIST, cursorToList(getCursor()));

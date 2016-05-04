@@ -35,12 +35,15 @@ import io.vov.vitamio.widget.VideoView;
 
 /**
  * 作者：Administrator on 2016/4/24 18:14
- * <p/>
+ * <p>
  * 邮箱：zhangdongsheng2@sina.com
  */
 public class VitamioPlayActivity extends Activity implements View.OnClickListener {
     public static final String POSITION = "position";
     public static final String VIDEOLIST = "videolist";
+    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
+    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
+    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,47 +52,6 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         initListener();
         initData();
     }
-
-
-    @Override
-    public void onClick(View v) {
-        {
-            switch (v.getId()) {
-                case R.id.btn_exit:
-                    finish();
-                    break;
-                case R.id.iv_voice:
-                    isMute = !isMute;
-                    updateSystemVolume();
-                    break;
-                case R.id.btn_play:
-                    if (video_view.isPlaying()) {
-                        video_view.pause();
-                    } else {
-                        video_view.start();
-                    }
-                    updateBtnPlayBg();
-                    break;
-                case R.id.btn_pre:
-                    if (currentPosition > 0) {
-                        currentPosition--;
-                        playVideo();
-                    }
-                    break;
-                case R.id.btn_next:
-                    if (currentPosition < (videoList.size() - 1)) {
-                        currentPosition++;
-                        playVideo();
-                    }
-                    break;
-                case R.id.btn_screen:
-//                    video_view.switchScreen();
-                    updateScreenBtnBg();
-                    break;
-            }
-        }
-    }
-
 
     private VideoView video_view;
     //top control
@@ -105,16 +67,20 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     private LinearLayout ll_top_control, ll_bottom_control;
     private LinearLayout ll_loading, ll_buffer;
 
+    //------------------------------------------------------------------------
     private int currentPosition;//当前播放视频的位置
     private ArrayList<VideoItem> videoList;//当前的视频列表
     private BatteryChangeReceiver batteryChangeReceiver;
     private AudioManager audioManager;
     private int touchSlop;
     private GestureDetector gestureDetector;
+    //--------------------------------------------------------------------
+    private int maxVolume;//系统中音乐和视频类型最大音量
+    private int currentVolume;//系统音乐和视频类型当前的音量
+    private boolean isMute = false;//是否是静音模式
+    private int screenWidth, screenHeight;
+    private boolean isShowControlLayout = false;//是否是显示控制面板
 
-    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
-    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
-    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
 
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -134,14 +100,9 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         ;
     };
 
-    private int maxVolume;//系统中音乐和视频类型最大音量
-    private int currentVolume;//系统音乐和视频类型当前的音量
-    private boolean isMute = false;//是否是静音模式
-    private int screenWidth, screenHeight;
-    private boolean isShowControlLayout = false;//是否是显示控制面板
 
     /**
-     * 更新系统时间
+     * 更新系统时间  每隔一秒
      */
     private void updateSystemTime() {
         tv_system_time.setText(StringUtil.formatSystemTime());
@@ -149,7 +110,7 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     }
 
     /**
-     * 更新播放进度
+     * 更新播放进度  每隔0.5秒
      */
     private void updatePlayProgress() {
         tv_current_position.setText(StringUtil.formatVideoDuration(video_view.getCurrentPosition()));
@@ -157,9 +118,13 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         handler.sendEmptyMessageDelayed(MSG_UPDATE_PLAY_PROGRESS, 500);
     }
 
+    /**
+     * 初始化控件
+     */
     protected void initView() {
         //检查vitamio类库是否正确加载
         LibsChecker.checkVitamioLibs(this);
+
         setContentView(R.layout.fragment_video_play);
         video_view = (VideoView) findViewById(R.id.video_view);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -183,6 +148,7 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     }
 
     protected void initListener() {
+        //把top和bottom布局移动隐藏
         ll_top_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -303,8 +269,49 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        {
+            switch (v.getId()) {
+                case R.id.btn_exit:
+                    finish();
+                    break;
+                case R.id.iv_voice:
+                    isMute = !isMute;
+                    updateSystemVolume();
+                    break;
+                case R.id.btn_play:
+                    if (video_view.isPlaying()) {
+                        video_view.pause();
+                    } else {
+                        video_view.start();
+                    }
+                    updateBtnPlayBg();
+                    break;
+                case R.id.btn_pre:
+                    if (currentPosition > 0) {
+                        currentPosition--;
+                        playVideo();
+                    }
+                    break;
+                case R.id.btn_next:
+                    if (currentPosition < (videoList.size() - 1)) {
+                        currentPosition++;
+                        playVideo();
+                    }
+                    break;
+                case R.id.btn_screen:
+//                    video_view.switchScreen();
+                    updateScreenBtnBg();
+                    break;
+            }
+        }
+    }
+
     protected void initData() {
-        gestureDetector = new GestureDetector(this, (GestureDetector.OnGestureListener) new MyOnGestureListner());
+        //监控页面的手势行为，单击长按双击等。
+        gestureDetector = new GestureDetector(this, new MyOnGestureListner());
+        //判断用户是否是在做手势滑动行为
         touchSlop = ViewConfiguration.getTouchSlop();
         screenWidth = getWindowManager().getDefaultDisplay().getWidth();
         screenHeight = getWindowManager().getDefaultDisplay().getHeight();
@@ -312,6 +319,7 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         registerBatteryReceiver();
         initVolume();
 
+        //外部跳转进来的
         Uri videoUri = getIntent().getData();
         if (videoUri != null) {
             //从文件发起的请求
@@ -332,7 +340,6 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         video_view.setOnPreparedListener(new io.vov.vitamio.MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(io.vov.vitamio.MediaPlayer mp) {
-                {
                     ViewPropertyAnimator.animate(ll_loading).alpha(0).setDuration(1000).setListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator arg0) {
@@ -361,7 +368,6 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
 
                     btn_play.setImageResource(R.drawable.selector_btn_pause);
                 }
-            }
         });
 
 //		video_view.setMediaController(new MediaController(this));
@@ -515,13 +521,13 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     private void updateBatteryBg(int level) {
         if (level == 0) {
             iv_battery.setImageResource(R.drawable.ic_battery_0);
-        } else if (level > 0 && level <= 10) {
+        } else if (level > 0 && level <= 20) {
             iv_battery.setImageResource(R.drawable.ic_battery_1);
-        } else if (level > 10 && level <= 20) {
-            iv_battery.setImageResource(R.drawable.ic_battery_2);
         } else if (level > 20 && level <= 50) {
+            iv_battery.setImageResource(R.drawable.ic_battery_2);
+        } else if (level > 50 && level <= 70) {
             iv_battery.setImageResource(R.drawable.ic_battery_4);
-        } else if (level > 50 && level <= 80) {
+        } else if (level > 70 && level <= 90) {
             iv_battery.setImageResource(R.drawable.ic_battery_5);
         } else {
             iv_battery.setImageResource(R.drawable.ic_battery_6);
