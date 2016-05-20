@@ -14,6 +14,19 @@ import com.example.myplayer.util.ViewUtils;
 
 public class PlayService extends Service {
 
+
+    public static final String POSITION = "position";
+    public static final String VIDEOLIST = "videolist";
+    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
+    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
+    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
+
+
+
+
+
+
+
     private WindowManager wm;
     private View mView;
 
@@ -40,18 +53,14 @@ public class PlayService extends Service {
         // 修改完左上角对其
         mParams.gravity = Gravity.LEFT + Gravity.TOP;
         mParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN|WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-//                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
         mParams.format = PixelFormat.TRANSPARENT;
         mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("asldfjalsdjfl");
-            }
-        });
-
-
         wm.addView(mView, mParams);
+
+
+        initView();
+        initListener();
+        initData();
     }
 
     private Handler mHandler = new Handler() {
