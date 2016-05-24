@@ -58,9 +58,9 @@ public class PlayService extends Service {
         wm.addView(mView, mParams);
 
 
-        initView();
-        initListener();
-        initData();
+//        initView();
+//        initListener();
+//        initData();
     }
 
     private Handler mHandler = new Handler() {
