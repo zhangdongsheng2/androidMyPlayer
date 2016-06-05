@@ -3,6 +3,7 @@ package com.example.myplayer.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
 import android.view.View;
@@ -14,7 +15,8 @@ import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
-import com.example.myplayer.service.PlayService;
+import com.example.myplayer.ui.activity.VideoPlayerActivity;
+import com.example.myplayer.ui.activity.VitamioPlayActivity;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
 
@@ -72,22 +74,19 @@ public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(BaseActivity.getActivity(), Video。PlayerActivity.class);
-//                Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
+                Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt(VideoPlayerActivity.POSITION, position);
+                bundle.putSerializable(VideoPlayerActivity.VIDEOLIST, cursorToList(getCursor()));
+                intent.putExtras(bundle);
+                mBaseFragment.startActivity(intent);
+
+//                Intent intent = new Intent(BaseActivity.getActivity(), PlayService.class);
 //                Bundle bundle = new Bundle();
 //                bundle.putInt(VideoPlayerActivity.POSITION, position);
 //                bundle.putSerializable(VideoPlayerActivity.VIDEOLIST, cursorToList(getCursor()));
 //                intent.putExtras(bundle);
-//                mBaseFragment.startActivity(intent);
-
-                Intent intent = new Intent(BaseActivity.getActivity(), PlayService.class);
-                mBaseFragment.getActivity().startService(intent);
-
-
-
-
-
-
-
+//                mBaseFragment.getActivity().startService(intent);
 
 
 //                WindowManager  wm = (WindowManager) mBaseFragment.getActivity().getSystemService(Context.WINDOW_SERVICE);

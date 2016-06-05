@@ -9,7 +9,9 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -20,7 +22,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
+import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.bean.VideoItem;
+import com.example.myplayer.service.PlayService;
 import com.example.myplayer.util.LogUtils;
 import com.example.myplayer.util.StringUtil;
 import com.example.myplayer.util.ToastUtil;
@@ -271,7 +275,6 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        {
             switch (v.getId()) {
                 case R.id.btn_exit:
                     finish();
@@ -305,7 +308,6 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
                     updateScreenBtnBg();
                     break;
             }
-        }
     }
 
     protected void initData() {
@@ -455,8 +457,30 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     private void updateScreenBtnBg() {
 //        btn_screen.setImageResource(video_view.isFullScreen() ?
 //                R.drawable.selector_btn_defaultscreen : R.drawable.selector_btn_fullscreen);
-    }
 
+//        finish();
+    }
+    // 点击HOME键时程序进入后台运行
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        // 按下HOME键
+        if(keyCode == KeyEvent.KEYCODE_HOME){
+            // 显示Notification
+
+            Intent intent = new Intent(BaseActivity.getActivity(), PlayService.class);
+            Bundle bundle = getIntent().getExtras();
+            intent.putExtras(bundle);
+            Log.d("VitamioPlayActivity", "开启服务");
+            startService(intent);
+            handler.removeCallbacksAndMessages(null);
+            unregisterReceiver(batteryChangeReceiver);
+            video_view.stopPlayback();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
