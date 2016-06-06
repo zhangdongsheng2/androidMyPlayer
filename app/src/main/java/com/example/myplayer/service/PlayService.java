@@ -3,13 +3,12 @@ package com.example.myplayer.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -26,6 +25,8 @@ import android.widget.TextView;
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.bean.VideoItem;
+import com.example.myplayer.ui.activity.VideoPlayerActivity;
+import com.example.myplayer.ui.activity.VitamioPlayActivity;
 import com.example.myplayer.util.LogUtils;
 import com.example.myplayer.util.ToastUtil;
 import com.example.myplayer.util.ViewUtils;
@@ -34,7 +35,6 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.util.ArrayList;
 
-import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.VideoView;
 
@@ -54,6 +54,7 @@ public class PlayService extends Service implements View.OnClickListener {
     private int moveY;
     private float x;
     private float y;
+    private long currentPositionTime;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -61,21 +62,46 @@ public class PlayService extends Service implements View.OnClickListener {
     }
 
     @Override
-    public void onCreate() {
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+        mIntent = intent;
 
+
+        wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        mView = ViewUtils.inflateView(this,R.layout.service_video_play);
+//        int width = wm.getDefaultDisplay().getWidth() - 90;
+//        int height = (int) (width * 0.6);
+
+        mParams = new WindowManager.LayoutParams();
+//        mParams.height = height;
+//        mParams.width = width;
+        mParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        mParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+        // 修改完左上角对其
+        mParams.gravity = Gravity.LEFT + Gravity.TOP;
+        mParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+//        mParams.format = PixelFormat.TRANSPARENT;
+//        mParams.format = PixelFormat.RGB_565;
+
+        mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+        wm.addView(mView, mParams);
+        mView.setOnTouchListener(touchListener);
+
+        initView();
+        initListener();
+        initData();
     }
-
     View.OnTouchListener touchListener = new View.OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            Log.d("PlayService", "onTouch");
             gestureDetector.onTouchEvent(event);
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     startX = (int) event.getX();
                     startY = (int) event.getY();
-                    Log.d("PlayService", "onTouchDown");
                     break;
                 case MotionEvent.ACTION_MOVE:
                     moveX = (int) event.getRawX();
@@ -189,7 +215,7 @@ public class PlayService extends Service implements View.OnClickListener {
      */
     protected void initView() {
         //检查vitamio类库是否正确加载
-        LibsChecker.checkVitamioLibs(BaseActivity.getActivity());
+//        LibsChecker.checkVitamioLibs(BaseActivity.getActivity());
 
         video_view = (VideoView) mView.findViewById(R.id.video_view);
         tv_name = (TextView) mView.findViewById(R.id.tv_name);
@@ -363,7 +389,17 @@ public class PlayService extends Service implements View.OnClickListener {
                     }
                     break;
                 case R.id.btn_screen:
-
+                    this.stopSelf();
+                    currentPositionTime = video_view.getCurrentPosition();
+                    Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Bundle extras = new Bundle();
+                    extras.putInt(VideoPlayerActivity.POSITION, currentPosition);
+                    extras.putSerializable(VideoPlayerActivity.VIDEOLIST,videoList );
+                    extras.putLong("currentPosition",currentPositionTime);
+                    intent.setData(getIntent().getData());
+                    intent.putExtras(extras);
+                    startActivity(intent);
                     break;
                 case R.id.iv_amplify:
                     mParams.width = (int) (mView.getWidth() * 1.1);
@@ -393,37 +429,7 @@ public class PlayService extends Service implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-        mIntent = intent;
 
-
-        wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        mView = ViewUtils.inflateView(this,R.layout.service_video_play);
-//        int width = wm.getDefaultDisplay().getWidth() - 90;
-//        int height = (int) (width * 0.6);
-
-        mParams = new WindowManager.LayoutParams();
-//        mParams.height = height;
-//        mParams.width = width;
-        mParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        mParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-
-        // 修改完左上角对其
-        mParams.gravity = Gravity.LEFT + Gravity.TOP;
-        mParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-        mParams.format = PixelFormat.TRANSPARENT;
-        mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        wm.addView(mView, mParams);
-
-        mView.setOnTouchListener(touchListener);
-
-        initView();
-        initListener();
-        initData();
-    }
 
     Intent mIntent;
 
@@ -437,7 +443,7 @@ public class PlayService extends Service implements View.OnClickListener {
         //判断用户是否是在做手势滑动行为
         touchSlop = ViewConfiguration.getTouchSlop();
         initVolume();
-
+        currentPositionTime = getIntent().getExtras().getLong("currentPosition");
         //外部跳转进来的
         Uri videoUri = getIntent().getData();
         if (videoUri != null) {
@@ -449,7 +455,7 @@ public class PlayService extends Service implements View.OnClickListener {
             tv_name.setText(videoUri.getPath());
         } else {
             //正常从视频列表中进入的
-            currentPosition = getIntent().getExtras().getInt(POSITION);
+            this.currentPosition = getIntent().getExtras().getInt(POSITION);
             videoList = (ArrayList<VideoItem>) getIntent().getExtras().getSerializable(VIDEOLIST);
 
             playVideo();
@@ -481,13 +487,12 @@ public class PlayService extends Service implements View.OnClickListener {
                 video_view.start();
 
 
-
-
                 updatePlayProgress();
                 video_seekbar.setMax((int) video_view.getDuration());
-
+                video_seekbar.setProgress((int) currentPositionTime);
+                video_view.seekTo(currentPositionTime);
                 btn_play.setImageResource(R.drawable.selector_btn_pause);
-
+                currentPositionTime = 0;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

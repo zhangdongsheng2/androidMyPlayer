@@ -9,9 +9,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -22,7 +20,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.service.PlayService;
 import com.example.myplayer.util.LogUtils;
@@ -48,6 +45,7 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
     private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
     private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
+    private long currentPositionTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,39 +273,39 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_exit:
-                    finish();
-                    break;
-                case R.id.iv_voice:
-                    isMute = !isMute;
-                    updateSystemVolume();
-                    break;
-                case R.id.btn_play:
-                    if (video_view.isPlaying()) {
-                        video_view.pause();
-                    } else {
-                        video_view.start();
-                    }
-                    updateBtnPlayBg();
-                    break;
-                case R.id.btn_pre:
-                    if (currentPosition > 0) {
-                        currentPosition--;
-                        playVideo();
-                    }
-                    break;
-                case R.id.btn_next:
-                    if (currentPosition < (videoList.size() - 1)) {
-                        currentPosition++;
-                        playVideo();
-                    }
-                    break;
-                case R.id.btn_screen:
+        switch (v.getId()) {
+            case R.id.btn_exit:
+                finish();
+                break;
+            case R.id.iv_voice:
+                isMute = !isMute;
+                updateSystemVolume();
+                break;
+            case R.id.btn_play:
+                if (video_view.isPlaying()) {
+                    video_view.pause();
+                } else {
+                    video_view.start();
+                }
+                updateBtnPlayBg();
+                break;
+            case R.id.btn_pre:
+                if (currentPosition > 0) {
+                    currentPosition--;
+                    playVideo();
+                }
+                break;
+            case R.id.btn_next:
+                if (currentPosition < (videoList.size() - 1)) {
+                    currentPosition++;
+                    playVideo();
+                }
+                break;
+            case R.id.btn_screen:
 //                    video_view.switchScreen();
-                    updateScreenBtnBg();
-                    break;
-            }
+                updateScreenBtnBg();
+                break;
+        }
     }
 
     protected void initData() {
@@ -320,6 +318,12 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         updateSystemTime();
         registerBatteryReceiver();
         initVolume();
+
+        try {
+            currentPositionTime = getIntent().getExtras().getLong("currentPosition",0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //外部跳转进来的
         Uri videoUri = getIntent().getData();
@@ -342,37 +346,40 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         video_view.setOnPreparedListener(new io.vov.vitamio.MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(io.vov.vitamio.MediaPlayer mp) {
-                    ViewPropertyAnimator.animate(ll_loading).alpha(0).setDuration(1000).setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator arg0) {
-                        }
+                ViewPropertyAnimator.animate(ll_loading).alpha(0).setDuration(1000).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator arg0) {
+                    }
 
-                        @Override
-                        public void onAnimationRepeat(Animator arg0) {
-                        }
+                    @Override
+                    public void onAnimationRepeat(Animator arg0) {
+                    }
 
-                        @Override
-                        public void onAnimationEnd(Animator arg0) {
-                            ll_loading.setVisibility(View.GONE);
-                        }
+                    @Override
+                    public void onAnimationEnd(Animator arg0) {
+                        ll_loading.setVisibility(View.GONE);
+                    }
 
-                        @Override
-                        public void onAnimationCancel(Animator arg0) {
-                        }
-                    });
+                    @Override
+                    public void onAnimationCancel(Animator arg0) {
+                    }
+                });
 
-                    video_view.start();
+                video_view.start();
 
-                    updatePlayProgress();
-                    video_seekbar.setMax((int) video_view.getDuration());
-                    tv_current_position.setText("00:00");
-                    tv_duration.setText(StringUtil.formatVideoDuration(video_view.getDuration()));
+                updatePlayProgress();
+                video_seekbar.setMax((int) video_view.getDuration());
+                tv_current_position.setText("00:00");
+                tv_current_position.setText(StringUtil.formatVideoDuration(currentPositionTime));
+                video_view.seekTo(currentPositionTime);
+                currentPositionTime = 0;
+                tv_duration.setText(StringUtil.formatVideoDuration(video_view.getDuration()));
 
-                    btn_play.setImageResource(R.drawable.selector_btn_pause);
-                }
+                btn_play.setImageResource(R.drawable.selector_btn_pause);
+            }
         });
 
-//		video_view.setMediaController(new MediaController(this));
+//		video_view.setMediaController(new MediaController(this));//启用系统自带控制器，播放暂停等控制
     }
 
     private float downY;
@@ -457,30 +464,44 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     private void updateScreenBtnBg() {
 //        btn_screen.setImageResource(video_view.isFullScreen() ?
 //                R.drawable.selector_btn_defaultscreen : R.drawable.selector_btn_fullscreen);
+        final long currentPositionTime = video_view.getCurrentPosition();
 
-//        finish();
+        finish();
+        new Thread() {
+            @Override
+            public void run() {
+                Intent intentHome = new Intent(Intent.ACTION_MAIN);
+                intentHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
+                intentHome.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intentHome);
+                Intent playIntent = new Intent(VitamioPlayActivity.this, PlayService.class);
+                Bundle extras = new Bundle();
+                extras.putInt(VideoPlayerActivity.POSITION, currentPosition);
+                extras.putSerializable(VideoPlayerActivity.VIDEOLIST,videoList );
+                extras.putLong("currentPosition",currentPositionTime);
+                playIntent.putExtras(extras);
+                playIntent.setData(getIntent().getData());
+                playIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startService(playIntent);
+            }
+        }.start();
     }
-    // 点击HOME键时程序进入后台运行
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
-        // 按下HOME键
-        if(keyCode == KeyEvent.KEYCODE_HOME){
-            // 显示Notification
 
-            Intent intent = new Intent(BaseActivity.getActivity(), PlayService.class);
-            Bundle bundle = getIntent().getExtras();
-            intent.putExtras(bundle);
-            Log.d("VitamioPlayActivity", "开启服务");
-            startService(intent);
-            handler.removeCallbacksAndMessages(null);
-            unregisterReceiver(batteryChangeReceiver);
-            video_view.stopPlayback();
-            return true;
-        }
+//    // 点击HOME键时程序进入后台运行
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        // TODO Auto-generated method stub
+//        // 按下HOME键
+//        if (keyCode == KeyEvent.KEYCODE_HOME) {
+//            // 显示Notification
+//
+//
+//            return true;
+//        }
+//
+//        return super.onKeyDown(keyCode, event);
+//    }
 
-        return super.onKeyDown(keyCode, event);
-    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
