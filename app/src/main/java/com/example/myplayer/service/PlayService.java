@@ -8,12 +8,14 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -82,19 +84,13 @@ public class PlayService extends Service implements View.OnClickListener {
                     mParams.y = moveY - startY;
                     x = event.getX();
                     y = event.getY();
-                    if (Math.abs(x - startX) > 10 || Math.abs(y - startY) > 10) {
+                    if (Math.abs(x - startX) > 20 || Math.abs(y - startY) > 20) {
                         wm.updateViewLayout(mView, mParams);
                     } else {
 
                     }
-                    Log.d("PlayService", "onTouchMove");
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (Math.abs(x - startX) > 10 || Math.abs(y - startY) > 10) {
-                    } else {
-
-                    }
-                    Log.d("PlayService", "onTouchUP");
                     break;
             }
             return true;
@@ -160,7 +156,10 @@ public class PlayService extends Service implements View.OnClickListener {
                     updatePlayProgress();
                     break;
                 case MSG_HIDE_CONTROL:
-                    hideControlLayout();
+                    if (isShowControlLayout) {
+                        //隐藏操作
+                        hideControlLayout();
+                    }
                     break;
             }
         }
@@ -207,6 +206,8 @@ public class PlayService extends Service implements View.OnClickListener {
         ll_bottom_control = (LinearLayout) mView.findViewById(R.id.ll_bottom_control);
         ll_loading = (LinearLayout) mView.findViewById(R.id.ll_loading);
         ll_buffer = (LinearLayout) mView.findViewById(R.id.ll_buffer);
+        mView.findViewById(R.id.iv_amplify).setOnClickListener(this);
+        mView.findViewById(R.id.iv_reduce).setOnClickListener(this);
     }
 
     protected void initListener() {
@@ -215,18 +216,14 @@ public class PlayService extends Service implements View.OnClickListener {
             @Override
             public void onGlobalLayout() {
                 ll_top_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                if (isShowControlLayout) {
                     ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(0);
-                }
             }
         });
         ll_bottom_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 ll_bottom_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                if (isShowControlLayout) {
                     ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(0);
-                }
             }
         });
 
@@ -366,8 +363,31 @@ public class PlayService extends Service implements View.OnClickListener {
                     }
                     break;
                 case R.id.btn_screen:
-//                    video_view.switchScreen();
-                    updateScreenBtnBg();
+
+                    break;
+                case R.id.iv_amplify:
+                    mParams.width = (int) (mView.getWidth() * 1.1);
+                    mParams.height = (int) (mView.getHeight() * 1.1);
+
+                    ViewGroup.LayoutParams layoutParams = video_view.getLayoutParams();
+                    layoutParams.width = mParams.width;
+                    layoutParams.height = mParams.height;
+                    SystemClock.sleep(10);
+                    video_view.getHolder().setFixedSize(mParams.width, mParams.height);
+                    SystemClock.sleep(10);
+                    wm.updateViewLayout(mView, mParams);
+                    break;
+                case R.id.iv_reduce:
+                    mParams.width = (int) (mView.getWidth() * 0.9);
+                    mParams.height = (int) (mView.getHeight() * 0.9);
+
+                    ViewGroup.LayoutParams layoutParam = video_view.getLayoutParams();
+                    layoutParam.width = mParams.width;
+                    layoutParam.height = mParams.height;
+                    SystemClock.sleep(10);
+                    video_view.getHolder().setFixedSize(mParams.width, mParams.height);
+                    SystemClock.sleep(10);
+                    wm.updateViewLayout(mView, mParams);
                     break;
             }
         }
@@ -381,13 +401,15 @@ public class PlayService extends Service implements View.OnClickListener {
 
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        mView = ViewUtils.inflateView(R.layout.service_video_play);
-        int width = wm.getDefaultDisplay().getWidth() - 90;
-        int height = (int) (width * 0.6);
+        mView = ViewUtils.inflateView(this,R.layout.service_video_play);
+//        int width = wm.getDefaultDisplay().getWidth() - 90;
+//        int height = (int) (width * 0.6);
 
         mParams = new WindowManager.LayoutParams();
-        mParams.height = height;
-        mParams.width = width;
+//        mParams.height = height;
+//        mParams.width = width;
+        mParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        mParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
 
         // 修改完左上角对其
         mParams.gravity = Gravity.LEFT + Gravity.TOP;
@@ -458,10 +480,29 @@ public class PlayService extends Service implements View.OnClickListener {
 
                 video_view.start();
 
+
+
+
                 updatePlayProgress();
                 video_seekbar.setMax((int) video_view.getDuration());
 
                 btn_play.setImageResource(R.drawable.selector_btn_pause);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mParams.width = video_view.getWidth();
+                        mParams.height = video_view.getHeight();
+
+//                        ViewGroup.LayoutParams layoutParams = video_view.getLayoutParams();
+//                        layoutParams.width = mParams.width;
+//                        layoutParams.height = mParams.height;
+//                        SystemClock.sleep(10);
+//                        video_view.getHolder().setFixedSize(mParams.width, mParams.height);
+//                        SystemClock.sleep(10);
+                        wm.updateViewLayout(mView, mParams);
+                    }
+                }, 292);
             }
         });
 
@@ -556,30 +597,44 @@ public class PlayService extends Service implements View.OnClickListener {
                 showControlLayout();
             }
 //            onClick(btn_play);
-            Log.d("MyOnGestureListner", "GestureLongPress" + "=-====" + isShowControlLayout);
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            onClick(btn_screen);
-            Log.d("MyOnGestureListner", "OnDoubleTap");
+            if (isShowControlLayout) {
+                //隐藏操作
+                hideControlLayout();
+            } else {
+                //显示操作
+                showControlLayout();
+            }
             return super.onDoubleTap(e);
         }
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.d("MyOnGestureListner", "onSingleTapConfirmed");
-
+            if (isShowControlLayout) {
+                //隐藏操作
+                hideControlLayout();
+            } else {
+                //显示操作
+//                showControlLayout();
+            }
             return super.onSingleTapConfirmed(e);
         }
 
     }
 
     private void showControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(mView.getY()).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(mView.getY()).setDuration(200);
+        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(0);
+        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(0);
         isShowControlLayout = true;
-        Log.d("PlayService", "显示控制栏");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                wm.updateViewLayout(mView,mParams);
+            }
+        },500);
         handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
     }
 

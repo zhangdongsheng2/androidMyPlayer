@@ -64,8 +64,13 @@ public class ViewUtils {
      * @param id
      * @return
      */
+
     public static View inflateView(int id) {
         return View.inflate(BaseActivity.getActivity(), id, null);
+    }
+
+    public static View inflateView(Context context, int id) {
+        return View.inflate(context, id, null);
     }
 
     /**
