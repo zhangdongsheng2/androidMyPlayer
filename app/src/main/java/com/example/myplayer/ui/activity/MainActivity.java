@@ -8,6 +8,8 @@ import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.ui.fragment.SplashFragment;
 import com.example.myplayer.util.ViewUtils;
 
+import butterknife.ButterKnife;
+
 
 /**
  * Created by Administrator on 2016/3/23.
@@ -21,5 +23,6 @@ public class MainActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_main);
         ViewUtils.launch(false, R.id.content, SplashFragment.class, false, null,null);
+
     }
 }

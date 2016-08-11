@@ -7,6 +7,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
+import com.socks.library.KLog;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -48,7 +50,38 @@ public class SIMCardNetInfo {
     public String getNativePhoneNumber() {
         String NativePhoneNumber = null;
         NativePhoneNumber = telephonyManager.getLine1Number();
+//        KLog.e(telephonyManager.getPhoneCount());
+//        KLog.e(telephonyManager.getPhoneType());
+//        KLog.e(telephonyManager.getAllCellInfo());
+//        KLog.e(telephonyManager.getCellLocation());
+//        KLog.e(telephonyManager.getSimCountryIso());
+//        KLog.e(telephonyManager.getSimOperator());
+//        KLog.e(telephonyManager.getSimOperatorName());
+//        KLog.e(telephonyManager.getSimSerialNumber());
+//        KLog.e(telephonyManager.getSimState());
+        KLog.e(telephonyManager.getSubscriberId());
         return NativePhoneNumber;
+    }
+
+    public String getPhone(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\nDeviceId(IMEI) = " + telephonyManager.getDeviceId());
+        sb.append("\nDeviceSoftwareVersion = " + telephonyManager.getDeviceSoftwareVersion());
+        sb.append("\nLine1Number = " + telephonyManager.getLine1Number());
+        sb.append("\nNetworkCountryIso = " + telephonyManager.getNetworkCountryIso());
+        sb.append("\nNetworkOperator = " + telephonyManager.getNetworkOperator());
+        sb.append("\nNetworkOperatorName = " + telephonyManager.getNetworkOperatorName());
+        sb.append("\nNetworkType = " + telephonyManager.getNetworkType());
+        sb.append("\nPhoneType = " + telephonyManager.getPhoneType());
+        sb.append("\nSimCountryIso = " + telephonyManager.getSimCountryIso());
+        sb.append("\nSimOperator = " + telephonyManager.getSimOperator());
+        sb.append("\nSimOperatorName = " + telephonyManager.getSimOperatorName());
+        sb.append("\nSimSerialNumber = " + telephonyManager.getSimSerialNumber());
+        sb.append("\nSimState = " + telephonyManager.getSimState());
+        sb.append("\nSubscriberId(IMSI) = " + telephonyManager.getSubscriberId());
+        sb.append("\nVoiceMailNumber = " + telephonyManager.getVoiceMailNumber());
+        return  sb.toString();
     }
 
     /**

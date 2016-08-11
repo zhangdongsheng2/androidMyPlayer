@@ -1,135 +1,166 @@
 package com.example.myplayer.ui.fragment;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.RadioGroup;
 
 import com.example.myplayer.R;
-import com.example.myplayer.adapter.MainPagerAdapter;
-import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
-import com.example.myplayer.ui.fragment.play.AudioListFragment;
-import com.example.myplayer.ui.fragment.play.VideoListFragment;
-import com.example.myplayer.ui.view.StatusBarLinearLayout;
-import com.example.myplayer.ui.view.ZoomOutPageTransformer;
+import com.example.myplayer.ui.view.NoScrollViewPager;
 import com.example.myplayer.util.ViewUtils;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-/*
-                   _ooOoo_
-                  o8888888o
-                  88" . "88
-                  (| -_- |)
-                  O\  =  /O
-               ____/`---'\____
-             .'  \\|     |//  `.
-            /  \\|||  :  |||//  \
-           /  _||||| -:- |||||-  \
-           |   | \\\  -  /// |   |
-           | \_|  ''\---/''  |   |
-           \  .-\__  `-`  ___/-. /
-         ___`. .'  /--.--\  `. . __
-      ."" '<  `.___\_<|>_/___.'  >'"".
-     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-     \  \ `-.   \_ __\ /__ _/   .-` /  /
-======`-.____`-.___\_____/___.-`____.-'======
-                   `=---='
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-         佛祖保佑       永无BUG
-----------------------------------------------
-          主页面
-           @author ZDS
-           create on 2016/3/31 15:01 */
+/**
+ * Created by zhangdongsheng on 16/8/11.
+ */
 public class MainFragment extends BaseFragment {
 
-    TextView tabvideo;
-    TextView tabaudio;
-    View indicateline;
-    ViewPager viewpager;
-    StatusBarLinearLayout rlrootview;
+
+    private RadioGroup rgGroup;
 
 
-    private MainPagerAdapter adapter;
-    private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
-    private int lineWidth;
+    private NoScrollViewPager mViewPager;
+
+    int mCurrent;
+    private final Fragment[] Factory = {new HomeFragment(), new NewsFragment(),
+            new GoyFragment(), new OtherFragment(),
+           new SetingFragment()};
 
     @Override
     protected View initView() {
-        View root = ViewUtils.inflateView(R.layout.fragment_main);
-        tabvideo = (TextView) root.findViewById(R.id.tab_video);
-        tabaudio = (TextView) root.findViewById(R.id.tab_audio);
-        indicateline = (View) root.findViewById(R.id.indicate_line);
-        viewpager = (ViewPager) root.findViewById(R.id.view_pager);
-        rlrootview = (StatusBarLinearLayout) root.findViewById(R.id.rl_rootview);
-        return root;
+        View view = ViewUtils.inflateView(R.layout.fragment_content);
+        rgGroup = (RadioGroup) view.findViewById(R.id.rg_group);
+        mViewPager = (NoScrollViewPager) view.findViewById(R.id.vp_content);
+        return view;
     }
 
     @Override
     protected void initListener() {
-        tabaudio.setOnClickListener(this);
-        tabvideo.setOnClickListener(this);
-        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
+
+        // 监听RadioGroup的选择事件
+        rgGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int targetPosition = position * lineWidth + positionOffsetPixels / fragments.size();
-                ViewPropertyAnimator.animate(indicateline).translationX(targetPosition).setDuration(0);
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rb_home:
+                        // mViewPager.setCurrentItem(0);// 设置当前页面
+                        mViewPager.setCurrentItem(0, false);// 去掉切换页面的动画
+                        break;
+                    case R.id.rb_news:
+                        mViewPager.setCurrentItem(1, false);// 设置当前页面
+                        break;
+                    case R.id.rb_smart:
+                        mViewPager.setCurrentItem(2, false);// 设置当前页面
+                        break;
+                    case R.id.rb_gov:
+                        mViewPager.setCurrentItem(3, false);// 设置当前页面
+                        break;
+                    case R.id.rb_setting:
+                        mViewPager.setCurrentItem(4, false);// 设置当前页面
+                        break;
+
+                    default:
+                        break;
+                }
             }
+        });
 
+
+        FragmentManager fm = getChildFragmentManager();
+        MyFragmentPagerAdapter mAdapter = new MyFragmentPagerAdapter(fm);
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.addOnPageChangeListener(new MyHomePageChangeListener());
+        mViewPager.setCurrentItem(mCurrent);
+        mViewPager.setOnRestoreListener(new NoScrollViewPager.RestoreListener() {
             @Override
-            public void onPageSelected(int position) {
-                linghtAndScaleTabTitle();
-
+            public void onResotreFinish() {
+                mViewPager.setCurrentItem(mCurrent);
+                setBottomMark(mCurrent);
             }
         });
     }
 
-
     @Override
     protected void initData() {
-        fragments.add(new VideoListFragment());
-        fragments.add(new AudioListFragment());
-
-        calculateIndicateLineWidth();
-
-        adapter = new MainPagerAdapter(BaseActivity.getActivity().getSupportFragmentManager(), fragments);
-        viewpager.setAdapter(adapter);
-        viewpager.setPageTransformer(true, new ZoomOutPageTransformer());
-        linghtAndScaleTabTitle();
+        rgGroup.check(R.id.rb_home);// 默认勾选首页
     }
 
-    private void calculateIndicateLineWidth() {
-        int screenWidth = BaseActivity.getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        lineWidth = screenWidth / fragments.size();
-        indicateline.getLayoutParams().width = lineWidth;
-        indicateline.requestLayout();
-    }
+    private void setBottomMark(int i){
+        switch (i) {
+            case 0:
+                rgGroup.check(R.id.rb_home);
+                break;
+            case 1:
+                rgGroup.check(R.id.rb_news);
+                break;
+            case 2:
+                rgGroup.check(R.id.rb_smart);
+                break;
+            case 3:
+                rgGroup.check(R.id.rb_gov);
+                break;
+            case 4:
+                rgGroup.check(R.id.rb_setting);
+                break;
+        }
 
-    private void linghtAndScaleTabTitle() {
-        int currentPage = viewpager.getCurrentItem();
-        tabvideo.setTextColor(currentPage == 0 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.white));
-        tabaudio.setTextColor(currentPage == 1 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.white));
-//        ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
-//        ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
-//        ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
-//        ViewPropertyAnimator.animate(tabaudio).scaleY(currentPage == 1 ? 1.2f : 1).setDuration(200).setInterpolator(new CycleInterpolator(1f));
-        ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200);
-        ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200);
-        ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200);
-        ViewPropertyAnimator.animate(tabaudio).scaleY(currentPage == 1 ? 1.2f : 1).setDuration(200);
     }
 
     @Override
     protected void processClick(View view) {
-        switch (view.getId()) {
-            case R.id.tab_audio:
-                viewpager.setCurrentItem(1);
-                break;
-            case R.id.tab_video:
-                viewpager.setCurrentItem(0);
-                break;
+
+    }
+    public class MyHomePageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            mCurrent = position;
+        }
+    }
+    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+        public MyFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+        }
+
+        @Override
+        public int getCount() {
+            return Factory.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return Factory[position];
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.myplayer.ui.fragment.play;
+package com.example.myplayer.ui.fragment;
 
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +13,7 @@ import com.socks.library.KLog;
 /**
  * Created by Administrator on 2016/3/31.
  */
-public class AudioListFragment extends BaseFragment {
+public class OtherFragment extends BaseFragment {
     private Button button_getSIMInfo;
     private TextView number;
     private TextView privoid;

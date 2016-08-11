@@ -11,12 +11,12 @@
         android:layout_gravity="center_horizontal"
         android:text="New Button" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:theme="@style/MyButton" />
+        android:background="?android:attr/selectableItemBackground"/>
 
     <RadioButton
         android:id="@+id/radioButton"

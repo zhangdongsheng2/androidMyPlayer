@@ -16,6 +16,9 @@ import com.example.myplayer.util.ViewUtils;
 
 import java.lang.reflect.Field;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Fragment 的基类 2016/3/29.
  */
