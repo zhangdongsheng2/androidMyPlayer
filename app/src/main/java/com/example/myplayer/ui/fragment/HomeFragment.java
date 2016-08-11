@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.myplayer.Const;
 import com.example.myplayer.R;
 import com.example.myplayer.adapter.MainPagerAdapter;
 import com.example.myplayer.base.BaseActivity;
@@ -17,6 +18,8 @@ import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /*
                    _ooOoo_
@@ -53,7 +56,7 @@ public class HomeFragment extends BaseFragment {
 
 
     private MainPagerAdapter adapter;
-    private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+    private ArrayList<Fragment> fragments = new ArrayList<>();
     private int lineWidth;
 
     @Override
@@ -89,8 +92,11 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        fragments.add(new VideoListFragment());
-        fragments.add(new AudioListFragment());
+       fragments.clear();
+            fragments.add(new VideoListFragment());
+            fragments.add(new AudioListFragment());
+
+
 
         calculateIndicateLineWidth();
 
