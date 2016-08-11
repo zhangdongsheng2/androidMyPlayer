@@ -6,4 +6,18 @@
         <item name="android:listDivider">@drawable/item_divider</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <!-- Android 5.0 中使用的带波纹的button -->
+    <style name="MyButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#268dff</item>
+        <item name="colorButtonNormal">#c7edcc</item>
+    </style>
+    <!-- Android 5.0 以下兼容  中使用的带波纹的button -->
+    <style name="GreenButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/selector_ripple_bg</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

@@ -17,6 +17,7 @@ public class AudioListFragment extends BaseFragment {
     private TextView number;
     private TextView privoid;
     private TextView netState;
+    private TextView ip;
 
     @Override
     protected View initView() {
@@ -29,6 +30,7 @@ public class AudioListFragment extends BaseFragment {
         number = (TextView) mRootView.findViewById(R.id.textView1);
         privoid = (TextView) mRootView.findViewById(R.id.textView2);
         netState = (TextView) mRootView.findViewById(R.id.textView3);
+        ip = (TextView) mRootView.findViewById(R.id.textView4);
         button_getSIMInfo.setOnClickListener(new ButtonListener());
     }
 
@@ -42,6 +44,8 @@ public class AudioListFragment extends BaseFragment {
                 System.out.println(siminfo.getNativePhoneNumber());
                 number.setText(siminfo.getNativePhoneNumber());
                 privoid.setText(siminfo.getProvidersName());
+                ip.setText(siminfo.getLocalIpAddress());
+
                 netState.setText(siminfo.getNetworkState());
             }
         }

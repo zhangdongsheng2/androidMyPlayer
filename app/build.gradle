@@ -38,4 +38,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile project(':InitActivity')
     compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.github.zhaokaiqiang.klog:library:1.4.0'//好用的打印Log日志
 }

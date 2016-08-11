@@ -3,7 +3,14 @@ package com.example.myplayer.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 /**
  * class name：SIMCardNetInfo<BR>
@@ -144,5 +151,47 @@ public class SIMCardNetInfo {
         return NETWORN_NONE;
     }
 
+    /**
+     * 获取网络IP 地址  WiFi 和 移动网络 通用
+     *
+     * @return
+     */
+    public String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                        //if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet6Address) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    /**
+     * 获取WiFi 网络的IP地址  包括打开WiFi
+     *
+     * @return
+     */
+    public String getWiFiLocalIpAddress() {
+        //获取wifi服务
+        WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        //判断wifi是否开启
+        if (!wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(true);
+        }
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+
+        return (ipAddress & 0xFF) + "." +
+                ((ipAddress >> 8) & 0xFF) + "." +
+                ((ipAddress >> 16) & 0xFF) + "." +
+                (ipAddress >> 24 & 0xFF);
+    }
 
 }
