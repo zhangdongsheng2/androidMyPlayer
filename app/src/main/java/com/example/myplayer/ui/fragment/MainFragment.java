@@ -10,6 +10,7 @@ import android.widget.RadioGroup;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseFragment;
+import com.example.myplayer.ui.view.LazyViewPager;
 import com.example.myplayer.ui.view.NoScrollViewPager;
 import com.example.myplayer.util.ViewUtils;
 
@@ -77,7 +78,7 @@ public class MainFragment extends BaseFragment {
         FragmentManager fm = getChildFragmentManager();
         MyFragmentPagerAdapter mAdapter = new MyFragmentPagerAdapter(fm);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.addOnPageChangeListener(new MyHomePageChangeListener());
+        mViewPager.setOnPageChangeListener(new MyHomePageChangeListener());
         mViewPager.setCurrentItem(mCurrent);
         mViewPager.setOnRestoreListener(new NoScrollViewPager.RestoreListener() {
             @Override
@@ -118,7 +119,7 @@ public class MainFragment extends BaseFragment {
     protected void processClick(View view) {
 
     }
-    public class MyHomePageChangeListener implements ViewPager.OnPageChangeListener {
+    public class MyHomePageChangeListener implements LazyViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
