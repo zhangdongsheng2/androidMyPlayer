@@ -2,8 +2,6 @@ package com.example.myplayer.ui.fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
@@ -13,9 +11,7 @@ import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.ui.view.LazyViewPager;
 import com.example.myplayer.ui.view.NoScrollViewPager;
 import com.example.myplayer.util.ViewUtils;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import com.nineoldandroids.view.ViewHelper;
 
 /**
  * Created by zhangdongsheng on 16/8/11.
@@ -38,10 +34,18 @@ public class MainFragment extends BaseFragment {
         return view;
     }
 
+    private void setMargin(View view){
+        //Button 压边是 放大的效果
+        ViewHelper.setScaleX(view,1.2f);
+        ViewHelper.setScaleY(view,1.2f);
+    }
     @Override
     protected void initListener() {
-
-
+        setMargin(rgGroup.findViewById(R.id.rb_home));
+        setMargin(rgGroup.findViewById(R.id.rb_news));
+        setMargin(rgGroup.findViewById(R.id.rb_smart));
+        setMargin(rgGroup.findViewById(R.id.rb_gov));
+        setMargin(rgGroup.findViewById(R.id.rb_setting));
         // 监听RadioGroup的选择事件
         rgGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 

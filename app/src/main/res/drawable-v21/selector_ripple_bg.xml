@@ -2,7 +2,7 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
 android:color="@android:color/holo_red_dark"><!--//这里是扩散水波纹的色值-->
 
-<item android:id="@android:id/mask" android:drawable="@android:color/holo_green_light" />    <!--里面的色值可以任选一个    mask  代表不绘制-->
+<item android:id="@android:id/mask" android:drawable="@drawable/radio_bt_shape" />    <!--里面的色值可以任选一个    mask  代表不绘制-->
 
 </ripple>
     <!--<?xml version="1.0" encoding="utf-8"?>-->
