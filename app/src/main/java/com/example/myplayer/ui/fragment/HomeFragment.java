@@ -1,25 +1,20 @@
 package com.example.myplayer.ui.fragment;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.myplayer.Const;
 import com.example.myplayer.R;
-import com.example.myplayer.adapter.MainPagerAdapter;
 import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
-import com.example.myplayer.ui.fragment.play.AudioListFragment;
-import com.example.myplayer.ui.fragment.play.VideoListFragment;
 import com.example.myplayer.ui.view.StatusBarLinearLayout;
 import com.example.myplayer.ui.view.ZoomOutPageTransformer;
 import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.view.ViewPropertyAnimator;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import com.socks.library.KLog;
 
 /*
                    _ooOoo_
@@ -54,9 +49,6 @@ public class HomeFragment extends BaseFragment {
     ViewPager viewpager;
     StatusBarLinearLayout rlrootview;
 
-
-    private MainPagerAdapter adapter;
-    private ArrayList<Fragment> fragments = new ArrayList<>();
     private int lineWidth;
 
     @Override
@@ -77,7 +69,7 @@ public class HomeFragment extends BaseFragment {
         viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int targetPosition = position * lineWidth + positionOffsetPixels / fragments.size();
+                int targetPosition = position * lineWidth + positionOffsetPixels / FragmentFactory.HOMEFRAGMENTMAP_LENGHT;
                 ViewPropertyAnimator.animate(indicateline).translationX(targetPosition).setDuration(0);
             }
 
@@ -92,23 +84,18 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-       fragments.clear();
-            fragments.add(new VideoListFragment());
-            fragments.add(new AudioListFragment());
-
-
 
         calculateIndicateLineWidth();
 
-        adapter = new MainPagerAdapter(BaseActivity.getActivity().getSupportFragmentManager(), fragments);
-        viewpager.setAdapter(adapter);
+//        adapter = new MainPagerAdapter(BaseActivity.getActivity().getSupportFragmentManager());
+        viewpager.setAdapter(new HomePagerAdapter(getChildFragmentManager()));
         viewpager.setPageTransformer(true, new ZoomOutPageTransformer());
         linghtAndScaleTabTitle();
     }
 
     private void calculateIndicateLineWidth() {
         int screenWidth = BaseActivity.getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        lineWidth = screenWidth / fragments.size();
+        lineWidth = screenWidth / FragmentFactory.HOMEFRAGMENTMAP_LENGHT;
         indicateline.getLayoutParams().width = lineWidth;
         indicateline.requestLayout();
     }
@@ -129,6 +116,8 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void processClick(View view) {
+        KLog.e(viewpager.getAdapter());
+        KLog.e(viewpager.getCurrentItem());
         switch (view.getId()) {
             case R.id.tab_audio:
                 viewpager.setCurrentItem(1);
@@ -137,5 +126,30 @@ public class HomeFragment extends BaseFragment {
                 viewpager.setCurrentItem(0);
                 break;
         }
+    }
+
+
+    public static class HomePagerAdapter extends FragmentPagerAdapter {
+
+        public HomePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return FragmentFactory.HOMEFRAGMENTMAP_LENGHT;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return FragmentFactory.createHomeFragment(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+
     }
 }

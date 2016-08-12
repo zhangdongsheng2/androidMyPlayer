@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseFragment;
+import com.example.myplayer.ui.fragment.play.VideoListFragment;
 import com.example.myplayer.util.SIMCardNetInfo;
 import com.example.myplayer.util.ViewUtils;
 import com.socks.library.KLog;
@@ -39,18 +40,7 @@ public class OtherFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
-            if (v == button_getSIMInfo) {
-                SIMCardNetInfo siminfo = new SIMCardNetInfo(getActivity());
-                System.out.println(siminfo.getProvidersName());
-                System.out.println(siminfo.getNativePhoneNumber());
-                number.setText(siminfo.getNativePhoneNumber());
-                privoid.setText(siminfo.getProvidersName());
-                ip.setText(siminfo.getLocalIpAddress());
-
-                KLog.e(siminfo.getPhone());
-
-                netState.setText(siminfo.getNetworkState());
-            }
+            mainLaunch(VideoListFragment.class,null);
         }
 
     }

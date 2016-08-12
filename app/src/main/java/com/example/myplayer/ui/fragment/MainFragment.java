@@ -29,9 +29,6 @@ public class MainFragment extends BaseFragment {
     private NoScrollViewPager mViewPager;
 
     int mCurrent;
-    private final Fragment[] Factory = {new HomeFragment(), new NewsFragment(),
-            new GoyFragment(), new OtherFragment(),
-           new SetingFragment()};
 
     @Override
     protected View initView() {
@@ -53,19 +50,19 @@ public class MainFragment extends BaseFragment {
                 switch (checkedId) {
                     case R.id.rb_home:
                         // mViewPager.setCurrentItem(0);// 设置当前页面
-                        mViewPager.setCurrentItem(0, false);// 去掉切换页面的动画
+                        mViewPager.setCurrentItem(0, true);// false 去掉切换页面的动画
                         break;
                     case R.id.rb_news:
-                        mViewPager.setCurrentItem(1, false);// 设置当前页面
+                        mViewPager.setCurrentItem(1, true);// 设置当前页面
                         break;
                     case R.id.rb_smart:
-                        mViewPager.setCurrentItem(2, false);// 设置当前页面
+                        mViewPager.setCurrentItem(2, true);// 设置当前页面
                         break;
                     case R.id.rb_gov:
-                        mViewPager.setCurrentItem(3, false);// 设置当前页面
+                        mViewPager.setCurrentItem(3, true);// 设置当前页面
                         break;
                     case R.id.rb_setting:
-                        mViewPager.setCurrentItem(4, false);// 设置当前页面
+                        mViewPager.setCurrentItem(4, true);// 设置当前页面
                         break;
 
                     default:
@@ -74,6 +71,15 @@ public class MainFragment extends BaseFragment {
             }
         });
 
+//        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getChildFragmentManager(), mViewPager);
+//        adapter.setOnExtraPageChangeListener(new FragmentViewPagerAdapter.OnExtraPageChangeListener(){
+//            @Override
+//            public void onExtraPageSelected(int i) {
+//                System.out.println("Extra...i: " + i);
+//            }
+//        });
+//        mViewPager.setOnPageChangeListener(new MyHomePageChangeListener());
+//        mViewPager.setCurrentItem(mCurrent);
 
         FragmentManager fm = getChildFragmentManager();
         MyFragmentPagerAdapter mAdapter = new MyFragmentPagerAdapter(fm);
@@ -94,7 +100,7 @@ public class MainFragment extends BaseFragment {
         rgGroup.check(R.id.rb_home);// 默认勾选首页
     }
 
-    private void setBottomMark(int i){
+    private void setBottomMark(int i) {
         switch (i) {
             case 0:
                 rgGroup.check(R.id.rb_home);
@@ -119,6 +125,7 @@ public class MainFragment extends BaseFragment {
     protected void processClick(View view) {
 
     }
+
     public class MyHomePageChangeListener implements LazyViewPager.OnPageChangeListener {
 
         @Override
@@ -134,7 +141,8 @@ public class MainFragment extends BaseFragment {
             mCurrent = position;
         }
     }
-    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+
+    private class MyFragmentPagerAdapter extends MyMainFragmentPagerAdapter {
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -146,12 +154,12 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            return Factory.length;
+            return FragmentFactory.MAINFRAGMENTMAP_LENGHT;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return Factory[position];
+            return FragmentFactory.createFragment(position);
         }
 
         @Override

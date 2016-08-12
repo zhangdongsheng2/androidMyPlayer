@@ -84,6 +84,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         ViewUtils.launch(save, id, clazz, stack, this, bundle);
     }
 
+    public void mainLaunch(Class clazz,Bundle bundle){
+        ViewUtils.launch(true, R.id.content, clazz, true, getParentFragment(), bundle);
+    }
+
     /**
      * 退出Fragment回退栈
      */
