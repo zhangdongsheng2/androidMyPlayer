@@ -6,13 +6,17 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseFragment;
-import com.example.myplayer.ui.fragment.play.VideoListFragment;
-import com.example.myplayer.util.SIMCardNetInfo;
+import com.example.myplayer.test.TestJson;
+import com.example.myplayer.util.FileUtil;
+import com.example.myplayer.util.GsonTools;
 import com.example.myplayer.util.ViewUtils;
 import com.socks.library.KLog;
 
-/**
- * Created by Administrator on 2016/3/31.
+import java.io.IOException;
+import java.util.List;
+
+/***
+ * 测试页面
  */
 public class OtherFragment extends BaseFragment {
     private Button button_getSIMInfo;
@@ -36,15 +40,6 @@ public class OtherFragment extends BaseFragment {
         button_getSIMInfo.setOnClickListener(new ButtonListener());
     }
 
-    class ButtonListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            mainLaunch(VideoListFragment.class,null);
-        }
-
-    }
-
     @Override
     protected void initData() {
 
@@ -52,6 +47,24 @@ public class OtherFragment extends BaseFragment {
 
     @Override
     protected void processClick(View view) {
+
+    }
+
+    class ButtonListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            try {
+                String testJson = FileUtil.ReadFile(getActivity().getAssets().open("testJson"));
+                List<TestJson> list_person = GsonTools.changeGsonToList(testJson, TestJson.class);
+
+                KLog.e(testJson);
+                KLog.e(list_person);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 }

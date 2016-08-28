@@ -2,10 +2,10 @@ package com.example.myplayer;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
- * To work on unit tests, switch the Test Artifact in the Build Variants mRootView.
+ * To work on unit tests, switch the TestJson Artifact in the Build Variants mRootView.
  */
 public class ExampleUnitTest {
     @Test
