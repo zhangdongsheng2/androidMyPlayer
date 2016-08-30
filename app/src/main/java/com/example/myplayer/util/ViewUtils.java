@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseActivity;
@@ -67,6 +68,10 @@ public class ViewUtils {
 
     public static View inflateView(int id) {
         return View.inflate(BaseActivity.getActivity(), id, null);
+    }
+
+    public static View inflateView(int id, ViewGroup viewGroup) {
+        return View.inflate(BaseActivity.getActivity(), id, viewGroup);
     }
 
     public static View inflateView(Context context, int id) {

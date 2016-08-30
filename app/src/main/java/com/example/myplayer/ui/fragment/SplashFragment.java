@@ -179,7 +179,7 @@ public class SplashFragment extends BaseFragment {
                     beginTransaction.setCustomAnimations(R.anim.my_scale_action,
                             R.anim.my_alpha_action, R.anim.my_scale_action,
                             R.anim.my_translation_out);
-                    Fragment fragment = (Fragment) MainFragment.class.newInstance();
+                    Fragment fragment = MainTabHostFragment.class.newInstance();
                     beginTransaction.add(R.id.content, fragment);
                     new Handler().postDelayed(new Runnable() {
                         @Override

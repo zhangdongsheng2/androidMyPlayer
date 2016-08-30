@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.3'
@@ -33,11 +35,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
     compile files('libs/nineoldandroids-2.4.0.jar')
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.0'
     compile project(':InitActivity')
-    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-v4:24.2.0'
     compile 'com.github.zhaokaiqiang.klog:library:1.4.0'
     //
     compile 'io.reactivex:rxjava:1.1.8'
