@@ -15,8 +15,8 @@ import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
-import com.example.myplayer.ui.activity.VideoPlayerActivity;
-import com.example.myplayer.ui.activity.VitamioPlayActivity;
+import com.example.myplayer.activity.VideoPlayerActivity;
+import com.example.myplayer.activity.VitamioPlayActivity;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
 

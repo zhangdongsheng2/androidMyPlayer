@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 信誉等级 -->
+    <declare-styleable name="Credit">
+        <attr name="creditSize" format="dimension" />
+        <attr name="creditAlignment" format="enum">
+            <enum name="bottom" value="0" />
+            <enum name="baseline" value="1" />
+        </attr>
+        <attr name="creditTextStart" format="integer" />
+        <attr name="creditTextLength" format="integer" />
+    </declare-styleable>
+</resources>

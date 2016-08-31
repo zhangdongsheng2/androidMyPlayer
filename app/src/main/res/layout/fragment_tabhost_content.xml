@@ -17,14 +17,15 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="#e7e7e7" />
 
-            <com.example.myplayer.ui.view.MyFragmentTabHost
+            <com.example.myplayer.widget.MyFragmentTabHost
                 android:id="@android:id/tabhost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

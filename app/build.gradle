@@ -46,4 +46,5 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.jakewharton:butterknife:8.2.1'
     compile 'com.google.code.gson:gson:2.7'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
 }
