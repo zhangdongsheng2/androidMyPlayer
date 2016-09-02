@@ -10,11 +10,11 @@
 
 
     <!-- 底部导航文字 -->
-    <string name="main_tab_name_news">综合</string>
-    <string name="main_tab_name_tweet">动弹</string>
-    <string name="main_tab_name_quick">快速</string>
-    <string name="main_tab_name_question">问答</string>
-    <string name="main_tab_name_my">我的</string>
-    <string name="main_tab_name_explore">发现</string>
+    <string name="main_tab_name_news">菩提</string>
+    <string name="main_tab_name_quick">解脱</string>
+    <string name="main_tab_name_tweet">涅盘</string>
+    <string name="main_tab_name_question">寂灭</string>
+    <string name="main_tab_name_explore">禅定</string>
+    <string name="main_tab_name_my">六度</string>
 
 </resources>

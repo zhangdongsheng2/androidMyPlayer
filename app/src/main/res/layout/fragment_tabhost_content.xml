@@ -20,16 +20,13 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="#e7e7e7" />
-
             <com.example.myplayer.widget.MyFragmentTabHost
                 android:id="@android:id/tabhost"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="-2dp"
+                android:background="#d9ce3a" />
 
             <!-- 快速操作按钮 -->
             <ImageView
@@ -37,7 +34,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="6dp"
                 android:layout_marginTop="4dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_nav_add_selector" />
