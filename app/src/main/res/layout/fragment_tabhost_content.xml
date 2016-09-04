@@ -25,8 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="-2dp"
-                android:background="#d9ce3a" />
+                android:layout_marginTop="-3dp"
+                android:background="#d9edcd" />
 
             <!-- 快速操作按钮 -->
             <ImageView

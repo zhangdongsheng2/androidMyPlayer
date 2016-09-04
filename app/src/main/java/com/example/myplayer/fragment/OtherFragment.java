@@ -6,14 +6,18 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseFragment;
-import com.example.myplayer.test.TestJson;
-import com.example.myplayer.util.FileUtil;
-import com.example.myplayer.util.GsonTools;
 import com.example.myplayer.util.ViewUtils;
 import com.socks.library.KLog;
 
-import java.io.IOException;
-import java.util.List;
+import net1.interfaces.Page;
+import net1.interfaces.QueryStoreForCRequest;
+import net1.netutils.ClientCommonInfo;
+import net1.netutils.PageRequest;
+import net2.UserService;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /***
  * 测试页面
@@ -38,6 +42,7 @@ public class OtherFragment extends BaseFragment {
 //        netState = (TextView) mRootView.findViewById(R.id.textView3);
 //        ip = (TextView) mRootView.findViewById(R.id.textView4);
 //        button_getSIMInfo.setOnClickListener(new ButtonListener());
+        mRootView.findViewById(R.id.btn).setOnClickListener(this);
     }
 
     @Override
@@ -48,23 +53,48 @@ public class OtherFragment extends BaseFragment {
     @Override
     protected void processClick(View view) {
 
+//        NetWorkFactory.getInstance().storeQuery(new Page(), new QueryStoreForCRequest(), new FilterSortMap(), new CallBack<Page<StoreViewModel>>() {
+//            @Override
+//            public void onSuccess(Page<StoreViewModel> result) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure() {
+//
+//            }
+//        });
+
+
+        CompositeSubscription subscription = new CompositeSubscription();
+
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setClientCommonInfo(ClientCommonInfo.getInstance());
+        pageRequest.setParam(new QueryStoreForCRequest());
+        pageRequest.setPage(new Page());
+        subscription.add(//
+                UserService.createUserService().newsList(pageRequest)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Object>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(Object contributors) {
+                                KLog.json("aaaaaaa", contributors.toString());
+                            }
+                        }));
+
+
     }
 
-    class ButtonListener implements View.OnClickListener {
 
-        @Override
-        public void onClick(View v) {
-            try {
-                String testJson = FileUtil.ReadFile(getActivity().getAssets().open("testJson"));
-                List<TestJson> list_person = GsonTools.changeGsonToList(testJson, TestJson.class);
-
-                KLog.e(testJson);
-                KLog.e(list_person);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 }

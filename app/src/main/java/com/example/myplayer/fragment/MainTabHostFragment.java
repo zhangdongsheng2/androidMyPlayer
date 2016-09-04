@@ -42,6 +42,11 @@ public class MainTabHostFragment extends BaseFragment {
             mTabHost.getTabWidget().setShowDividers(0);
         }
 
+        return view;
+    }
+
+    @Override
+    protected void initListener() {
         // 中间按键图片触发
         mAddBt.setOnClickListener(this);
 
@@ -64,12 +69,6 @@ public class MainTabHostFragment extends BaseFragment {
                 mTitle = tabId;
             }
         });
-        return view;
-    }
-
-    @Override
-    protected void initListener() {
-
     }
 
     private void setMargin(View view) {
