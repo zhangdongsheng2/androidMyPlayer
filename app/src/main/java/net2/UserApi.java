@@ -15,6 +15,6 @@ public interface UserApi {
 
 
     @POST("/api/Store/QueryRescueStores")
-    Observable<String> newsList(@Body PageRequest rest);
+    Observable<Object> newsList(@Body PageRequest rest);
 
 }

@@ -72,6 +72,7 @@ public class OtherFragment extends BaseFragment {
         pageRequest.setClientCommonInfo(ClientCommonInfo.getInstance());
         pageRequest.setParam(new QueryStoreForCRequest());
         pageRequest.setPage(new Page());
+        KLog.e("请求网络");
         subscription.add(//
                 UserService.createUserService().newsList(pageRequest)
                         .subscribeOn(Schedulers.io())
@@ -79,12 +80,12 @@ public class OtherFragment extends BaseFragment {
                         .subscribe(new Observer<Object>() {
                             @Override
                             public void onCompleted() {
-
+                                KLog.e("oncompleted");
                             }
 
                             @Override
                             public void onError(Throwable e) {
-
+                                KLog.e("失败");
                             }
 
                             @Override

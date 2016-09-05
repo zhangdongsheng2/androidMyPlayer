@@ -5,6 +5,7 @@ import com.socks.library.KLog;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import okhttp3.MediaType;
@@ -25,7 +26,7 @@ public class MyGsonConverterFactory extends Converter.Factory {
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
         //根据type判断是否是自己能处理的类型，不能的话，return null ,交给后面的Converter.Factory
-        return new UserResponseConverter(type);
+        return new UserResponseConverter<>(type);
     }
 //===============================结果类型判断User or List<User>==============================================
 //    @Override
@@ -123,8 +124,19 @@ public class MyGsonConverterFactory extends Converter.Factory {
         @Override
         public T convert(ResponseBody responseBody) throws IOException {
             String result = responseBody.string();
-            KLog.e(result);
+//            KLog.e(result);
 //            T users = gson.fromJson(result, type);
+
+
+            Class c = this.getClass();
+            Type t = c.getGenericSuperclass();
+            if (t instanceof ParameterizedType) {
+//          System.out.println("in if");
+                Type[] p = ((ParameterizedType) t).getActualTypeArguments();
+//          System.out.println(Arrays.toString(p));
+                KLog.e("class" + (Class<T>) p[0]);
+            }
+            KLog.e("type" + t);
             return (T) result;
         }
     }
