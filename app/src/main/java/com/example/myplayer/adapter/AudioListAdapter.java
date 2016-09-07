@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.activity.VideoPlayerActivity;
-import com.example.myplayer.activity.VitamioPlayActivity;
+import com.example.myplayer.activity.AudioPlayActivity;
 import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
+import com.example.myplayer.bean.AudioItem;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
@@ -29,11 +29,11 @@ import java.util.ArrayList;
           @author ZDS
           create on 2016/4/2  18:32 */
 
-public class VideoListAdapter extends BasePlayAdapter<VideoListAdapter.MyViewHolder, VideoItem> {
-
-    public VideoListAdapter(Context context, Cursor c, BaseFragment baseFragment) {
+public class AudioListAdapter extends BasePlayAdapter<AudioListAdapter.MyViewHolder, AudioItem> {
+    public AudioListAdapter(Context context, Cursor c, BaseFragment baseFragment) {
         super(context, c, baseFragment);
     }
+
 
     //RecyclerView 的特殊方法直接绑定holder
     @Override
@@ -45,16 +45,15 @@ public class VideoListAdapter extends BasePlayAdapter<VideoListAdapter.MyViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
+                Intent intent = new Intent(BaseActivity.getActivity(), AudioPlayActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt(VideoPlayerActivity.POSITION, position);
-                bundle.putSerializable(VideoPlayerActivity.VIDEOLIST, cursorToList(getCursor()));
+                bundle.putInt(AudioPlayActivity.POSITION, position);
+                bundle.putSerializable(AudioPlayActivity.AUDIOLIST, cursorToList(getCursor()));
                 intent.putExtras(bundle);
                 mBaseFragment.startActivity(intent);
             }
         });
     }
-
     /**
      * 将cursor中的数据取出来放入集合当中
      *
@@ -62,15 +61,14 @@ public class VideoListAdapter extends BasePlayAdapter<VideoListAdapter.MyViewHol
      * @return
      */
     @Override
-    protected ArrayList<VideoItem> cursorToList(Cursor cursor) {
-        ArrayList<VideoItem> list = new ArrayList<VideoItem>();
+    protected ArrayList<AudioItem> cursorToList(Cursor cursor) {
+        ArrayList<AudioItem> list = new ArrayList<AudioItem>();
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
-            list.add(VideoItem.fromCursor(cursor));
+            list.add(AudioItem.fromCursor(cursor));
         }
         return list;
     }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

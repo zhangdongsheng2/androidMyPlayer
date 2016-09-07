@@ -27,12 +27,12 @@ public class GoyFragment extends BaseFragment {
 
     @Override
     protected void initListener() {
-        button_getSIMInfo = (Button) mRootView.findViewById(R.id.getSIMInfo);
-        number = (TextView) mRootView.findViewById(R.id.textView1);
-        privoid = (TextView) mRootView.findViewById(R.id.textView2);
-        netState = (TextView) mRootView.findViewById(R.id.textView3);
-        ip = (TextView) mRootView.findViewById(R.id.textView4);
-        button_getSIMInfo.setOnClickListener(new ButtonListener());
+//        button_getSIMInfo = (Button) mRootView.findViewById(R.id.getSIMInfo);
+//        number = (TextView) mRootView.findViewById(R.id.textView1);
+//        privoid = (TextView) mRootView.findViewById(R.id.textView2);
+//        netState = (TextView) mRootView.findViewById(R.id.textView3);
+//        ip = (TextView) mRootView.findViewById(R.id.textView4);
+//        button_getSIMInfo.setOnClickListener(new ButtonListener());
     }
 
     class ButtonListener implements View.OnClickListener {

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +21,7 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.bean.VideoItem;
-import com.example.myplayer.widget.VideoView;
+import com.example.myplayer.service.PlayService;
 import com.example.myplayer.util.LogUtils;
 import com.example.myplayer.util.StringUtil;
 import com.example.myplayer.util.ToastUtil;
@@ -31,15 +30,22 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.util.ArrayList;
 
-/*
-         佛祖保佑       永无BUG
-----------------------------------------------
-           视频播放页面
-           @author ZDS
-           create on 2016/4/3 19:18 */
-public class VideoPlayerActivity extends Activity implements View.OnClickListener {
+import io.vov.vitamio.LibsChecker;
+import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.widget.VideoView;
+
+/**
+ * 作者：Administrator on 2016/4/24 18:14
+ * <p/>
+ * 邮箱：zhangdongsheng2@sina.com
+ */
+public class AudioPlayActivity extends Activity implements View.OnClickListener {
     public static final String POSITION = "position";
-    public static final String VIDEOLIST = "videolist";
+    public static final String AUDIOLIST = "audiolist";
+    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
+    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
+    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
+    private long currentPositionTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,47 +54,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         initListener();
         initData();
     }
-
-
-    @Override
-    public void onClick(View v) {
-        {
-            switch (v.getId()) {
-                case R.id.btn_exit:
-                    finish();
-                    break;
-                case R.id.iv_voice:
-                    isMute = !isMute;
-                    updateSystemVolume();
-                    break;
-                case R.id.btn_play:
-                    if (video_view.isPlaying()) {
-                        video_view.pause();
-                    } else {
-                        video_view.start();
-                    }
-                    updateBtnPlayBg();
-                    break;
-                case R.id.btn_pre:
-                    if (currentPosition > 0) {
-                        currentPosition--;
-                        playVideo();
-                    }
-                    break;
-                case R.id.btn_next:
-                    if (currentPosition < (videoList.size() - 1)) {
-                        currentPosition++;
-                        playVideo();
-                    }
-                    break;
-                case R.id.btn_screen:
-                    video_view.switchScreen();
-                    updateScreenBtnBg();
-                    break;
-            }
-        }
-    }
-
 
     private VideoView video_view;
     //top control
@@ -104,16 +69,20 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     private LinearLayout ll_top_control, ll_bottom_control;
     private LinearLayout ll_loading, ll_buffer;
 
+    //------------------------------------------------------------------------
     private int currentPosition;//当前播放视频的位置
     private ArrayList<VideoItem> videoList;//当前的视频列表
     private BatteryChangeReceiver batteryChangeReceiver;
     private AudioManager audioManager;
     private int touchSlop;
     private GestureDetector gestureDetector;
+    //--------------------------------------------------------------------
+    private int maxVolume;//系统中音乐和视频类型最大音量
+    private int currentVolume;//系统音乐和视频类型当前的音量
+    private boolean isMute = false;//是否是静音模式
+    private int screenWidth, screenHeight;
+    private boolean isShowControlLayout = false;//是否是显示控制面板
 
-    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
-    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
-    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
 
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -133,14 +102,9 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         ;
     };
 
-    private int maxVolume;//系统中音乐和视频类型最大音量
-    private int currentVolume;//系统音乐和视频类型当前的音量
-    private boolean isMute = false;//是否是静音模式
-    private int screenWidth, screenHeight;
-    private boolean isShowControlLayout = false;//是否是显示控制面板
 
     /**
-     * 更新系统时间
+     * 更新系统时间  每隔一秒
      */
     private void updateSystemTime() {
         tv_system_time.setText(StringUtil.formatSystemTime());
@@ -148,15 +112,21 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     }
 
     /**
-     * 更新播放进度
+     * 更新播放进度  每隔0.5秒
      */
     private void updatePlayProgress() {
         tv_current_position.setText(StringUtil.formatVideoDuration(video_view.getCurrentPosition()));
-        video_seekbar.setProgress(video_view.getCurrentPosition());
+        video_seekbar.setProgress((int) video_view.getCurrentPosition());
         handler.sendEmptyMessageDelayed(MSG_UPDATE_PLAY_PROGRESS, 500);
     }
 
+    /**
+     * 初始化控件
+     */
     protected void initView() {
+        //检查vitamio类库是否正确加载
+        LibsChecker.checkVitamioLibs(this);
+
         setContentView(R.layout.fragment_video_play);
         video_view = (VideoView) findViewById(R.id.video_view);
         tv_name = (TextView) findViewById(R.id.tv_name);
@@ -180,6 +150,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     }
 
     protected void initListener() {
+        //把top和bottom布局移动隐藏
         ll_top_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -300,8 +271,47 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_exit:
+                finish();
+                break;
+            case R.id.iv_voice:
+                isMute = !isMute;
+                updateSystemVolume();
+                break;
+            case R.id.btn_play:
+                if (video_view.isPlaying()) {
+                    video_view.pause();
+                } else {
+                    video_view.start();
+                }
+                updateBtnPlayBg();
+                break;
+            case R.id.btn_pre:
+                if (currentPosition > 0) {
+                    currentPosition--;
+                    playVideo();
+                }
+                break;
+            case R.id.btn_next:
+                if (currentPosition < (videoList.size() - 1)) {
+                    currentPosition++;
+                    playVideo();
+                }
+                break;
+            case R.id.btn_screen:
+//                    video_view.switchScreen();
+                updateScreenBtnBg();
+                break;
+        }
+    }
+
     protected void initData() {
-        gestureDetector = new GestureDetector(this, (GestureDetector.OnGestureListener) new MyOnGestureListner());
+        //监控页面的手势行为，单击长按双击等。
+        gestureDetector = new GestureDetector(this, new MyOnGestureListner());
+        //判断用户是否是在做手势滑动行为
         touchSlop = ViewConfiguration.getTouchSlop();
         screenWidth = getWindowManager().getDefaultDisplay().getWidth();
         screenHeight = getWindowManager().getDefaultDisplay().getHeight();
@@ -309,6 +319,13 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         registerBatteryReceiver();
         initVolume();
 
+        try {
+            currentPositionTime = getIntent().getExtras().getLong("currentPosition", 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //外部跳转进来的
         Uri videoUri = getIntent().getData();
         if (videoUri != null) {
             //从文件发起的请求
@@ -320,7 +337,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         } else {
             //正常从视频列表中进入的
             currentPosition = getIntent().getExtras().getInt(POSITION);
-            videoList = (ArrayList<VideoItem>) getIntent().getExtras().getSerializable(VIDEOLIST);
+            videoList = (ArrayList<VideoItem>) getIntent().getExtras().getSerializable(AUDIOLIST);
 
             playVideo();
         }
@@ -347,19 +364,22 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                     public void onAnimationCancel(Animator arg0) {
                     }
                 });
-//
+
                 video_view.start();
 
                 updatePlayProgress();
-                video_seekbar.setMax(video_view.getDuration());
+                video_seekbar.setMax((int) video_view.getDuration());
                 tv_current_position.setText("00:00");
+                tv_current_position.setText(StringUtil.formatVideoDuration(currentPositionTime));
+                video_view.seekTo(currentPositionTime);
+                currentPositionTime = 0;
                 tv_duration.setText(StringUtil.formatVideoDuration(video_view.getDuration()));
 
                 btn_play.setImageResource(R.drawable.selector_btn_pause);
             }
         });
 
-//		video_view.setMediaController(new MediaController(this));
+//		video_view.setMediaController(new MediaController(this));//启用系统自带控制器，播放暂停等控制
     }
 
     private float downY;
@@ -442,9 +462,45 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 根据是否是全屏设置屏幕按钮的背景图片
      */
     private void updateScreenBtnBg() {
-        btn_screen.setImageResource(video_view.isFullScreen() ?
-                R.drawable.selector_btn_defaultscreen : R.drawable.selector_btn_fullscreen);
+//        btn_screen.setImageResource(video_view.isFullScreen() ?
+//                R.drawable.selector_btn_defaultscreen : R.drawable.selector_btn_fullscreen);
+        final long currentPositionTime = video_view.getCurrentPosition();
+
+        finish();
+        new Thread() {
+            @Override
+            public void run() {
+                Intent intentHome = new Intent(Intent.ACTION_MAIN);
+                intentHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
+                intentHome.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intentHome);
+                Intent playIntent = new Intent(AudioPlayActivity.this, PlayService.class);
+                Bundle extras = new Bundle();
+                extras.putInt(VideoPlayerActivity.POSITION, currentPosition);
+                extras.putSerializable(VideoPlayerActivity.VIDEOLIST, videoList);
+                extras.putLong("currentPosition", currentPositionTime);
+                playIntent.putExtras(extras);
+                playIntent.setData(getIntent().getData());
+                playIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startService(playIntent);
+            }
+        }.start();
     }
+
+//    // 点击HOME键时程序进入后台运行
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        // TODO Auto-generated method stub
+//        // 按下HOME键
+//        if (keyCode == KeyEvent.KEYCODE_HOME) {
+//            // 显示Notification
+//
+//
+//            return true;
+//        }
+//
+//        return super.onKeyDown(keyCode, event);
+//    }
 
     @Override
     protected void onDestroy() {
@@ -510,13 +566,13 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     private void updateBatteryBg(int level) {
         if (level == 0) {
             iv_battery.setImageResource(R.drawable.ic_battery_0);
-        } else if (level > 0 && level <= 10) {
+        } else if (level > 0 && level <= 20) {
             iv_battery.setImageResource(R.drawable.ic_battery_1);
-        } else if (level > 10 && level <= 20) {
-            iv_battery.setImageResource(R.drawable.ic_battery_2);
         } else if (level > 20 && level <= 50) {
+            iv_battery.setImageResource(R.drawable.ic_battery_2);
+        } else if (level > 50 && level <= 70) {
             iv_battery.setImageResource(R.drawable.ic_battery_4);
-        } else if (level > 50 && level <= 80) {
+        } else if (level > 70 && level <= 90) {
             iv_battery.setImageResource(R.drawable.ic_battery_5);
         } else {
             iv_battery.setImageResource(R.drawable.ic_battery_6);
@@ -529,6 +585,5 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     private void updateBtnPlayBg() {
         btn_play.setImageResource(video_view.isPlaying() ? R.drawable.selector_btn_pause : R.drawable.selector_btn_play);
     }
-
 
 }

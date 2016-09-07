@@ -1,4 +1,4 @@
-package com.example.myplayer.widget;
+package com.example.myplayer.bean.tab;
 
 import com.example.myplayer.R;
 import com.example.myplayer.fragment.HomeFragment;

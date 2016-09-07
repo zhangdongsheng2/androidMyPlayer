@@ -1,11 +1,9 @@
 package net2;
 
 import com.google.gson.Gson;
-import com.socks.library.KLog;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import okhttp3.MediaType;
@@ -127,16 +125,17 @@ public class MyGsonConverterFactory extends Converter.Factory {
 //            KLog.e(result);
 //            T users = gson.fromJson(result, type);
 
-
-            Class c = this.getClass();
-            Type t = c.getGenericSuperclass();
-            if (t instanceof ParameterizedType) {
-//          System.out.println("in if");
-                Type[] p = ((ParameterizedType) t).getActualTypeArguments();
-//          System.out.println(Arrays.toString(p));
-                KLog.e("class" + (Class<T>) p[0]);
-            }
-            KLog.e("type" + t);
+//===============这里泛型由于前面没设置所以永远是 Object =======================
+//            Class c = this.getClass();
+//            Type t = c.getGenericSuperclass();
+//            if (t instanceof ParameterizedType) {
+//                System.out.println("in if");
+//                Type[] p = ((ParameterizedType) t).getActualTypeArguments();
+//                System.out.println(Arrays.toString(p));
+//                KLog.e("class" + (Class<T>) p[0]);
+//            }
+//            KLog.e("type" + t);
+//-------------这里的T是Object 返回后才转成需要的类型,成功or失败------------------------------------------
             return (T) result;
         }
     }
