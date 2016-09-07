@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,7 +14,7 @@ import com.example.myplayer.activity.AudioPlayActivity;
 import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.AudioItem;
-import com.example.myplayer.bean.VideoItem;
+import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
 
@@ -29,19 +28,31 @@ import java.util.ArrayList;
           @author ZDS
           create on 2016/4/2  18:32 */
 
-public class AudioListAdapter extends BasePlayAdapter<AudioListAdapter.MyViewHolder, AudioItem> {
+public class AudioListAdapter extends RecyclerViewCursorAdapter<AudioListAdapter.MyViewHolder> {
+
+
+    private BaseFragment mBaseFragment;
+
+    /**
+     * Recommended constructor.
+     *
+     * @param context The context
+     * @param c       The cursor from which to get the data.
+     * @param
+     */
     public AudioListAdapter(Context context, Cursor c, BaseFragment baseFragment) {
-        super(context, c, baseFragment);
+        super(context, c, FLAG_REGISTER_CONTENT_OBSERVER);
+        this.mBaseFragment = baseFragment;
     }
 
 
     //RecyclerView 的特殊方法直接绑定holder
     @Override
     public void onBindViewHolder(MyViewHolder holder, final Cursor cursor, final int position) {
-        VideoItem videoItem = VideoItem.fromCursor(cursor);
-        holder.tvTitle.setText(videoItem.getTitle());
-        holder.tvDuration.setText(DateUtil.formatVideoDuration(videoItem.getDuration()));
-        holder.tvSize.setText(Formatter.formatFileSize(mContext, videoItem.getSize()));
+        AudioItem audioItem = AudioItem.fromCursor(cursor);
+        holder.tvTitle.setText(audioItem.getTitle());
+        holder.tvDuration.setText(DateUtil.formatVideoDuration(audioItem.getDuration()));
+//        holder.tvSize.setText(Formatter.formatFileSize(mContext, audioItem.getSize()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,13 +65,18 @@ public class AudioListAdapter extends BasePlayAdapter<AudioListAdapter.MyViewHol
             }
         });
     }
+
+    @Override
+    protected void onContentChanged() {
+
+    }
+
     /**
      * 将cursor中的数据取出来放入集合当中
      *
      * @param cursor
      * @return
      */
-    @Override
     protected ArrayList<AudioItem> cursorToList(Cursor cursor) {
         ArrayList<AudioItem> list = new ArrayList<AudioItem>();
         cursor.moveToPosition(-1);

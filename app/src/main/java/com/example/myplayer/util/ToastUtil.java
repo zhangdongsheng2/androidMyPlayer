@@ -21,19 +21,25 @@ public class ToastUtil {
         mToast.show();
     }
 
+    public static void showToast(Context context, String msg) {
+        Toast.makeText(context, msg, 0).show();
+    }
+
     /**
      * dip 转换成 px
+     *
      * @param dip
-     * @param context
+     * @param
      * @return
      */
     public static float dip2Dimension(float dip) {
         DisplayMetrics displayMetrics = BaseActivity.getActivity().getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
     }
+
     /**
      * @param dip
-     * @param context
+     * @param
      * @param complexUnit {@link TypedValue#COMPLEX_UNIT_DIP} {@link TypedValue#COMPLEX_UNIT_SP}}
      * @return
      */

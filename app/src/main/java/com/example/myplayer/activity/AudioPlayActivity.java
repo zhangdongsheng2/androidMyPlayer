@@ -1,38 +1,37 @@
 package com.example.myplayer.activity;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
-import android.net.Uri;
+import android.content.ServiceConnection;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.os.IBinder;
+import android.os.Message;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.bean.VideoItem;
-import com.example.myplayer.service.PlayService;
-import com.example.myplayer.util.LogUtils;
+import com.example.myplayer.bean.AudioItem;
+import com.example.myplayer.bean.Lyric;
+import com.example.myplayer.service.AudioPlayService;
 import com.example.myplayer.util.StringUtil;
 import com.example.myplayer.util.ToastUtil;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.example.myplayer.view.LyricView;
+import com.example.myplayer.widget.lyric.LyricLoader;
+import com.example.myplayer.widget.lyric.LyricParser;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.File;
 import java.util.ArrayList;
-
-import io.vov.vitamio.LibsChecker;
-import io.vov.vitamio.MediaPlayer;
-import io.vov.vitamio.widget.VideoView;
 
 /**
  * 作者：Administrator on 2016/4/24 18:14
@@ -40,12 +39,55 @@ import io.vov.vitamio.widget.VideoView;
  * 邮箱：zhangdongsheng2@sina.com
  */
 public class AudioPlayActivity extends Activity implements View.OnClickListener {
-    public static final String POSITION = "position";
-    public static final String AUDIOLIST = "audiolist";
-    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
-    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
-    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
-    private long currentPositionTime;
+    public static final String POSITION = "currentPosition";
+    public static final String AUDIOLIST = "audioList";
+    private final int MSG_UPDATE_PROGRESS = 0;//更新播放进度
+    private final int MSG_ROLL_LYRIC = 1;//滚动歌词
+    private TextView tv_title, tv_artist, tv_time;
+    private ImageView iv_anim, btn_back;
+    private ImageView iv_mode, iv_play, iv_pre, iv_next;
+    private SeekBar audio_seekbar;
+    private LyricView lyric_view;
+    private AudioServiceConnection serviceConnection;
+    private AudioPlayService.AudioServiceBinder audioServiceBinder;
+    private AudioServiceReceiver receiver;
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_UPDATE_PROGRESS:
+                    updatePlayProgress();
+                    break;
+                case MSG_ROLL_LYRIC:
+                    updateLyric();
+                    break;
+            }
+        }
+
+        ;
+    };
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
+    /**
+     * 更新歌词
+     */
+    private void updateLyric() {
+        lyric_view.roll(audioServiceBinder.getCurrentPosition(), audioServiceBinder.getDuration());
+        handler.sendEmptyMessage(MSG_ROLL_LYRIC);
+    }
+
+    /**
+     * 更新播放进度
+     */
+    private void updatePlayProgress() {
+        audio_seekbar.setProgress((int) audioServiceBinder.getCurrentPosition());
+        tv_time.setText(StringUtil.formatVideoDuration(audioServiceBinder.getCurrentPosition())
+                + "/" + StringUtil.formatVideoDuration(audioServiceBinder.getDuration()));
+        handler.sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 500);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,537 +95,219 @@ public class AudioPlayActivity extends Activity implements View.OnClickListener 
         initView();
         initListener();
         initData();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private VideoView video_view;
-    //top control
-    private TextView tv_name, tv_system_time;
-    private ImageView iv_battery;
-    private ImageView iv_voice;
-    private SeekBar voice_seekbar;
-
-    //bottom control
-    private ImageView btn_play, btn_exit, btn_pre, btn_next, btn_screen;
-    private TextView tv_current_position, tv_duration;
-    private SeekBar video_seekbar;
-    private LinearLayout ll_top_control, ll_bottom_control;
-    private LinearLayout ll_loading, ll_buffer;
-
-    //------------------------------------------------------------------------
-    private int currentPosition;//当前播放视频的位置
-    private ArrayList<VideoItem> videoList;//当前的视频列表
-    private BatteryChangeReceiver batteryChangeReceiver;
-    private AudioManager audioManager;
-    private int touchSlop;
-    private GestureDetector gestureDetector;
-    //--------------------------------------------------------------------
-    private int maxVolume;//系统中音乐和视频类型最大音量
-    private int currentVolume;//系统音乐和视频类型当前的音量
-    private boolean isMute = false;//是否是静音模式
-    private int screenWidth, screenHeight;
-    private boolean isShowControlLayout = false;//是否是显示控制面板
-
-
-    private Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            switch (msg.what) {
-                case MSG_UPDATE_SYSTEM_TIME:
-                    updateSystemTime();
-                    break;
-                case MSG_UPDATE_PLAY_PROGRESS:
-                    updatePlayProgress();
-                    break;
-                case MSG_HIDE_CONTROL:
-                    hideControlLayout();
-                    break;
-            }
-        }
-
-        ;
-    };
-
-
-    /**
-     * 更新系统时间  每隔一秒
-     */
-    private void updateSystemTime() {
-        tv_system_time.setText(StringUtil.formatSystemTime());
-        handler.sendEmptyMessageDelayed(MSG_UPDATE_SYSTEM_TIME, 1000);
+    @Override
+    public void onClick(View v) {
+        processClick(v);
     }
 
-    /**
-     * 更新播放进度  每隔0.5秒
-     */
-    private void updatePlayProgress() {
-        tv_current_position.setText(StringUtil.formatVideoDuration(video_view.getCurrentPosition()));
-        video_seekbar.setProgress((int) video_view.getCurrentPosition());
-        handler.sendEmptyMessageDelayed(MSG_UPDATE_PLAY_PROGRESS, 500);
+    protected void enterActivity(Class<?> targetActivity) {
+        startActivity(new Intent(this, targetActivity));
     }
 
-    /**
-     * 初始化控件
-     */
+    protected void enterActivity(Bundle bundle, Class<?> targetActivity) {
+        Intent intent = new Intent(this, targetActivity);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
     protected void initView() {
-        //检查vitamio类库是否正确加载
-        LibsChecker.checkVitamioLibs(this);
+        setContentView(R.layout.activity_audio_player);
+        btn_back = (ImageView) findViewById(R.id.btn_back);
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_time = (TextView) findViewById(R.id.tv_time);
+        tv_artist = (TextView) findViewById(R.id.tv_artist);
+        iv_mode = (ImageView) findViewById(R.id.iv_mode);
+        iv_play = (ImageView) findViewById(R.id.iv_play);
+        iv_pre = (ImageView) findViewById(R.id.iv_pre);
+        iv_next = (ImageView) findViewById(R.id.iv_next);
+        audio_seekbar = (SeekBar) findViewById(R.id.audio_seekbar);
+        lyric_view = (LyricView) findViewById(R.id.lyric_view);
 
-        setContentView(R.layout.fragment_video_play);
-        video_view = (VideoView) findViewById(R.id.video_view);
-        tv_name = (TextView) findViewById(R.id.tv_name);
-        tv_system_time = (TextView) findViewById(R.id.tv_system_time);
-        iv_battery = (ImageView) findViewById(R.id.iv_battery);
-        iv_voice = (ImageView) findViewById(R.id.iv_voice);
-        voice_seekbar = (SeekBar) findViewById(R.id.voice_seekbar);
-
-        btn_play = (ImageView) findViewById(R.id.btn_play);
-        btn_exit = (ImageView) findViewById(R.id.btn_exit);
-        btn_pre = (ImageView) findViewById(R.id.btn_pre);
-        btn_next = (ImageView) findViewById(R.id.btn_next);
-        btn_screen = (ImageView) findViewById(R.id.btn_screen);
-        tv_current_position = (TextView) findViewById(R.id.tv_current_position);
-        tv_duration = (TextView) findViewById(R.id.tv_duration);
-        video_seekbar = (SeekBar) findViewById(R.id.video_seekbar);
-        ll_top_control = (LinearLayout) findViewById(R.id.ll_top_control);
-        ll_bottom_control = (LinearLayout) findViewById(R.id.ll_bottom_control);
-        ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
-        ll_buffer = (LinearLayout) findViewById(R.id.ll_buffer);
+        iv_anim = (ImageView) findViewById(R.id.iv_anim);
+        AnimationDrawable animationDrawable = (AnimationDrawable) iv_anim.getBackground();
+        animationDrawable.start();
     }
 
     protected void initListener() {
-        //把top和bottom布局移动隐藏
-        ll_top_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                ll_top_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(0);
-            }
-        });
-        ll_bottom_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                ll_bottom_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(0);
-            }
-        });
-
-        iv_voice.setOnClickListener(this);
-        btn_exit.setOnClickListener(this);
-        btn_pre.setOnClickListener(this);
-        btn_next.setOnClickListener(this);
-        btn_screen.setOnClickListener(this);
-        btn_play.setOnClickListener(this);
-        voice_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        btn_back.setOnClickListener(this);
+        iv_mode.setOnClickListener(this);
+        iv_play.setOnClickListener(this);
+        iv_pre.setOnClickListener(this);
+        iv_next.setOnClickListener(this);
+        audio_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                handler.removeMessages(MSG_HIDE_CONTROL);
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                if (fromUser) {//表示是用户手动拖动
-                    isMute = false;
-                    currentVolume = progress;
-                    updateSystemVolume();
-                }
-            }
-        });
-        video_seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                handler.removeMessages(MSG_HIDE_CONTROL);
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
                 if (fromUser) {
-                    video_view.seekTo(progress);
-                    tv_current_position.setText(StringUtil.formatVideoDuration(progress));
+                    audioServiceBinder.seekTo(progress);
+                    tv_time.setText(StringUtil.formatVideoDuration(progress)
+                            + "/" + StringUtil.formatVideoDuration(audioServiceBinder.getDuration()));
                 }
             }
         });
-        video_view.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                btn_play.setImageResource(R.drawable.selector_btn_play);
-            }
-        });
-        video_view.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                //percent:0-100
-                long bufferProgress = (long) ((video_view.getDuration() / 100f) * percent);
-                video_seekbar.setSecondaryProgress((int) bufferProgress);
-            }
-        });
-        video_view.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                switch (what) {
-                    case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-//					Toast.makeText(VideoPlayerActivity.this, "开始卡顿", 0).show();
-                        ll_buffer.setVisibility(View.VISIBLE);
-                        break;
-                    case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                        ll_buffer.setVisibility(View.GONE);
-//					Toast.makeText(VideoPlayerActivity.this, "卡顿结束。。。。。。。。", 0).show();
-                        break;
-                }
-                return true;
-            }
-        });
-        video_view.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                switch (what) {
-                    case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                        //未知格式，视频文件错误
-                        ToastUtil.showToast("视频格式不支持");
-                        break;
-                }
-                return true;
-            }
-        });
-    }
-
-    /**
-     * 更新系统音量
-     */
-    private void updateSystemVolume() {
-        if (isMute) {
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-            voice_seekbar.setProgress(0);
-        } else {
-            voice_seekbar.setProgress(currentVolume);
-            //第三个参数如果是1，会显示音量改变的浮动面板
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_exit:
-                finish();
-                break;
-            case R.id.iv_voice:
-                isMute = !isMute;
-                updateSystemVolume();
-                break;
-            case R.id.btn_play:
-                if (video_view.isPlaying()) {
-                    video_view.pause();
-                } else {
-                    video_view.start();
-                }
-                updateBtnPlayBg();
-                break;
-            case R.id.btn_pre:
-                if (currentPosition > 0) {
-                    currentPosition--;
-                    playVideo();
-                }
-                break;
-            case R.id.btn_next:
-                if (currentPosition < (videoList.size() - 1)) {
-                    currentPosition++;
-                    playVideo();
-                }
-                break;
-            case R.id.btn_screen:
-//                    video_view.switchScreen();
-                updateScreenBtnBg();
-                break;
-        }
     }
 
     protected void initData() {
-        //监控页面的手势行为，单击长按双击等。
-        gestureDetector = new GestureDetector(this, new MyOnGestureListner());
-        //判断用户是否是在做手势滑动行为
-        touchSlop = ViewConfiguration.getTouchSlop();
-        screenWidth = getWindowManager().getDefaultDisplay().getWidth();
-        screenHeight = getWindowManager().getDefaultDisplay().getHeight();
-        updateSystemTime();
-        registerBatteryReceiver();
-        initVolume();
+        registerAudioServiceReceiver();
 
-        try {
-            currentPositionTime = getIntent().getExtras().getLong("currentPosition", 0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        serviceConnection = new AudioServiceConnection();
 
-        //外部跳转进来的
-        Uri videoUri = getIntent().getData();
-        if (videoUri != null) {
-            //从文件发起的请求
-            LogUtils.e("uri: " + videoUri.getPath());
-            video_view.setVideoURI(videoUri);
-            btn_pre.setEnabled(false);
-            btn_next.setEnabled(false);
-            tv_name.setText(videoUri.getPath());
+        Intent intent = new Intent(this, AudioPlayService.class);
+        Bundle bundle = new Bundle();
+        boolean isFromNotification = getIntent().getBooleanExtra("isFromNotification", false);
+        if (isFromNotification) {
+            //如果是点击通知开启的activity
+
+            intent.putExtra("isFromNotification", isFromNotification);
+            intent.putExtra("notification_view", getIntent().getIntExtra("notification_view", -1));
         } else {
-            //正常从视频列表中进入的
-            currentPosition = getIntent().getExtras().getInt(POSITION);
-            videoList = (ArrayList<VideoItem>) getIntent().getExtras().getSerializable(AUDIOLIST);
-
-            playVideo();
+            //从音乐列表进入的
+            int currentPosition = getIntent().getExtras().getInt("currentPosition");
+            ArrayList<AudioItem> audioList = (ArrayList<AudioItem>) getIntent().getExtras().getSerializable("audioList");
+            bundle.putInt("currentPosition", currentPosition);
+            bundle.putSerializable("audioList", audioList);
+            intent.putExtras(bundle);
         }
-
-
-        video_view.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                ViewPropertyAnimator.animate(ll_loading).alpha(0).setDuration(1000).setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator arg0) {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator arg0) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator arg0) {
-                        ll_loading.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator arg0) {
-                    }
-                });
-
-                video_view.start();
-
-                updatePlayProgress();
-                video_seekbar.setMax((int) video_view.getDuration());
-                tv_current_position.setText("00:00");
-                tv_current_position.setText(StringUtil.formatVideoDuration(currentPositionTime));
-                video_view.seekTo(currentPositionTime);
-                currentPositionTime = 0;
-                tv_duration.setText(StringUtil.formatVideoDuration(video_view.getDuration()));
-
-                btn_play.setImageResource(R.drawable.selector_btn_pause);
-            }
-        });
-
-//		video_view.setMediaController(new MediaController(this));//启用系统自带控制器，播放暂停等控制
+        bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
+        startService(intent);//为了给service传递数据
     }
 
-    private float downY;
+    /**
+     * 注册AudioService中的广播接受者
+     */
+    private void registerAudioServiceReceiver() {
+        receiver = new AudioServiceReceiver();
+        IntentFilter filter = new IntentFilter(AudioPlayService.ACTION_NOTIFY_PREPARED);
+        filter.addAction(AudioPlayService.ACTION_COMPLATION);
+        registerReceiver(receiver, filter);
+    }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                downY = event.getY();
-                handler.removeMessages(MSG_HIDE_CONTROL);
+
+    protected void processClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_back:
+                finish();
                 break;
-            case MotionEvent.ACTION_MOVE:
-                float moveY = event.getY();
-                float moveDistance = moveY - downY;
-
-                //对滑动距离进行一个值的限制
-                if (Math.abs(moveDistance) < touchSlop) break;
-
-                isMute = false;
-
-                float totalDistance = Math.min(screenHeight, screenWidth);
-                float movePercent = Math.abs(moveDistance) / totalDistance;
-                LogUtils.e("movePercent: " + movePercent);
-                int moveVolume = (int) (movePercent * maxVolume);//这个值一定是0
-
-                if (moveDistance > 0) {
-                    //减小音量
-                    currentVolume -= 1;
+            case R.id.iv_mode:
+                audioServiceBinder.switchPlayMode();
+                updatePlayModeBg(true);
+                break;
+            case R.id.iv_play:
+                if (audioServiceBinder.isPlaying()) {
+                    audioServiceBinder.pause();
                 } else {
-                    //增大音量
-                    currentVolume += 1;
+                    audioServiceBinder.start();
                 }
-                updateSystemVolume();
-
-                downY = moveY;
+                updatePlayBtnBg();
                 break;
-            case MotionEvent.ACTION_UP:
-                handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
+            case R.id.iv_pre:
+                if (audioServiceBinder.isPlayingFirst()) {
+                    ToastUtil.showToast("当前是第一首");
+                } else {
+                    audioServiceBinder.playPre();
+                }
+                break;
+            case R.id.iv_next:
+                if (audioServiceBinder.isPlayingLast()) {
+                    ToastUtil.showToast("当前是最后一首");
+                } else {
+                    audioServiceBinder.playNext();
+                }
                 break;
         }
-        return super.onTouchEvent(event);
     }
 
     /**
-     * 初始化系统音量
+     * 更新播放模式按钮的背景图片
+     *
+     * @param isShowToast
      */
-    private void initVolume() {
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        //maxVolume:0-15
-        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        voice_seekbar.setMax(maxVolume);
-        voice_seekbar.setProgress(currentVolume);
+    private void updatePlayModeBg(boolean isShowToast) {
+        switch (audioServiceBinder.getPlayMode()) {
+            case AudioPlayService.MODE_ORDER:
+                if (isShowToast) ToastUtil.showToast("顺序播放");
+                iv_mode.setBackgroundResource(R.drawable.selector_playmode_order);
+                break;
+            case AudioPlayService.MODE_SINGLE_REPEAT:
+                if (isShowToast) ToastUtil.showToast("单曲循环");
+                iv_mode.setBackgroundResource(R.drawable.selector_playmode_single);
+                break;
+            case AudioPlayService.MODE_ALL_REPEAT:
+                if (isShowToast) ToastUtil.showToast("循环播放");
+                iv_mode.setBackgroundResource(R.drawable.selector_playmode_allrepeat);
+                break;
+        }
     }
-
-    /**
-     * 注册系统电量变化的广播接受者
-     */
-    private void registerBatteryReceiver() {
-        batteryChangeReceiver = new BatteryChangeReceiver();
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        registerReceiver(batteryChangeReceiver, filter);
-
-    }
-
-    /**
-     * 播放当前位置的视频
-     */
-    private void playVideo() {
-        btn_pre.setEnabled(currentPosition != 0);
-        btn_next.setEnabled(currentPosition != (videoList.size() - 1));
-
-        VideoItem videoItem = videoList.get(currentPosition);
-        tv_name.setText(videoItem.getTitle());
-        video_view.setVideoURI(Uri.parse(videoItem.getPath()));
-    }
-
-    /**
-     * 根据是否是全屏设置屏幕按钮的背景图片
-     */
-    private void updateScreenBtnBg() {
-//        btn_screen.setImageResource(video_view.isFullScreen() ?
-//                R.drawable.selector_btn_defaultscreen : R.drawable.selector_btn_fullscreen);
-        final long currentPositionTime = video_view.getCurrentPosition();
-
-        finish();
-        new Thread() {
-            @Override
-            public void run() {
-                Intent intentHome = new Intent(Intent.ACTION_MAIN);
-                intentHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
-                intentHome.addCategory(Intent.CATEGORY_HOME);
-                startActivity(intentHome);
-                Intent playIntent = new Intent(AudioPlayActivity.this, PlayService.class);
-                Bundle extras = new Bundle();
-                extras.putInt(VideoPlayerActivity.POSITION, currentPosition);
-                extras.putSerializable(VideoPlayerActivity.VIDEOLIST, videoList);
-                extras.putLong("currentPosition", currentPositionTime);
-                playIntent.putExtras(extras);
-                playIntent.setData(getIntent().getData());
-                playIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startService(playIntent);
-            }
-        }.start();
-    }
-
-//    // 点击HOME键时程序进入后台运行
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        // TODO Auto-generated method stub
-//        // 按下HOME键
-//        if (keyCode == KeyEvent.KEYCODE_HOME) {
-//            // 显示Notification
-//
-//
-//            return true;
-//        }
-//
-//        return super.onKeyDown(keyCode, event);
-//    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
-        unregisterReceiver(batteryChangeReceiver);
-    }
-
-    private class MyOnGestureListner extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public void onLongPress(MotionEvent e) {
-            super.onLongPress(e);
-            onClick(btn_play);
-        }
-
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            onClick(btn_screen);
-            return super.onDoubleTap(e);
-        }
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            if (isShowControlLayout) {
-                //隐藏操作
-                hideControlLayout();
-            } else {
-                //显示操作
-                showControlLayout();
-            }
-            return super.onSingleTapConfirmed(e);
-        }
-
-    }
-
-    private void showControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(200);
-        isShowControlLayout = true;
-        handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
-    }
-
-    private void hideControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(200);
-        isShowControlLayout = false;
     }
 
     /**
-     * 电池电量变化的广播接受者
-     *
-     * @author Administrator
+     * 更新播放按钮的背景图图片
      */
-    private class BatteryChangeReceiver extends BroadcastReceiver {
+    private void updatePlayBtnBg() {
+        iv_play.setBackgroundResource(audioServiceBinder.isPlaying() ?
+                R.drawable.selector_btn_audio_pause : R.drawable.selector_btn_audio_play);
+    }
+
+
+    class AudioServiceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //level:0-100
-            int level = intent.getIntExtra("level", 0);
-            updateBatteryBg(level);
+            if (AudioPlayService.ACTION_NOTIFY_PREPARED.equals(intent.getAction())) {
+                AudioItem audioItem = (AudioItem) intent.getSerializableExtra("audioItem");
+
+                audio_seekbar.setMax((int) audioItem.getDuration());
+                iv_play.setBackgroundResource(R.drawable.selector_btn_audio_pause);
+                tv_title.setText(StringUtil.formatAudioName(audioItem.getTitle()));
+                tv_artist.setText(audioItem.getArtist());
+                updatePlayModeBg(false);
+                updatePlayProgress();
+
+
+                File file = LyricLoader.loadLyricFileByName(audioItem.getTitle());//加载歌词文件
+                ArrayList<Lyric> lyricList = LyricParser.parseLyricFromFile(file);//解析歌词文件
+                lyric_view.setLyricList(lyricList);
+                updateLyric();//开始滚动歌词
+            } else if (AudioPlayService.ACTION_COMPLATION.equals(intent.getAction())) {
+                iv_play.setBackgroundResource(R.drawable.selector_btn_audio_play);
+                tv_time.setText(StringUtil.formatVideoDuration(audioServiceBinder.getDuration())
+                        + "/" + StringUtil.formatVideoDuration(audioServiceBinder.getDuration()));
+
+                handler.removeMessages(MSG_ROLL_LYRIC);
+                handler.removeMessages(MSG_UPDATE_PROGRESS);
+            }
         }
     }
 
-    private void updateBatteryBg(int level) {
-        if (level == 0) {
-            iv_battery.setImageResource(R.drawable.ic_battery_0);
-        } else if (level > 0 && level <= 20) {
-            iv_battery.setImageResource(R.drawable.ic_battery_1);
-        } else if (level > 20 && level <= 50) {
-            iv_battery.setImageResource(R.drawable.ic_battery_2);
-        } else if (level > 50 && level <= 70) {
-            iv_battery.setImageResource(R.drawable.ic_battery_4);
-        } else if (level > 70 && level <= 90) {
-            iv_battery.setImageResource(R.drawable.ic_battery_5);
-        } else {
-            iv_battery.setImageResource(R.drawable.ic_battery_6);
+    class AudioServiceConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            audioServiceBinder = (AudioPlayService.AudioServiceBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
         }
     }
 
-    /**
-     * 根据是否正在播放更改播放按钮的背景图片
-     */
-    private void updateBtnPlayBg() {
-        btn_play.setImageResource(video_view.isPlaying() ? R.drawable.selector_btn_pause : R.drawable.selector_btn_play);
-    }
 
 }

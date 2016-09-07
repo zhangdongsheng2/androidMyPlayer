@@ -16,6 +16,7 @@ import com.example.myplayer.activity.VitamioPlayActivity;
 import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
+import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
 
@@ -25,17 +26,24 @@ import java.util.ArrayList;
          佛祖保佑       永无BUG
 ---------------------------------------------
           视频列表适配器
-          别人做的支持Cursor的适配器
           @author ZDS
           create on 2016/4/2  18:32 */
 
-public class VideoListAdapter extends BasePlayAdapter<VideoListAdapter.MyViewHolder, VideoItem> {
+public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter.MyViewHolder> {
+    private BaseFragment mBaseFragment;
 
+    /**
+     * Recommended constructor.
+     *
+     * @param context The context
+     * @param c       The cursor from which to get the data.
+     * @param
+     */
     public VideoListAdapter(Context context, Cursor c, BaseFragment baseFragment) {
-        super(context, c, baseFragment);
+        super(context, c, FLAG_REGISTER_CONTENT_OBSERVER);
+        this.mBaseFragment = baseFragment;
     }
 
-    //RecyclerView 的特殊方法直接绑定holder
     @Override
     public void onBindViewHolder(MyViewHolder holder, final Cursor cursor, final int position) {
         VideoItem videoItem = VideoItem.fromCursor(cursor);
@@ -61,8 +69,7 @@ public class VideoListAdapter extends BasePlayAdapter<VideoListAdapter.MyViewHol
      * @param cursor
      * @return
      */
-    @Override
-    protected ArrayList<VideoItem> cursorToList(Cursor cursor) {
+    private ArrayList<VideoItem> cursorToList(Cursor cursor) {
         ArrayList<VideoItem> list = new ArrayList<VideoItem>();
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
@@ -71,6 +78,10 @@ public class VideoListAdapter extends BasePlayAdapter<VideoListAdapter.MyViewHol
         return list;
     }
 
+    @Override
+    protected void onContentChanged() {
+
+    }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
