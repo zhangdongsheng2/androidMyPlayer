@@ -10,16 +10,17 @@ import com.example.myplayer.util.ToastUtil;
  */
 public abstract class BaseActivity extends FragmentActivity {
     private static BaseActivity mActivity;
+    private long exitTime = 0L;
+
+    public static BaseActivity getActivity() {
+        return mActivity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mActivity = this;
 
-    }
-
-    public static BaseActivity getActivity() {
-        return mActivity;
     }
 
     @Override
@@ -30,8 +31,6 @@ public abstract class BaseActivity extends FragmentActivity {
             super.onBackPressed();
         }
     }
-
-    private long exitTime = 0L;
 
     /**
      * 判断栈中只有最后一个Fragment
@@ -51,7 +50,7 @@ public abstract class BaseActivity extends FragmentActivity {
             exitTime = System.currentTimeMillis();
         } else {
             finish();
-//            System.exit(0);
+            System.exit(0);
         }
     }
 
