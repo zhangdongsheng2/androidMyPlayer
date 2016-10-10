@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseFragment;
-import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.bean.tab.MainTab;
+import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.MyFragmentTabHost;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -30,13 +30,11 @@ public class MainTabHostFragment extends BaseFragment {
     View mAddBt;
 
 
-    private CharSequence mTitle;
 
     @Override
     protected View initView() {
         View view = ViewUtils.inflateView(R.layout.fragment_tabhost_content);
         ButterKnife.bind(this, view);
-        mTitle = getResources().getString(R.string.main_tab_name_news);
         mTabHost.setup(getContext(), getChildFragmentManager(), R.id.realtabcontent);
         if (android.os.Build.VERSION.SDK_INT > 10) {
             mTabHost.getTabWidget().setShowDividers(0);
@@ -66,7 +64,6 @@ public class MainTabHostFragment extends BaseFragment {
                 if (tabId.equals(getString(MainTab.ME.getResName()))) {//点击时右上角至空
 
                 }
-                mTitle = tabId;
             }
         });
     }

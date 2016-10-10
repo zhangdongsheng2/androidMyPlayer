@@ -1,4 +1,4 @@
-package com.example.myplayer.fragment;
+package com.example.myplayer.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +12,7 @@ import com.example.myplayer.widget.wheel.widget.adapters.AbstractWheelTextAdapte
 import com.example.myplayer.widget.wheel.widget.views.OnWheelChangedListener;
 import com.example.myplayer.widget.wheel.widget.views.OnWheelScrollListener;
 import com.example.myplayer.widget.wheel.widget.views.WheelView;
+import com.socks.library.KLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -203,7 +204,7 @@ public class ChangeAddressDialog extends Dialog implements android.view.View.OnC
             int len = -1;
             byte[] buf = new byte[1024];
             while ((len = is.read(buf)) != -1) {
-                sb.append(new String(buf, 0, len, "gbk"));
+                sb.append(new String(buf, 0, len, "utf-8"));
             }
             is.close();
             mJsonObj = new JSONObject(sb.toString());
@@ -259,6 +260,7 @@ public class ChangeAddressDialog extends Dialog implements android.view.View.OnC
                         mAreasDatas[k] = area;
                     }
                 }
+                KLog.e(province + "=======" + mCitiesDatas);
                 mCitisDatasMap.put(province, mCitiesDatas);
             }
 

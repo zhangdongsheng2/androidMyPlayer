@@ -7,10 +7,11 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.example.myplayer.R;
+import com.example.myplayer.adapter.baseadapter.MyMainFragmentPagerAdapter;
 import com.example.myplayer.base.BaseFragment;
+import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.LazyViewPager;
 import com.example.myplayer.widget.NoScrollViewPager;
-import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.view.ViewHelper;
 
 /**
@@ -19,12 +20,10 @@ import com.nineoldandroids.view.ViewHelper;
 public class MainFragment extends BaseFragment {
 
 
-    private RadioGroup rgGroup;
-
-
-    private NoScrollViewPager mViewPager;
-
     int mCurrent;
+    Fragment[] fragments = new BaseFragment[]{new BodhiFragment(), new NirvanaFragment(), new MeditationFragment(), new SixVirtuesFragment()};
+    private RadioGroup rgGroup;
+    private NoScrollViewPager mViewPager;
 
     @Override
     protected View initView() {
@@ -75,15 +74,6 @@ public class MainFragment extends BaseFragment {
             }
         });
 
-//        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getChildFragmentManager(), mViewPager);
-//        adapter.setOnExtraPageChangeListener(new FragmentViewPagerAdapter.OnExtraPageChangeListener(){
-//            @Override
-//            public void onExtraPageSelected(int i) {
-//                System.out.println("Extra...i: " + i);
-//            }
-//        });
-//        mViewPager.setOnPageChangeListener(new MyHomePageChangeListener());
-//        mViewPager.setCurrentItem(mCurrent);
 
         FragmentManager fm = getChildFragmentManager();
         MyFragmentPagerAdapter mAdapter = new MyFragmentPagerAdapter(fm);
@@ -158,12 +148,12 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            return FragmentFactory.MAINFRAGMENTMAP_LENGHT;
+            return fragments.length;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return FragmentFactory.createFragment(position);
+            return fragments[position];
         }
 
         @Override

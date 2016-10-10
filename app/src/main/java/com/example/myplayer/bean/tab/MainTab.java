@@ -1,10 +1,11 @@
 package com.example.myplayer.bean.tab;
 
 import com.example.myplayer.R;
-import com.example.myplayer.fragment.HomeFragment;
-import com.example.myplayer.fragment.NewsFragment;
-import com.example.myplayer.fragment.OtherFragment;
-import com.example.myplayer.fragment.SetingFragment;
+import com.example.myplayer.fragment.BodhiFragment;
+import com.example.myplayer.fragment.MeditationFragment;
+import com.example.myplayer.fragment.NirvanaFragment;
+import com.example.myplayer.fragment.SixVirtuesFragment;
+
 
 
 public enum MainTab {
@@ -15,19 +16,19 @@ public enum MainTab {
 			*/
 
     NEWS(0, R.string.main_tab_name_news, R.drawable.tab_icon_new,
-            HomeFragment.class),
+            BodhiFragment.class),
 
     TWEET(1, R.string.main_tab_name_tweet, R.drawable.tab_icon_tweet,
-            NewsFragment.class),
+            NirvanaFragment.class),
 
     QUICK(2, R.string.main_tab_name_quick, R.drawable.tab_icon_new,
             null),
 
     EXPLORE(3, R.string.main_tab_name_explore, R.drawable.tab_icon_explore,
-            OtherFragment.class),
+            MeditationFragment.class),
 
     ME(4, R.string.main_tab_name_my, R.drawable.tab_icon_me,
-            SetingFragment.class);
+            SixVirtuesFragment.class);
 
     private int idx;
     private int resName;

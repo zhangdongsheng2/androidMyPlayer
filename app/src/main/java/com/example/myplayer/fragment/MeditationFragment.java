@@ -13,7 +13,7 @@ import com.socks.library.KLog;
 /**
  * Created by Administrator on 2016/3/31.
  */
-public class GoyFragment extends BaseFragment {
+public class MeditationFragment extends BaseFragment {
     private Button button_getSIMInfo;
     private TextView number;
     private TextView privoid;
@@ -35,6 +35,16 @@ public class GoyFragment extends BaseFragment {
 //        button_getSIMInfo.setOnClickListener(new ButtonListener());
     }
 
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void processClick(View view) {
+
+    }
+
     class ButtonListener implements View.OnClickListener {
 
         @Override
@@ -52,16 +62,6 @@ public class GoyFragment extends BaseFragment {
                 netState.setText(siminfo.getNetworkState());
             }
         }
-
-    }
-
-    @Override
-    protected void initData() {
-
-    }
-
-    @Override
-    protected void processClick(View view) {
 
     }
 }

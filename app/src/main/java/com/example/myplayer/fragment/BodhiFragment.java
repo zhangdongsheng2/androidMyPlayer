@@ -30,7 +30,7 @@ import com.example.myplayer.view.HomeFragmentView;
           主页面
            @author ZDS
            create on 2016/3/31 15:01 */
-public class HomeFragment extends BaseFragment {
+public class BodhiFragment extends BaseFragment {
     @Override
     protected View initView() {
         return HomeFragmentView.getInstance(getContext(), this);

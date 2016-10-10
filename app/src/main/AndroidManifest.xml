@@ -61,7 +61,24 @@
         </activity>
 
 
-        <activity android:name="io.vov.vitamio.activity.InitActivity"></activity>
+        <activity android:name="io.vov.vitamio.activity.InitActivity" />
+        <activity android:name=".activity.leonids.ExampleListActivity" />
+        <activity android:name=".activity.leonids.OneShotSimpleExampleActivity" />
+        <activity android:name=".activity.leonids.FireworksExampleActivity" />
+        <activity android:name=".activity.leonids.OneShotAdvancedExampleActivity" />
+        <activity android:name=".activity.leonids.EmiterSimpleExampleActivity" />
+        <activity android:name=".activity.leonids.EmiterBackgroundSimpleExampleActivity" />
+        <activity android:name=".activity.leonids.EmiterIntermediateExampleActivity" />
+        <activity android:name=".activity.leonids.EmiterTimeLimitedExampleActivity" />
+        <activity android:name=".activity.leonids.AnimatedParticlesExampleActivity" />
+        <activity android:name=".activity.leonids.ConfettiExampleActivity" />
+        <activity android:name=".activity.leonids.DustExampleActivity" />
+        <activity android:name=".activity.leonids.StarsExampleActivity" />
+        <activity android:name=".activity.leonids.FollowCursorExampleActivity" />
+        <activity android:name=".activity.leonids.EmiterWithGravityExampleActivity" />
+        <activity android:name=".activity.leonids.HeartActivity" />
+
+
         <activity
             android:name=".activity.AudioPlayActivity"
             android:launchMode="singleTop"
@@ -70,10 +87,6 @@
         <service android:name=".service.AudioPlayService" />
 
 
-        <service android:name=".service.PlayService"></service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <service android:name=".service.PlayService" />
     </application>
 </manifest>

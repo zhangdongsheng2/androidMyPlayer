@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@android:style/Theme.Translucent.NoTitleBar">
+    <style name="AppTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <!-- Customize your theme here. -->
         <item name="android:listDivider">@drawable/item_divider</item>
         <item name="windowNoTitle">true</item>

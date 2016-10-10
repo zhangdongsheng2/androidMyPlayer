@@ -27,8 +27,6 @@ import com.example.myplayer.util.ToastUtil;
 import com.example.myplayer.view.LyricView;
 import com.example.myplayer.widget.lyric.LyricLoader;
 import com.example.myplayer.widget.lyric.LyricParser;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,11 +63,7 @@ public class AudioPlayActivity extends Activity implements View.OnClickListener 
 
         ;
     };
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
 
     /**
      * 更新歌词
@@ -95,9 +89,7 @@ public class AudioPlayActivity extends Activity implements View.OnClickListener 
         initView();
         initListener();
         initData();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     @Override

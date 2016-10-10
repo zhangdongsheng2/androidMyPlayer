@@ -1,17 +1,22 @@
 package com.example.myplayer.fragment;
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myplayer.R;
+import com.example.myplayer.activity.leonids.ExampleListActivity;
 import com.example.myplayer.base.BaseFragment;
+import com.example.myplayer.dialog.ChangeAddressDialog;
+import com.example.myplayer.dialog.ChangeBirthDialog;
 import com.example.myplayer.util.ViewUtils;
 
 /**
  * Created by Administrator on 2016/3/31.
  */
-public class NewsFragment extends BaseFragment {
+public class NirvanaFragment extends BaseFragment {
     private TextView mBirth;
     private TextView mAddress;
 
@@ -30,6 +35,13 @@ public class NewsFragment extends BaseFragment {
     protected void initData() {
         mBirth = (TextView) mRootView.findViewById(R.id.tv_birth);
         mAddress = (TextView) mRootView.findViewById(R.id.tv_address);
+        Button button = (Button) mRootView.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ExampleListActivity.class));
+            }
+        });
 
         mBirth.setOnClickListener(new View.OnClickListener() {
 

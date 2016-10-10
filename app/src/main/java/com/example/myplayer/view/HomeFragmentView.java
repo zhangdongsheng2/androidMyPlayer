@@ -10,13 +10,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
+import com.example.myplayer.adapter.baseadapter.MyMainFragmentPagerAdapter;
 import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
-import com.example.myplayer.fragment.FragmentFactory;
-import com.example.myplayer.fragment.MyMainFragmentPagerAdapter;
+import com.example.myplayer.fragment.play.AudioListFragment;
+import com.example.myplayer.fragment.play.VideoListFragment;
+import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.StatusBarLinearLayout;
 import com.example.myplayer.widget.ZoomOutPageTransformer;
-import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.socks.library.KLog;
 
@@ -31,6 +32,7 @@ public class HomeFragmentView extends FrameLayout implements View.OnClickListene
     View indicateline;
     ViewPager viewpager;
     StatusBarLinearLayout rlrootview;
+    Fragment[] fragments = new BaseFragment[]{new VideoListFragment(), new AudioListFragment()};
     private BaseFragment mFragment;
     private int lineWidth;
 
@@ -74,7 +76,7 @@ public class HomeFragmentView extends FrameLayout implements View.OnClickListene
         viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int targetPosition = position * lineWidth + positionOffsetPixels / FragmentFactory.HOMEFRAGMENTMAP_LENGHT;
+                int targetPosition = position * lineWidth + positionOffsetPixels / fragments.length;
                 ViewPropertyAnimator.animate(indicateline).translationX(targetPosition).setDuration(0);
             }
 
@@ -99,7 +101,7 @@ public class HomeFragmentView extends FrameLayout implements View.OnClickListene
 
     private void calculateIndicateLineWidth() {
         int screenWidth = BaseActivity.getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        lineWidth = screenWidth / FragmentFactory.HOMEFRAGMENTMAP_LENGHT;
+        lineWidth = screenWidth / fragments.length;
         indicateline.getLayoutParams().width = lineWidth;
         indicateline.requestLayout();
     }
@@ -134,7 +136,7 @@ public class HomeFragmentView extends FrameLayout implements View.OnClickListene
     }
 
 
-    public static class HomePagerAdapter extends MyMainFragmentPagerAdapter {
+    public class HomePagerAdapter extends MyMainFragmentPagerAdapter {
 
         public HomePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -142,12 +144,12 @@ public class HomeFragmentView extends FrameLayout implements View.OnClickListene
 
         @Override
         public int getCount() {
-            return FragmentFactory.HOMEFRAGMENTMAP_LENGHT;
+            return fragments.length;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return FragmentFactory.createHomeFragment(position);
+            return fragments[position];
         }
 
         @Override

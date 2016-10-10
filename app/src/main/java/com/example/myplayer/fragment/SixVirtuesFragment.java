@@ -23,7 +23,7 @@ import okhttp3.Response;
 /***
  * 测试页面
  */
-public class OtherFragment extends BaseFragment {
+public class SixVirtuesFragment extends BaseFragment {
     private Button button_getSIMInfo;
     private TextView number;
     private TextView privoid;

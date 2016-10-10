@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.myplayer.fragment;
+package com.example.myplayer.adapter.baseadapter;
 
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -70,6 +70,10 @@ public abstract class MyMainFragmentPagerAdapter extends PagerAdapter {
 
     public MyMainFragmentPagerAdapter(FragmentManager fm) {
         mFragmentManager = fm;
+    }
+
+    private static String makeFragmentName(int viewId, long id) {
+        return "android:switcher:" + viewId + ":" + id;
     }
 
     /**
@@ -171,9 +175,5 @@ public abstract class MyMainFragmentPagerAdapter extends PagerAdapter {
      */
     public long getItemId(int position) {
         return position;
-    }
-
-    private static String makeFragmentName(int viewId, long id) {
-        return "android:switcher:" + viewId + ":" + id;
     }
 }

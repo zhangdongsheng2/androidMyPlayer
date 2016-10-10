@@ -1,4 +1,4 @@
-package com.example.myplayer.fragment;
+package com.example.myplayer.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

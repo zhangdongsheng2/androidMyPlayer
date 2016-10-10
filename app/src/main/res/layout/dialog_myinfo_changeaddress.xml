@@ -36,14 +36,14 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.ywl5320.pickaddress.wheel.widget.views.WheelView
+            <com.example.myplayer.widget.wheel.widget.views.WheelView
                 android:id="@+id/wv_address_province"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
 
-            <com.ywl5320.pickaddress.wheel.widget.views.WheelView
+            <com.example.myplayer.widget.wheel.widget.views.WheelView
                 android:id="@+id/wv_address_city"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
