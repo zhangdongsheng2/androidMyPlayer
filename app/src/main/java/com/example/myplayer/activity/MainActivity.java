@@ -1,11 +1,13 @@
 package com.example.myplayer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.fragment.SplashFragment;
+import com.example.myplayer.service.ForeverService;
 import com.example.myplayer.util.ViewUtils;
 
 
@@ -21,6 +23,6 @@ public class MainActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_main);
         ViewUtils.launch(false, R.id.content, SplashFragment.class, false, null,null);
-
+        startService(new Intent(this, ForeverService.class));
     }
 }
