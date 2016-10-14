@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.myplayer.MyApplication;
 import com.example.myplayer.R;
 import com.example.myplayer.activity.VideoPlayerActivity;
 import com.example.myplayer.activity.VitamioPlayActivity;
-import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
@@ -53,7 +53,7 @@ public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
+                Intent intent = new Intent(MyApplication.getContext(), VitamioPlayActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt(VideoPlayerActivity.POSITION, position);
                 bundle.putSerializable(VideoPlayerActivity.VIDEOLIST, cursorToList(getCursor()));

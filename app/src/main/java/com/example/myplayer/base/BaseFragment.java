@@ -16,9 +16,6 @@ import com.example.myplayer.util.ViewUtils;
 
 import java.lang.reflect.Field;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * Fragment 的基类 2016/3/29.
  */
@@ -81,11 +78,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param save  是否要保存自己
      */
     public void launch(boolean save, int id, Class clazz, boolean stack, Bundle bundle) {
-        ViewUtils.launch(save, id, clazz, stack, this, bundle);
+        ViewUtils.launch(getActivity(),save, id, clazz, stack, this, bundle);
     }
 
     public void mainLaunch(Class clazz,Bundle bundle){
-        ViewUtils.launch(true, R.id.content, clazz, true, getParentFragment(), bundle);
+        ViewUtils.launch(getActivity(),true, R.id.content, clazz, true, getParentFragment(), bundle);
     }
 
     /**

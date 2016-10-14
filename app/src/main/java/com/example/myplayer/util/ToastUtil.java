@@ -5,6 +5,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import com.example.myplayer.MyApplication;
 import com.example.myplayer.base.BaseActivity;
 
 /**
@@ -15,7 +16,7 @@ public class ToastUtil {
 
     public static void showToast(String msg) {
         if (mToast == null) {
-            mToast = Toast.makeText(BaseActivity.getActivity(), "", Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(MyApplication.getContext(), "", Toast.LENGTH_SHORT);
         }
         mToast.setText(msg);
         mToast.show();
@@ -33,7 +34,7 @@ public class ToastUtil {
      * @return
      */
     public static float dip2Dimension(float dip) {
-        DisplayMetrics displayMetrics = BaseActivity.getActivity().getResources().getDisplayMetrics();
+        DisplayMetrics displayMetrics = MyApplication.getContext().getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
     }
 
@@ -44,7 +45,7 @@ public class ToastUtil {
      * @return
      */
     public static float toDimension(float dip, int complexUnit) {
-        DisplayMetrics displayMetrics = BaseActivity.getActivity().getResources().getDisplayMetrics();
+        DisplayMetrics displayMetrics = MyApplication.getContext().getResources().getDisplayMetrics();
         return TypedValue.applyDimension(complexUnit, dip, displayMetrics);
     }
 }

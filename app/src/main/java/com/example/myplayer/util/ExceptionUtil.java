@@ -5,7 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 
-import com.example.myplayer.base.BaseActivity;
+import com.example.myplayer.MyApplication;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -44,8 +44,8 @@ public class ExceptionUtil {
         // 导出手机信息
         try {
             // 应用的版本名称和版本号
-            PackageManager pm = BaseActivity.getActivity().getPackageManager();
-            PackageInfo pi = pm.getPackageInfo( BaseActivity.getActivity().getPackageName(), PackageManager.GET_ACTIVITIES);
+            PackageManager pm = MyApplication.getContext().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo( MyApplication.getContext().getPackageName(), PackageManager.GET_ACTIVITIES);
             pw.print("App Version: ");
             pw.print(pi.versionName);
             pw.print('_');

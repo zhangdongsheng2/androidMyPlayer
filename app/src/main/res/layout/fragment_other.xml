@@ -11,6 +11,13 @@
         android:text="&amp;#@$%wwwww"
         android:textSize="22sp" />
 
+    <ProgressBar
+        android:id="@+id/pb_footer"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
     <Button
         android:id="@+id/btn"
         android:layout_width="match_parent"

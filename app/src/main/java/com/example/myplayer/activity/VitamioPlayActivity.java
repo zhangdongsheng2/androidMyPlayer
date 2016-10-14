@@ -320,7 +320,7 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         initVolume();
 
         try {
-            currentPositionTime = getIntent().getExtras().getLong("currentPosition",0);
+            currentPositionTime = getIntent().getExtras().getLong("currentPosition", 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -465,26 +465,26 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
 //        btn_screen.setImageResource(video_view.isFullScreen() ?
 //                R.drawable.selector_btn_defaultscreen : R.drawable.selector_btn_fullscreen);
         final long currentPositionTime = video_view.getCurrentPosition();
-
+        final Intent intentHome = new Intent(Intent.ACTION_MAIN);
+        intentHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
+        intentHome.addCategory(Intent.CATEGORY_HOME);
+        final Intent playIntent = new Intent(VitamioPlayActivity.this, PlayService.class);
+        Bundle extras = new Bundle();
+        extras.putInt(VideoPlayerActivity.POSITION, currentPosition);
+        extras.putSerializable(VideoPlayerActivity.VIDEOLIST, videoList);
+        extras.putLong("currentPosition", currentPositionTime);
+        playIntent.putExtras(extras);
+        playIntent.setData(getIntent().getData());
+        playIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();
-        new Thread() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intentHome = new Intent(Intent.ACTION_MAIN);
-                intentHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);// 注意
-                intentHome.addCategory(Intent.CATEGORY_HOME);
                 startActivity(intentHome);
-                Intent playIntent = new Intent(VitamioPlayActivity.this, PlayService.class);
-                Bundle extras = new Bundle();
-                extras.putInt(VideoPlayerActivity.POSITION, currentPosition);
-                extras.putSerializable(VideoPlayerActivity.VIDEOLIST,videoList );
-                extras.putLong("currentPosition",currentPositionTime);
-                playIntent.putExtras(extras);
-                playIntent.setData(getIntent().getData());
-                playIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startService(playIntent);
             }
-        }.start();
+        }, 500);
+
     }
 
 //    // 点击HOME键时程序进入后台运行

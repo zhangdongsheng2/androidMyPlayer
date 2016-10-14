@@ -37,8 +37,11 @@ public class MyListView extends ListView {
         return (int) (startInt + fraction * (endValue - startInt));
     }
 
+
+    private int originalHight;
+
     /**
-     * 当listview 滚动到顶部的时候，还要下拉，还要网上滚动，那么这时就会调用该方法
+     * 当listview 滚动到顶部的时候，还要下拉，还要向上滚动，那么这时就会调用该方法
      *
      * @param deltaX
      * @param deltaY
@@ -59,8 +62,8 @@ public class MyListView extends ListView {
         if (isTouchEvent && deltaY < 0) {
             for (int i = 0; i < getChildCount(); i++) {
                 View view = getChildAt(i);
-
                 int oldHeight = view.getHeight();
+                originalHight = originalHight > 0 ? originalHight : oldHeight;
                 int newHeight = oldHeight + Math.abs(deltaY) / 17;
 
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -68,12 +71,13 @@ public class MyListView extends ListView {
                 view.setLayoutParams(layoutParams);
                 list.add(view);
             }
-        } else if (deltaY > 0) {
+        } else if (deltaY > 0 && getLastVisiblePosition() == (getCount() - 1)) {
             for (int i = 0; i < getChildCount() - 1; i++) {
                 setSelection(getBottom());
                 View view = getChildAt(i + 1);
 
                 int oldHeight = view.getHeight();
+                originalHight = originalHight > 0 ? originalHight : oldHeight;
                 int newHeight = oldHeight + Math.abs(deltaY) / 17;
 
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -98,7 +102,7 @@ public class MyListView extends ListView {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
                         float percent = animation.getAnimatedFraction();
-                        Integer height = evaluateInt(percent, startHeight, 162);
+                        Integer height = evaluateInt(percent, startHeight, originalHight);
                         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                         layoutParams.height = height;
                         view.setLayoutParams(layoutParams);

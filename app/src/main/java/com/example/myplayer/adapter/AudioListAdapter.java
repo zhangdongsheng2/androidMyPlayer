@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.myplayer.MyApplication;
 import com.example.myplayer.R;
 import com.example.myplayer.activity.AudioPlayActivity;
-import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.AudioItem;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
@@ -56,7 +56,7 @@ public class AudioListAdapter extends RecyclerViewCursorAdapter<AudioListAdapter
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BaseActivity.getActivity(), AudioPlayActivity.class);
+                Intent intent = new Intent(MyApplication.getContext(), AudioPlayActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt(AudioPlayActivity.POSITION, position);
                 bundle.putSerializable(AudioPlayActivity.AUDIOLIST, cursorToList(getCursor()));

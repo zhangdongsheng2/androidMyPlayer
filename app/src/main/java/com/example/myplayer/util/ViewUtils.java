@@ -3,13 +3,14 @@ package com.example.myplayer.util;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myplayer.MyApplication;
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseActivity;
 
 import java.lang.reflect.Field;
 
@@ -67,11 +68,11 @@ public class ViewUtils {
      */
 
     public static View inflateView(int id) {
-        return View.inflate(BaseActivity.getActivity(), id, null);
+        return View.inflate(MyApplication.getInstance(), id, null);
     }
 
     public static View inflateView(int id, ViewGroup viewGroup) {
-        return View.inflate(BaseActivity.getActivity(), id, viewGroup);
+        return View.inflate(MyApplication.getInstance(), id, viewGroup);
     }
 
     public static View inflateView(Context context, int id) {
@@ -86,9 +87,9 @@ public class ViewUtils {
      * @param stack 是否要加入到回退栈
      * @param save  是否要保存自己
      */
-    public static void launch(boolean save, int id, Class clazz, boolean stack, Fragment thisFragment, Bundle bundle) {
+    public static void launch(FragmentActivity activity, boolean save, int id, Class clazz, boolean stack, Fragment thisFragment, Bundle bundle) {
         try {
-            FragmentManager manager = BaseActivity.getActivity().getSupportFragmentManager();
+            FragmentManager manager = activity.getSupportFragmentManager();
             FragmentTransaction beginTransaction = manager.beginTransaction();
             beginTransaction.setCustomAnimations(R.anim.my_scale_action,
                     R.anim.my_alpha_action, R.anim.my_scale_action,

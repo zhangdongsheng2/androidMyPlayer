@@ -22,16 +22,17 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.myplayer.MyApplication;
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseActivity;
-import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.activity.VideoPlayerActivity;
 import com.example.myplayer.activity.VitamioPlayActivity;
+import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.util.LogUtils;
 import com.example.myplayer.util.ToastUtil;
 import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 
@@ -61,15 +62,14 @@ public class PlayService extends Service implements View.OnClickListener {
         return null;
     }
 
+
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         mIntent = intent;
-
-
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        mView = ViewUtils.inflateView(this,R.layout.service_video_play);
+        mView = ViewUtils.inflateView(this, R.layout.service_video_play);
 //        int width = wm.getDefaultDisplay().getWidth() - 90;
 //        int height = (int) (width * 0.6);
 
@@ -93,6 +93,7 @@ public class PlayService extends Service implements View.OnClickListener {
         initListener();
         initData();
     }
+
     View.OnTouchListener touchListener = new View.OnTouchListener() {
 
         @Override
@@ -242,14 +243,14 @@ public class PlayService extends Service implements View.OnClickListener {
             @Override
             public void onGlobalLayout() {
                 ll_top_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(0);
+                ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(0);
             }
         });
         ll_bottom_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 ll_bottom_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(0);
+                ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(0);
             }
         });
 
@@ -391,12 +392,12 @@ public class PlayService extends Service implements View.OnClickListener {
                 case R.id.btn_screen:
                     this.stopSelf();
                     currentPositionTime = video_view.getCurrentPosition();
-                    Intent intent = new Intent(BaseActivity.getActivity(), VitamioPlayActivity.class);
+                    Intent intent = new Intent(MyApplication.getContext(), VitamioPlayActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle extras = new Bundle();
                     extras.putInt(VideoPlayerActivity.POSITION, currentPosition);
-                    extras.putSerializable(VideoPlayerActivity.VIDEOLIST,videoList );
-                    extras.putLong("currentPosition",currentPositionTime);
+                    extras.putSerializable(VideoPlayerActivity.VIDEOLIST, videoList);
+                    extras.putLong("currentPosition", currentPositionTime);
                     intent.setData(getIntent().getData());
                     intent.putExtras(extras);
                     startActivity(intent);
@@ -430,7 +431,6 @@ public class PlayService extends Service implements View.OnClickListener {
     }
 
 
-
     Intent mIntent;
 
     public Intent getIntent() {
@@ -443,6 +443,8 @@ public class PlayService extends Service implements View.OnClickListener {
         //判断用户是否是在做手势滑动行为
         touchSlop = ViewConfiguration.getTouchSlop();
         initVolume();
+        KLog.e(getIntent() + "===========");
+        KLog.e(getIntent().getExtras() + "===========");
         currentPositionTime = getIntent().getExtras().getLong("currentPosition");
         //外部跳转进来的
         Uri videoUri = getIntent().getData();
@@ -637,9 +639,9 @@ public class PlayService extends Service implements View.OnClickListener {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                wm.updateViewLayout(mView,mParams);
+                wm.updateViewLayout(mView, mParams);
             }
-        },500);
+        }, 500);
         handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
     }
 

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.adapter.baseadapter.MyMainFragmentPagerAdapter;
-import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.fragment.play.AudioListFragment;
 import com.example.myplayer.fragment.play.VideoListFragment;
@@ -100,7 +99,7 @@ public class HomeFragmentView extends FrameLayout implements View.OnClickListene
     }
 
     private void calculateIndicateLineWidth() {
-        int screenWidth = BaseActivity.getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int screenWidth =mFragment.getActivity().getWindowManager().getDefaultDisplay().getWidth();
         lineWidth = screenWidth / fragments.length;
         indicateline.getLayoutParams().width = lineWidth;
         indicateline.requestLayout();
