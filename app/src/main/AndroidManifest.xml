@@ -18,6 +18,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:persistent="true"
         android:supportsRtl="true"
         android:name=".MyApplication"
         android:theme="@style/Theme.AppCompat.Light">
@@ -89,5 +90,19 @@
 
 
         <service android:name=".service.PlayService" />
+
+
+        <service
+            android:name=".service.ForeverService"
+            android:process=":remotee" />
+
+        <receiver android:name=".service.MyBroadcastReceiver"
+
+            >
+            <intent-filter android:priority="100000">
+                <action android:name="android.intent.action.TIME_TICK" />
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>
