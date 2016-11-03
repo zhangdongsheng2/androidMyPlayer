@@ -1,18 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@android:style/Theme.Light.NoTitleBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="android:listDivider">@drawable/item_divider</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!-- Android 5.0 中使用的带波纹的button -->
-    <style name="MyButton" parent="Theme.AppCompat.Light">
-        <item name="colorControlHighlight">#268dff</item>
-        <item name="colorButtonNormal">#c7edcc</item>
-    </style>
-    <!-- Android 5.0 以下兼容  中使用的带波纹的button -->
+
+    <!-- Android 5.0   中使用的带波纹的button -->
     <style name="GreenButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
@@ -37,7 +33,7 @@
     </style>
 
 
-    <!-- 分享对话框样式 -->
+    <!-- 地址选择对话框样式 -->
     <style name="ShareDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>

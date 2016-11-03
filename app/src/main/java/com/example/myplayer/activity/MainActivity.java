@@ -2,16 +2,23 @@ package com.example.myplayer.activity;
 
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseActivity;
+import com.example.myplayer.drop.FileUtils;
+import com.example.myplayer.drop.NativeRuntime;
 import com.example.myplayer.util.ToastUtil;
 
 
 /**
- * Created by Administrator on 2016/3/23.
+ * Created by Administrator on 2016/3/23.D:\Studio\sdk\platforms\android-22\android.jar
  */
 public class MainActivity extends BaseActivity {
+
+    static {
+        System.loadLibrary("moduleName");
+    }
 
     private long exitTime = 0L;
 
@@ -22,7 +29,31 @@ public class MainActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         setContentView(R.layout.activity_main);
+        initService();
+    }
 
+    private void initService() {
+        Toast.makeText(this, NativeRuntime.getInstance().stringFromJNI(), Toast.LENGTH_LONG).show();
+        String executable = "libmoduleName.so";
+        String aliasfile = "moduleName";
+        String parafind = "/data/data/" + getPackageName() + "/" + aliasfile;
+        String retx = "false";
+        NativeRuntime.getInstance().RunExecutable(getPackageName(), executable, aliasfile, getPackageName() + "/com.example.myplayer.service.ForeverService");
+
+
+        (new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    NativeRuntime.getInstance().startService(getPackageName() + "/com.example.myplayer.service.ForeverService", FileUtils.createRootPath());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        })).start();
+
+//                    NativeRuntime.getInstance().stopService();
     }
 
     @Override
@@ -43,4 +74,5 @@ public class MainActivity extends BaseActivity {
             System.exit(0);
         }
     }
+
 }
