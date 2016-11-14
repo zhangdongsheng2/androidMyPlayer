@@ -6,8 +6,8 @@ import android.widget.Toast;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseActivity;
-import com.example.myplayer.drop.FileUtils;
-import com.example.myplayer.drop.NativeRuntime;
+import com.example.myplayer.drop.Cserver.FileUtils;
+import com.example.myplayer.drop.Cserver.NativeRuntime;
 import com.example.myplayer.util.ToastUtil;
 
 

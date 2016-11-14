@@ -1,4 +1,4 @@
-package com.example.myplayer.drop;
+package com.example.myplayer.drop.Cserver;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
