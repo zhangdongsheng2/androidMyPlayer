@@ -278,7 +278,7 @@ void check_and_restart_activity(char *service) {
 /**
  * 返回ABI给Java
  */
-jstring Java_com_yyh_fork_NativeRuntime_stringFromJNI(JNIEnv *env, jobject thiz) {
+jstring Java_com_example_myplayer_drop_Cserver_NativeRuntime_stringFromJNI(JNIEnv *env, jobject thiz) {
 #if defined(__arm__)
 #if defined(__ARM_ARCH_7A__)
 #if defined(__ARM_NEON__)
@@ -327,12 +327,12 @@ char *jstringTostring(JNIEnv *env, jstring jstr) {
  * 查找进程
  */
 pid_t JNICALL
-Java_com_yyh_fork_NativeRuntime_findProcess(JNIEnv
+Java_com_example_myplayer_drop_Cserver_NativeRuntime_findProcess(JNIEnv
 * env,
 jobject thiz, jstring
 cchrptr_ProcessName) {
 char *rtn = jstringTostring(env, cchrptr_ProcessName);
-LOGI("Java_com_yyh_fork_NativeRuntime_findProcess run....ProcessName:%s", rtn);
+LOGI("Java_com_example_myplayer_drop_Cserver_NativeRuntime_findProcess run....ProcessName:%s", rtn);
 //return 1;
 return
 GetPIDbyName_implements(rtn,
@@ -342,13 +342,13 @@ GetPIDbyName_implements(rtn,
 /**
  * 启动Service
  */
-void Java_com_yyh_fork_NativeRuntime_startService(JNIEnv * env, jobject
+void Java_com_example_myplayer_drop_Cserver_NativeRuntime_startService(JNIEnv * env, jobject
 thiz,
 jstring cchrptr_ProcessName, jstring
 sdpath) {
 char *rtn = jstringTostring(env, cchrptr_ProcessName); // 得到进程名称
 char *sd = jstringTostring(env, sdpath);
-LOGI("Java_com_yyh_fork_NativeRuntime_startService run....ProcessName:%s", rtn);
+LOGI("Java_com_example_myplayer_drop_Cserver_NativeRuntime_startService run....ProcessName:%s", rtn);
 a = rtn;
 start(1, rtn, sd);
 }
@@ -356,14 +356,14 @@ start(1, rtn, sd);
 /**
  * 关闭Service
  */
-void Java_com_yyh_fork_NativeRuntime_stopService() {
+void Java_com_example_myplayer_drop_Cserver_NativeRuntime_stopService() {
     exit(0);
 }
 
 /**
  * 启动Activity
  */
-void Java_com_yyh_fork_NativeRuntime_startActivity(JNIEnv * env, jobject
+void Java_com_example_myplayer_drop_Cserver_NativeRuntime_startActivity(JNIEnv * env, jobject
 thiz,
 jstring activityName
 ) {

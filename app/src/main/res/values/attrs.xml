@@ -10,4 +10,17 @@
         <attr name="creditTextStart" format="integer" />
         <attr name="creditTextLength" format="integer" />
     </declare-styleable>
+    <declare-styleable name="CustomSeekBar">
+        <attr name="numTextFormat" format="string" />
+        <attr name="ico_left" format="reference" />
+        <attr name="ico_right" format="reference" />
+        <attr name="numTextSize" format="dimension" />
+        <attr name="numTextColor" format="color" />
+        <attr name="numScale" format="string" />
+        <attr name="numType" format="enum">
+            <enum name="top" value="48" />
+            <enum name="bottom" value="80" />
+        </attr>
+
+    </declare-styleable>
 </resources>

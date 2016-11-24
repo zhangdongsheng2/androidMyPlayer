@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -24,4 +25,19 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="点击" />
+
+    <com.example.myplayer.widget.UiSeeKBar
+        android:id="@+id/ui_seekbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:maxHeight="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:progressDrawable="@drawable/seek"
+        android:splitTrack="false"
+        android:thumb="@drawable/shape_btn_orange"
+        custom:ico_left="@drawable/classify125"
+        custom:ico_right="@drawable/classify124"
+        custom:numTextColor="#fff" />
 </LinearLayout>
