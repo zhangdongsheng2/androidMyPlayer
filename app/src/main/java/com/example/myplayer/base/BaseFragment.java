@@ -27,6 +27,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = initView();
+        mRootView.setPadding(mRootView.getPaddingLeft(), mRootView.getPaddingTop() + ViewUtils.getStatusBarHeight(getContext()), mRootView.getPaddingRight(), mRootView.getPaddingBottom());
         initListener();
         initData();
         return mRootView;
@@ -78,11 +79,11 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param save  是否要保存自己
      */
     public void launch(boolean save, int id, Class clazz, boolean stack, Bundle bundle) {
-        ViewUtils.launch(getActivity(),save, id, clazz, stack, this, bundle);
+        ViewUtils.launch(getActivity(), save, id, clazz, stack, this, bundle);
     }
 
-    public void mainLaunch(Class clazz,Bundle bundle){
-        ViewUtils.launch(getActivity(),true, R.id.content, clazz, true, getParentFragment(), bundle);
+    public void mainLaunch(Class clazz, Bundle bundle) {
+        ViewUtils.launch(getActivity(), true, R.id.content, clazz, true, getParentFragment(), bundle);
     }
 
     /**
