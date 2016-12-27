@@ -1,12 +1,11 @@
 package com.example.myplayer.base;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
-
-import com.example.myplayer.app.AppManager;
-import com.example.myplayer.util.DialogHelp;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import butterknife.ButterKnife;
 
@@ -15,78 +14,62 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseActivity extends FragmentActivity {
 
-    private boolean _isVisible;
-    private ProgressDialog _waitDialog;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getLayoutId() != 0) {
-            setContentView(getLayoutId());
+        if (initBundle(getIntent().getExtras())) {
+            setContentView(getContentView());
+
+            ButterKnife.bind(this);
+
+            initWindow();
+            initWidget();
+            initData();
+        } else {
+            finish();
         }
-        AppManager.getAppManager().addActivity(this);
-        // 通过注解绑定控件
-        ButterKnife.bind(this);
-        initView();
-        initData();
-        _isVisible = true;
     }
 
-    protected View initView() {
-        return null;
+    protected abstract int getContentView();
+
+    protected boolean initBundle(Bundle bundle) {
+        return true;
+    }
+
+    protected void initWindow() {
+    }
+
+    protected void initWidget() {
     }
 
     protected void initData() {
     }
 
-    protected int getLayoutId() {
-        return 0;
+    /**
+     * 文本View
+     */
+    public TextView textView(int textview) {
+        return (TextView) findViewById(textview);
     }
 
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AppManager.getAppManager().finishActivity(this);
+    /**
+     * 文本button
+     */
+    public Button button(int id) {
+        return (Button) findViewById(id);
     }
 
-    public ProgressDialog showWaitDialog() {
-        return showWaitDialog("加载中…");
+    /**
+     * 文本button
+     */
+    public ImageView imageView(int id) {
+        return (ImageView) findViewById(id);
     }
 
-
-    public ProgressDialog showWaitDialog(int resid) {
-        return showWaitDialog(getString(resid));
+    /**
+     * 文本editText
+     */
+    public EditText editText(int id) {
+        return (EditText) findViewById(id);
     }
-
-
-    public ProgressDialog showWaitDialog(String message) {
-        if (_isVisible) {
-            if (_waitDialog == null) {
-                _waitDialog = DialogHelp.getWaitDialog(this, message);
-            }
-            if (_waitDialog != null) {
-                _waitDialog.setMessage(message);
-                _waitDialog.show();
-            }
-            return _waitDialog;
-        }
-        return null;
-    }
-
-
-    public void hideWaitDialog() {
-        if (_isVisible && _waitDialog != null) {
-            try {
-                _waitDialog.dismiss();
-                _waitDialog = null;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
 }
