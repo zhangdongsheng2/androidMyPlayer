@@ -36,19 +36,4 @@ public class VideoListFragment extends BaseFragment {
     protected View initView() {
         return VideoListFragmentView.getInstance(getContext(), this);
     }
-
-    @Override
-    protected void initListener() {
-
-    }
-
-    @Override
-    protected void initData() {
-
-    }
-
-    @Override
-    protected void processClick(View view) {
-
-    }
 }

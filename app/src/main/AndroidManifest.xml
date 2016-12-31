@@ -39,7 +39,7 @@
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme2" />
+            android:theme="@style/MainAppTheme" />
         <activity
             android:name=".activity.VideoPlayerActivity"
             android:screenOrientation="landscape"

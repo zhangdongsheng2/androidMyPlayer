@@ -35,19 +35,4 @@ public class BodhiFragment extends BaseFragment {
     protected View initView() {
         return HomeFragmentView.getInstance(getContext(), this);
     }
-
-    @Override
-    protected void initListener() {
-
-    }
-
-    @Override
-    protected void initData() {
-
-    }
-
-    @Override
-    protected void processClick(View view) {
-
-    }
 }

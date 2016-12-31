@@ -22,10 +22,9 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.bean.VideoItem;
-import com.example.myplayer.widget.VideoView;
-import com.example.myplayer.util.LogUtils;
 import com.example.myplayer.util.StringUtil;
 import com.example.myplayer.util.ToastUtil;
+import com.example.myplayer.widget.VideoView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
@@ -40,6 +39,50 @@ import java.util.ArrayList;
 public class VideoPlayerActivity extends Activity implements View.OnClickListener {
     public static final String POSITION = "position";
     public static final String VIDEOLIST = "videolist";
+    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
+    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
+    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
+    private VideoView video_view;
+    //top control
+    private TextView tv_name, tv_system_time;
+    private ImageView iv_battery;
+    private ImageView iv_voice;
+    private SeekBar voice_seekbar;
+    //bottom control
+    private ImageView btn_play, btn_exit, btn_pre, btn_next, btn_screen;
+    private TextView tv_current_position, tv_duration;
+    private SeekBar video_seekbar;
+    private LinearLayout ll_top_control, ll_bottom_control;
+    private LinearLayout ll_loading, ll_buffer;
+    private int currentPosition;//当前播放视频的位置
+    private ArrayList<VideoItem> videoList;//当前的视频列表
+    private BatteryChangeReceiver batteryChangeReceiver;
+    private AudioManager audioManager;
+    private int touchSlop;
+    private GestureDetector gestureDetector;
+    private int maxVolume;//系统中音乐和视频类型最大音量
+    private int currentVolume;//系统音乐和视频类型当前的音量
+    private boolean isMute = false;//是否是静音模式
+    private int screenWidth, screenHeight;
+    private boolean isShowControlLayout = false;//是否是显示控制面板
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case MSG_UPDATE_SYSTEM_TIME:
+                    updateSystemTime();
+                    break;
+                case MSG_UPDATE_PLAY_PROGRESS:
+                    updatePlayProgress();
+                    break;
+                case MSG_HIDE_CONTROL:
+                    hideControlLayout();
+                    break;
+            }
+        }
+
+        ;
+    };
+    private float downY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +91,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         initListener();
         initData();
     }
-
 
     @Override
     public void onClick(View v) {
@@ -88,56 +130,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             }
         }
     }
-
-
-    private VideoView video_view;
-    //top control
-    private TextView tv_name, tv_system_time;
-    private ImageView iv_battery;
-    private ImageView iv_voice;
-    private SeekBar voice_seekbar;
-
-    //bottom control
-    private ImageView btn_play, btn_exit, btn_pre, btn_next, btn_screen;
-    private TextView tv_current_position, tv_duration;
-    private SeekBar video_seekbar;
-    private LinearLayout ll_top_control, ll_bottom_control;
-    private LinearLayout ll_loading, ll_buffer;
-
-    private int currentPosition;//当前播放视频的位置
-    private ArrayList<VideoItem> videoList;//当前的视频列表
-    private BatteryChangeReceiver batteryChangeReceiver;
-    private AudioManager audioManager;
-    private int touchSlop;
-    private GestureDetector gestureDetector;
-
-    private final int MSG_UPDATE_SYSTEM_TIME = 0;//更新系统时间
-    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
-    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
-
-    private Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            switch (msg.what) {
-                case MSG_UPDATE_SYSTEM_TIME:
-                    updateSystemTime();
-                    break;
-                case MSG_UPDATE_PLAY_PROGRESS:
-                    updatePlayProgress();
-                    break;
-                case MSG_HIDE_CONTROL:
-                    hideControlLayout();
-                    break;
-            }
-        }
-
-        ;
-    };
-
-    private int maxVolume;//系统中音乐和视频类型最大音量
-    private int currentVolume;//系统音乐和视频类型当前的音量
-    private boolean isMute = false;//是否是静音模式
-    private int screenWidth, screenHeight;
-    private boolean isShowControlLayout = false;//是否是显示控制面板
 
     /**
      * 更新系统时间
@@ -312,7 +304,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         Uri videoUri = getIntent().getData();
         if (videoUri != null) {
             //从文件发起的请求
-            LogUtils.e("uri: " + videoUri.getPath());
             video_view.setVideoURI(videoUri);
             btn_pre.setEnabled(false);
             btn_next.setEnabled(false);
@@ -362,8 +353,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 //		video_view.setMediaController(new MediaController(this));
     }
 
-    private float downY;
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         gestureDetector.onTouchEvent(event);
@@ -383,7 +372,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 
                 float totalDistance = Math.min(screenHeight, screenWidth);
                 float movePercent = Math.abs(moveDistance) / totalDistance;
-                LogUtils.e("movePercent: " + movePercent);
                 int moveVolume = (int) (movePercent * maxVolume);//这个值一定是0
 
                 if (moveDistance > 0) {
@@ -453,6 +441,42 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         unregisterReceiver(batteryChangeReceiver);
     }
 
+    private void showControlLayout() {
+        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(200);
+        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(200);
+        isShowControlLayout = true;
+        handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
+    }
+
+    private void hideControlLayout() {
+        ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(200);
+        ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(200);
+        isShowControlLayout = false;
+    }
+
+    private void updateBatteryBg(int level) {
+        if (level == 0) {
+            iv_battery.setImageResource(R.drawable.ic_battery_0);
+        } else if (level > 0 && level <= 10) {
+            iv_battery.setImageResource(R.drawable.ic_battery_1);
+        } else if (level > 10 && level <= 20) {
+            iv_battery.setImageResource(R.drawable.ic_battery_2);
+        } else if (level > 20 && level <= 50) {
+            iv_battery.setImageResource(R.drawable.ic_battery_4);
+        } else if (level > 50 && level <= 80) {
+            iv_battery.setImageResource(R.drawable.ic_battery_5);
+        } else {
+            iv_battery.setImageResource(R.drawable.ic_battery_6);
+        }
+    }
+
+    /**
+     * 根据是否正在播放更改播放按钮的背景图片
+     */
+    private void updateBtnPlayBg() {
+        btn_play.setImageResource(video_view.isPlaying() ? R.drawable.selector_btn_pause : R.drawable.selector_btn_play);
+    }
+
     private class MyOnGestureListner extends GestureDetector.SimpleOnGestureListener {
         @Override
         public void onLongPress(MotionEvent e) {
@@ -480,19 +504,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 
     }
 
-    private void showControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(200);
-        isShowControlLayout = true;
-        handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
-    }
-
-    private void hideControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(200);
-        isShowControlLayout = false;
-    }
-
     /**
      * 电池电量变化的广播接受者
      *
@@ -505,29 +516,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             int level = intent.getIntExtra("level", 0);
             updateBatteryBg(level);
         }
-    }
-
-    private void updateBatteryBg(int level) {
-        if (level == 0) {
-            iv_battery.setImageResource(R.drawable.ic_battery_0);
-        } else if (level > 0 && level <= 10) {
-            iv_battery.setImageResource(R.drawable.ic_battery_1);
-        } else if (level > 10 && level <= 20) {
-            iv_battery.setImageResource(R.drawable.ic_battery_2);
-        } else if (level > 20 && level <= 50) {
-            iv_battery.setImageResource(R.drawable.ic_battery_4);
-        } else if (level > 50 && level <= 80) {
-            iv_battery.setImageResource(R.drawable.ic_battery_5);
-        } else {
-            iv_battery.setImageResource(R.drawable.ic_battery_6);
-        }
-    }
-
-    /**
-     * 根据是否正在播放更改播放按钮的背景图片
-     */
-    private void updateBtnPlayBg() {
-        btn_play.setImageResource(video_view.isPlaying() ? R.drawable.selector_btn_pause : R.drawable.selector_btn_play);
     }
 
 

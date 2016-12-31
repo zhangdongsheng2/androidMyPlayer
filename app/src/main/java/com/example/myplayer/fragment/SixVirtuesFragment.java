@@ -23,7 +23,7 @@ import okhttp3.Response;
 /***
  * 测试页面
  */
-public class SixVirtuesFragment extends BaseFragment {
+public class SixVirtuesFragment extends BaseFragment implements View.OnClickListener {
     private Button button_getSIMInfo;
     private TextView number;
     private TextView privoid;
@@ -47,12 +47,7 @@ public class SixVirtuesFragment extends BaseFragment {
     }
 
     @Override
-    protected void initData() {
-
-    }
-
-    @Override
-    protected void processClick(View view) {
+    public void onClick(View view) {
 
 //        NetWorkFactory.getInstance().storeQuery(new Page(), new QueryStoreForCRequest(), new FilterSortMap(), new CallBack<Page<StoreViewModel>>() {
 //            @Override
@@ -126,9 +121,6 @@ public class SixVirtuesFragment extends BaseFragment {
                 KLog.e(request.body().toString());
             }
         });
-
-
     }
-
 
 }

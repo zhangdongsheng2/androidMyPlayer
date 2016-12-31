@@ -1,9 +1,11 @@
 package com.example.myplayer.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.myplayer.R;
@@ -16,6 +18,7 @@ import com.nineoldandroids.view.ViewHelper;
 
 /**
  * Created by zhangdongsheng on 16/8/11.
+ * RadioGroup 低栏的主页
  */
 public class MainFragment extends BaseFragment {
 
@@ -33,11 +36,22 @@ public class MainFragment extends BaseFragment {
         return view;
     }
 
-    private void setMargin(View view){
+    private void setMargin(View view) {
+        initButton((RadioButton) view);
         //Button 压边是 放大的效果
-        ViewHelper.setScaleX(view,1.2f);
-        ViewHelper.setScaleY(view,1.2f);
+        ViewHelper.setScaleX(view, 1.2f);
+        ViewHelper.setScaleY(view, 1.2f);
     }
+
+    public void initButton(RadioButton radioBtns) {
+        Drawable[] drawables = radioBtns.getCompoundDrawables();//通过RadioButton的getCompoundDrawables()方法，拿到图片的drawables,分别是左上右下的图片
+        drawables[1].setBounds(0, 0, getResources().getDimensionPixelSize(R.dimen._16),
+                getResources().getDimensionPixelSize(R.dimen._16));
+
+        radioBtns.setCompoundDrawables(drawables[0], drawables[1], drawables[2],
+                drawables[3]);//将改变了属性的drawable再重新设置回去
+    }
+
     @Override
     protected void initListener() {
         setMargin(rgGroup.findViewById(R.id.rb_home));
@@ -112,11 +126,6 @@ public class MainFragment extends BaseFragment {
                 rgGroup.check(R.id.rb_setting);
                 break;
         }
-
-    }
-
-    @Override
-    protected void processClick(View view) {
 
     }
 

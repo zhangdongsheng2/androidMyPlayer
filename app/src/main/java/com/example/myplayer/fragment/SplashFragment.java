@@ -34,10 +34,6 @@ public class SplashFragment extends BaseFragment {
     private android.widget.LinearLayout lvanimContainer;
     private RelativeLayout rlsplash;
 
-    public SplashFragment() {
-
-    }
-
     @Override
     protected View initView() {
         View inflate = ViewUtils.inflateView(R.layout.fragment_splash);
@@ -48,11 +44,6 @@ public class SplashFragment extends BaseFragment {
         this.ivsplashlogo = (ImageView) inflate.findViewById(R.id.iv_splash_logo);
         this.ivsplashbg = (ImageView) inflate.findViewById(R.id.iv_splash_bg);
         return inflate;
-    }
-
-    @Override
-    protected void initListener() {
-
     }
 
     @Override
@@ -105,11 +96,6 @@ public class SplashFragment extends BaseFragment {
         });
 
         animator.start();
-    }
-
-    @Override
-    protected void processClick(View view) {
-
     }
 
 

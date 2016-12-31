@@ -36,16 +36,14 @@ import android.view.View;
            create on 2016/4/20 18:49 */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-    private static final int[] ATTRS = new int[]{
-            android.R.attr.listDivider
-    };
     /**
      * ListView 的方向
      */
     public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
-
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
-
+    private static final int[] ATTRS = new int[]{
+            android.R.attr.listDivider //从主题中加载分割线条
+    };
     private Drawable mDivider;
 
     private int mOrientation;
@@ -66,7 +64,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void onDraw(Canvas c, RecyclerView parent) {
-//        LogUtils.e("recyclerview - itemdecorationonDraw()");
         if (mOrientation == VERTICAL_LIST) {
             drawVertical(c, parent);
         } else {

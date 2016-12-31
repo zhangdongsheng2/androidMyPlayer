@@ -19,7 +19,7 @@ import java.io.File;
  * Created by  on 2016/4/16/08:55.
  * Glide的为此封装
  */
-public final class GlideUtil {
+public final class ImageUtil {
 
     /**
      * 加载网络图片到imageview

@@ -7,4 +7,9 @@
     <dimen name="lyric_size_default">14dp</dimen>
     <dimen name="lyric_size_light">16dp</dimen>
     <dimen name="lyric_row_height">19dp</dimen>
+
+
+    <dimen name="_16">16dp</dimen>
+
+
 </resources>

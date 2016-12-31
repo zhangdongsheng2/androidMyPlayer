@@ -21,6 +21,7 @@ import interf.OnTabReselectListener;
 
 /**
  * Created by zhangdongsheng on 16/8/30.
+ * TabHost 的主页
  */
 public class MainTabHostFragment extends BaseFragment {
 
@@ -28,7 +29,6 @@ public class MainTabHostFragment extends BaseFragment {
     MyFragmentTabHost mTabHost;
     @BindView(R.id.quick_option_iv)
     View mAddBt;
-
 
 
     @Override
@@ -46,7 +46,12 @@ public class MainTabHostFragment extends BaseFragment {
     @Override
     protected void initListener() {
         // 中间按键图片触发
-        mAddBt.setOnClickListener(this);
+        mAddBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         mTabHost.setCurrentTab(0);
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -124,10 +129,5 @@ public class MainTabHostFragment extends BaseFragment {
                 }
             });
         }
-    }
-
-    @Override
-    protected void processClick(View view) {
-
     }
 }

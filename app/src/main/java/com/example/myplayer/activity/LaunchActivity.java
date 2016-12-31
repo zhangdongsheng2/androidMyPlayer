@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.example.myplayer.R;
 import com.example.myplayer.base.BaseActivity;
+import com.example.myplayer.util.CommonUtil;
 
 
 /**
@@ -12,18 +13,21 @@ import com.example.myplayer.base.BaseActivity;
 public class LaunchActivity extends BaseActivity {
     @Override
     protected int getContentView() {
-
-        doMerge();
+        CommonUtil.runOnThread(new Runnable() {
+            @Override
+            public void run() {
+                doMerge();
+            }
+        });
         return R.layout.app_start;
 
     }
 
 
     private void doMerge() {
-
         // Delay...
         try {
-            Thread.sleep(80);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

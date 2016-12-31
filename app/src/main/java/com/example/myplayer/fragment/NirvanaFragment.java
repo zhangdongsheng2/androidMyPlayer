@@ -26,12 +26,6 @@ public class NirvanaFragment extends BaseFragment {
     }
 
     @Override
-    protected void initListener() {
-
-    }
-
-
-    @Override
     protected void initData() {
         mBirth = (TextView) mRootView.findViewById(R.id.tv_birth);
         mAddress = (TextView) mRootView.findViewById(R.id.tv_address);
@@ -89,8 +83,5 @@ public class NirvanaFragment extends BaseFragment {
         });
     }
 
-    @Override
-    protected void processClick(View view) {
 
-    }
 }

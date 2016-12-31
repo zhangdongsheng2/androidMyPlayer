@@ -19,32 +19,32 @@
         <RadioButton
             android:id="@+id/rb_home"
             style="@style/BottomTabStyle"
-            android:drawableTop="@drawable/btn_tab_home_selector"
-            android:text="首页" />
+            android:drawableTop="@drawable/tab_icon_new"
+            android:text="@string/main_tab_name_news" />
 
         <RadioButton
             android:id="@+id/rb_news"
             style="@style/BottomTabStyle"
-            android:drawableTop="@drawable/btn_tab_news_selector"
-            android:text="中心" />
+            android:drawableTop="@drawable/tab_icon_tweet"
+            android:text="@string/main_tab_name_news" />
 
         <RadioButton
             android:id="@+id/rb_smart"
             style="@style/BottomTabStyle"
-            android:drawableTop="@drawable/btn_tab_smart_selector"
-            android:text="服务" />
+            android:drawableTop="@drawable/tab_icon_new"
+            android:text="@string/main_tab_name_news" />
 
         <RadioButton
             android:id="@+id/rb_gov"
             style="@style/BottomTabStyle"
-            android:drawableTop="@drawable/btn_tab_gov_selector"
-            android:text="政务" />
+            android:drawableTop="@drawable/tab_icon_explore"
+            android:text="@string/main_tab_name_news" />
 
         <RadioButton
             android:id="@+id/rb_setting"
             style="@style/BottomTabStyle"
-            android:drawableTop="@drawable/btn_tab_setting_selector"
-            android:text="设置" />
+            android:drawableTop="@drawable/tab_icon_me"
+            android:text="@string/main_tab_name_news" />
     </RadioGroup>
 
 </LinearLayout>

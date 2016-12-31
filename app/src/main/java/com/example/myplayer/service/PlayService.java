@@ -27,7 +27,6 @@ import com.example.myplayer.R;
 import com.example.myplayer.activity.VideoPlayerActivity;
 import com.example.myplayer.activity.VitamioPlayActivity;
 import com.example.myplayer.bean.VideoItem;
-import com.example.myplayer.util.LogUtils;
 import com.example.myplayer.util.ToastUtil;
 import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.animation.Animator;
@@ -42,12 +41,15 @@ import io.vov.vitamio.widget.VideoView;
 public class PlayService extends Service implements View.OnClickListener {
 
 
+    public static final String POSITION = "position";
+    public static final String VIDEOLIST = "videolist";
+    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
+    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
+    Intent mIntent;
     private WindowManager wm;
     private View mView;
-
     private int mScreenWidth;
     private int mScreenHeight;
-
     private int startX;
     private int startY;
     private WindowManager.LayoutParams mParams;
@@ -56,12 +58,95 @@ public class PlayService extends Service implements View.OnClickListener {
     private float x;
     private float y;
     private long currentPositionTime;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            mParams.y = msg.arg1;
+            wm.updateViewLayout(mView, mParams);
+        }
+    };
+    private VideoView video_view;
+    //top control
+    private TextView tv_name;
+    private ImageView iv_voice;
+    private SeekBar voice_seekbar;
+    //bottom control
+    private ImageView btn_play, btn_exit, btn_pre, btn_next, btn_screen;
+    private SeekBar video_seekbar;
+    private LinearLayout ll_top_control, ll_bottom_control;
+    private LinearLayout ll_loading, ll_buffer;
+    //------------------------------------------------------------------------
+    private int currentPosition;//当前播放视频的位置
+    private ArrayList<VideoItem> videoList;//当前的视频列表
+    private AudioManager audioManager;
+    private int touchSlop;
+    private GestureDetector gestureDetector;
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            gestureDetector.onTouchEvent(event);
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    startX = (int) event.getX();
+                    startY = (int) event.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    moveX = (int) event.getRawX();
+                    moveY = (int) event.getRawY();
+                    mParams.x = moveX - startX;
+                    mParams.y = moveY - startY;
+                    x = event.getX();
+                    y = event.getY();
+                    if (Math.abs(x - startX) > 20 || Math.abs(y - startY) > 20) {
+                        wm.updateViewLayout(mView, mParams);
+                    } else {
+
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+            }
+            return true;
+        }
+    };
+    //--------------------------------------------------------------------
+    private int maxVolume;//系统中音乐和视频类型最大音量
+    private int currentVolume;//系统音乐和视频类型当前的音量
+    private boolean isMute = false;//是否是静音模式
+    //    private int screenWidth, screenHeight;
+    private boolean isShowControlLayout = false;//是否是显示控制面板
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case MSG_UPDATE_PLAY_PROGRESS:
+                    updatePlayProgress();
+                    break;
+                case MSG_HIDE_CONTROL:
+                    if (isShowControlLayout) {
+                        //隐藏操作
+                        hideControlLayout();
+                    }
+                    break;
+            }
+        }
+
+        ;
+    };
+    private float downY;
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+
+//    /**
+//     * 更新系统时间  每隔一秒
+//     */
+//    private void updateSystemTime() {
+//        tv_system_time.setText(StringUtil.formatSystemTime());
+//        handler.sendEmptyMessageDelayed(MSG_UPDATE_SYSTEM_TIME, 1000);
+//    }
 
     @Override
     public void onStart(Intent intent, int startId) {
@@ -94,45 +179,6 @@ public class PlayService extends Service implements View.OnClickListener {
         initData();
     }
 
-    View.OnTouchListener touchListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            gestureDetector.onTouchEvent(event);
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    startX = (int) event.getX();
-                    startY = (int) event.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    moveX = (int) event.getRawX();
-                    moveY = (int) event.getRawY();
-                    mParams.x = moveX - startX;
-                    mParams.y = moveY - startY;
-                    x = event.getX();
-                    y = event.getY();
-                    if (Math.abs(x - startX) > 20 || Math.abs(y - startY) > 20) {
-                        wm.updateViewLayout(mView, mParams);
-                    } else {
-
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-            }
-            return true;
-        }
-    };
-
-
-    private Handler mHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            mParams.y = msg.arg1;
-            wm.updateViewLayout(mView, mParams);
-        }
-    };
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -141,67 +187,6 @@ public class PlayService extends Service implements View.OnClickListener {
         }
         handler.removeCallbacksAndMessages(null);
     }
-
-
-    public static final String POSITION = "position";
-    public static final String VIDEOLIST = "videolist";
-    private final int MSG_UPDATE_PLAY_PROGRESS = 1;//更新播放进度
-    private final int MSG_HIDE_CONTROL = 2;//延时隐藏控制面板
-
-
-    private VideoView video_view;
-    //top control
-    private TextView tv_name;
-    private ImageView iv_voice;
-    private SeekBar voice_seekbar;
-
-    //bottom control
-    private ImageView btn_play, btn_exit, btn_pre, btn_next, btn_screen;
-
-    private SeekBar video_seekbar;
-    private LinearLayout ll_top_control, ll_bottom_control;
-    private LinearLayout ll_loading, ll_buffer;
-
-    //------------------------------------------------------------------------
-    private int currentPosition;//当前播放视频的位置
-    private ArrayList<VideoItem> videoList;//当前的视频列表
-    private AudioManager audioManager;
-    private int touchSlop;
-    private GestureDetector gestureDetector;
-    //--------------------------------------------------------------------
-    private int maxVolume;//系统中音乐和视频类型最大音量
-    private int currentVolume;//系统音乐和视频类型当前的音量
-    private boolean isMute = false;//是否是静音模式
-    //    private int screenWidth, screenHeight;
-    private boolean isShowControlLayout = false;//是否是显示控制面板
-
-
-    private Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            switch (msg.what) {
-                case MSG_UPDATE_PLAY_PROGRESS:
-                    updatePlayProgress();
-                    break;
-                case MSG_HIDE_CONTROL:
-                    if (isShowControlLayout) {
-                        //隐藏操作
-                        hideControlLayout();
-                    }
-                    break;
-            }
-        }
-
-        ;
-    };
-
-
-//    /**
-//     * 更新系统时间  每隔一秒
-//     */
-//    private void updateSystemTime() {
-//        tv_system_time.setText(StringUtil.formatSystemTime());
-//        handler.sendEmptyMessageDelayed(MSG_UPDATE_SYSTEM_TIME, 1000);
-//    }
 
     /**
      * 更新播放进度  每隔0.5秒
@@ -430,9 +415,6 @@ public class PlayService extends Service implements View.OnClickListener {
         }
     }
 
-
-    Intent mIntent;
-
     public Intent getIntent() {
         return mIntent;
     }
@@ -450,7 +432,6 @@ public class PlayService extends Service implements View.OnClickListener {
         Uri videoUri = getIntent().getData();
         if (videoUri != null) {
             //从文件发起的请求
-            LogUtils.e("uri: " + videoUri.getPath());
             video_view.setVideoURI(videoUri);
             btn_pre.setEnabled(false);
             btn_next.setEnabled(false);
@@ -516,8 +497,6 @@ public class PlayService extends Service implements View.OnClickListener {
 //		video_view.setMediaController(new MediaController(this));
     }
 
-    private float downY;
-
 //    @Override
 //    public boolean onTouchEvent(MotionEvent event) {
 //        gestureDetector.onTouchEvent(event);
@@ -537,7 +516,6 @@ public class PlayService extends Service implements View.OnClickListener {
 //
 //                float totalDistance = Math.min(screenHeight, screenWidth);
 //                float movePercent = Math.abs(moveDistance) / totalDistance;
-//                LogUtils.e("movePercent: " + movePercent);
 //                int moveVolume = (int) (movePercent * maxVolume);//这个值一定是0
 //
 //                if (moveDistance > 0) {
@@ -591,6 +569,31 @@ public class PlayService extends Service implements View.OnClickListener {
 //                R.drawable.selector_btn_defaultscreen : R.drawable.selector_btn_fullscreen);
     }
 
+    private void showControlLayout() {
+        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(0);
+        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(0);
+        isShowControlLayout = true;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                wm.updateViewLayout(mView, mParams);
+            }
+        }, 500);
+        handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
+    }
+
+    private void hideControlLayout() {
+        ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(200);
+        ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(200);
+        isShowControlLayout = false;
+    }
+
+    /**
+     * 根据是否正在播放更改播放按钮的背景图片
+     */
+    private void updateBtnPlayBg() {
+        btn_play.setImageResource(video_view.isPlaying() ? R.drawable.selector_btn_pause : R.drawable.selector_btn_play);
+    }
 
     private class MyOnGestureListner extends GestureDetector.SimpleOnGestureListener {
         @Override
@@ -630,32 +633,6 @@ public class PlayService extends Service implements View.OnClickListener {
             return super.onSingleTapConfirmed(e);
         }
 
-    }
-
-    private void showControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(0);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(0);
-        isShowControlLayout = true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                wm.updateViewLayout(mView, mParams);
-            }
-        }, 500);
-        handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
-    }
-
-    private void hideControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(200);
-        isShowControlLayout = false;
-    }
-
-    /**
-     * 根据是否正在播放更改播放按钮的背景图片
-     */
-    private void updateBtnPlayBg() {
-        btn_play.setImageResource(video_view.isPlaying() ? R.drawable.selector_btn_pause : R.drawable.selector_btn_play);
     }
 
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myplayer.R;
-import com.example.myplayer.util.ExceptionUtil;
 import com.example.myplayer.util.ViewUtils;
 
 import java.lang.reflect.Field;
@@ -19,7 +18,7 @@ import java.lang.reflect.Field;
 /**
  * Fragment 的基类 2016/3/29.
  */
-public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+public abstract class BaseFragment extends Fragment {
 
     protected View mRootView;
 
@@ -27,7 +26,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = initView();
-        mRootView.setPadding(mRootView.getPaddingLeft(), mRootView.getPaddingTop() + ViewUtils.getStatusBarHeight(getContext()), mRootView.getPaddingRight(), mRootView.getPaddingBottom());
         initListener();
         initData();
         return mRootView;
@@ -35,9 +33,14 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected abstract View initView();
 
-    protected abstract void initListener();
+    protected void initListener() {
+    }
 
-    protected abstract void initData();
+    protected void initData() {
+    }
+
+
+//========================跳转相关========================================
 
     /**
      * fragment跳转
@@ -82,10 +85,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         ViewUtils.launch(getActivity(), save, id, clazz, stack, this, bundle);
     }
 
-    public void mainLaunch(Class clazz, Bundle bundle) {
-        ViewUtils.launch(getActivity(), true, R.id.content, clazz, true, getParentFragment(), bundle);
-    }
-
     /**
      * 退出Fragment回退栈
      */
@@ -97,33 +96,28 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * 退出Fragment回退栈
      */
     public void popStack(String tag) {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+
         try {
-            FragmentManager supportFragmentManager = this.getFragmentManager();
-            Field mStateSaved = supportFragmentManager.getClass().getDeclaredField("mStateSaved");
+            Field mStateSaved = manager.getClass().getDeclaredField("mStateSaved");
             mStateSaved.setAccessible(true);
-            mStateSaved.set(supportFragmentManager, Boolean.valueOf(false));
-            if (TextUtils.isEmpty(tag)) {
-                supportFragmentManager.popBackStackImmediate();
-            } else {
-                boolean popBackStackImmediate = supportFragmentManager.popBackStackImmediate(tag,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
-        } catch (Throwable e) {
-            ExceptionUtil.printThrowable(e);
+            mStateSaved.set(manager, false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-
-    /**
-     * 处理共同按钮点击事件
-     *
-     * @param view
-     */
-    protected abstract void processClick(View view);
-
-    @Override
-    public void onClick(View v) {
-        processClick(v);
+        if (TextUtils.isEmpty(tag)) {
+            try {
+                manager.popBackStackImmediate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                manager.popBackStackImmediate(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

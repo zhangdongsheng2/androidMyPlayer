@@ -67,7 +67,7 @@ public class MeditationFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), VitamioPlayActivity.class);
-                        String video = "http://kscdn.ku6.com/v505/34/61/e89b5fb0a577c8827d0d609a35e05d9f-f4v-h264-aac-238-32-131704.0-4528945-1482060613818-250b0e7fe54ed716ba691a5adab2504f-1-00-00-00.f4v.mp4?AccessKeyId=nhYNYRxiQI%2BTNpwVdAH3&Expires=1482238446&Signature=6MIxcZiYpR4p6IRvh1e%2FNBp%2F1sI%3D&";
+                        String video = "http://wsqncdn.miaopai.com/stream/qNrXcaFlMAMJfRo0xtCZdg__.mp4?ssig=b3da09b97eddb626c755f9a2057d29ae&time_stamp=1483200284688&f=/qNrXcaFlMAMJfRo0xtCZdg__.mp4?";
                         intent.setDataAndType(Uri.parse(video), "video/*");
                         startActivity(intent);
                     }
@@ -87,10 +87,6 @@ public class MeditationFragment extends BaseFragment {
         });
     }
 
-    @Override
-    protected void processClick(View view) {
-
-    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTitle;

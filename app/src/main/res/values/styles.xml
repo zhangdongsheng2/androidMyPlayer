@@ -1,10 +1,13 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
-        <item name="android:listDivider">@drawable/item_divider</item>
+    <style name="BaseAppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
+        <item name="android:listDivider">@drawable/item_divider</item>
+    </style>
+
+
+    <style name="AppTheme" parent="BaseAppTheme">
+        <item name="android:background">@mipmap/welcome</item>
     </style>
 
 
@@ -21,11 +24,11 @@
     <style name="BottomTabStyle">
         <item name="android:background">@drawable/selector_ripple_bg</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">46dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:button">@null</item>
         <item name="android:drawablePadding">0dp</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:paddingTop">5dp</item>
         <item name="android:textColor">@drawable/btn_tab_text_selector</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
