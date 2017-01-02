@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import com.example.myplayer.Const;
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.util.SPHelper;
 import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.DraggableGridAdapter;

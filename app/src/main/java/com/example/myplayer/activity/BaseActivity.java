@@ -1,4 +1,4 @@
-package com.example.myplayer.base;
+package com.example.myplayer.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

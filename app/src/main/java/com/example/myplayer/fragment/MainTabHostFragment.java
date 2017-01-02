@@ -9,7 +9,6 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.tab.MainTab;
 import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.MyFragmentTabHost;

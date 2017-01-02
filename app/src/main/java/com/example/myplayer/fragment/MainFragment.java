@@ -10,7 +10,6 @@ import android.widget.RadioGroup;
 
 import com.example.myplayer.R;
 import com.example.myplayer.adapter.baseadapter.MyMainFragmentPagerAdapter;
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.LazyViewPager;
 import com.example.myplayer.widget.NoScrollViewPager;

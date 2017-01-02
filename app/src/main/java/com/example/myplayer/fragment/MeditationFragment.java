@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.activity.VitamioPlayActivity;
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.recyclerview.DividerItemDecoration;
 import com.example.myplayer.util.ViewUtils;
 

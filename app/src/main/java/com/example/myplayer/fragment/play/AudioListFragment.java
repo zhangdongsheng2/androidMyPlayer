@@ -7,8 +7,8 @@ import android.view.View;
 
 import com.example.myplayer.R;
 import com.example.myplayer.adapter.AudioListAdapter;
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.db.SimpleQueryHandler;
+import com.example.myplayer.fragment.BaseFragment;
 import com.example.myplayer.recyclerview.DividerItemDecoration;
 import com.example.myplayer.util.ViewUtils;
 

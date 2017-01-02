@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.util.ExceptionUtil;
 import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.animation.Animator;

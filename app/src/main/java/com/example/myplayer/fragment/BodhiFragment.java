@@ -2,7 +2,6 @@ package com.example.myplayer.fragment;
 
 import android.view.View;
 
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.view.HomeFragmentView;
 
 /*

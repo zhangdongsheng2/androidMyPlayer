@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.util.ViewUtils;
 import com.socks.library.KLog;
 

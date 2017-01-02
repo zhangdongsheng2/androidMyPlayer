@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.adapter.baseadapter.MyMainFragmentPagerAdapter;
-import com.example.myplayer.base.BaseFragment;
+import com.example.myplayer.fragment.BaseFragment;
 import com.example.myplayer.fragment.play.AudioListFragment;
 import com.example.myplayer.fragment.play.VideoListFragment;
 import com.example.myplayer.util.ViewUtils;

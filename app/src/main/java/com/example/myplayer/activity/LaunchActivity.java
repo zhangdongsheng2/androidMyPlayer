@@ -3,7 +3,6 @@ package com.example.myplayer.activity;
 import android.content.Intent;
 
 import com.example.myplayer.R;
-import com.example.myplayer.base.BaseActivity;
 import com.example.myplayer.util.CommonUtil;
 
 

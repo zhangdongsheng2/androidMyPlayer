@@ -1,4 +1,4 @@
-package com.example.myplayer.base;
+package com.example.myplayer.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
