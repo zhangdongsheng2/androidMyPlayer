@@ -21,8 +21,6 @@ import com.example.myplayer.util.ViewUtils;
 import java.util.ArrayList;
 
 /*
-         佛祖保佑       永无BUG
----------------------------------------------
           视频列表适配器
           别人做的支持Cursor的适配器
           @author ZDS

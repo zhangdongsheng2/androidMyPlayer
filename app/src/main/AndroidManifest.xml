@@ -39,7 +39,7 @@
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/MainAppTheme" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.VideoPlayerActivity"
             android:screenOrientation="landscape"
@@ -72,20 +72,7 @@
 
 
         <activity android:name="io.vov.vitamio.activity.InitActivity" />
-        <activity android:name=".activity.leonids.ExampleListActivity" />
-        <activity android:name=".activity.leonids.OneShotSimpleExampleActivity" />
-        <activity android:name=".activity.leonids.FireworksExampleActivity" />
-        <activity android:name=".activity.leonids.OneShotAdvancedExampleActivity" />
-        <activity android:name=".activity.leonids.EmiterSimpleExampleActivity" />
-        <activity android:name=".activity.leonids.EmiterBackgroundSimpleExampleActivity" />
-        <activity android:name=".activity.leonids.EmiterIntermediateExampleActivity" />
-        <activity android:name=".activity.leonids.EmiterTimeLimitedExampleActivity" />
-        <activity android:name=".activity.leonids.AnimatedParticlesExampleActivity" />
-        <activity android:name=".activity.leonids.ConfettiExampleActivity" />
-        <activity android:name=".activity.leonids.DustExampleActivity" />
-        <activity android:name=".activity.leonids.StarsExampleActivity" />
-        <activity android:name=".activity.leonids.FollowCursorExampleActivity" />
-        <activity android:name=".activity.leonids.EmiterWithGravityExampleActivity" />
+
         <activity android:name=".activity.leonids.HeartActivity" />
 
 

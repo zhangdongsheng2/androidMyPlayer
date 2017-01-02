@@ -33,6 +33,6 @@ import com.example.myplayer.view.HomeFragmentView;
 public class BodhiFragment extends BaseFragment {
     @Override
     protected View initView() {
-        return HomeFragmentView.getInstance(getContext(), this);
+        return new HomeFragmentView(getContext(), BodhiFragment.this);
     }
 }

@@ -17,6 +17,7 @@ import com.example.myplayer.activity.VitamioPlayActivity;
 import com.example.myplayer.base.BaseFragment;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
+import com.example.myplayer.service.PlayService;
 import com.example.myplayer.util.DateUtil;
 import com.example.myplayer.util.ViewUtils;
 
@@ -53,6 +54,9 @@ public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //如果小窗口视频存在就关闭它
+                mBaseFragment.getActivity().stopService(new Intent(mBaseFragment.getContext(), PlayService.class));
+
                 Intent intent = new Intent(MyApplication.getContext(), VitamioPlayActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt(VideoPlayerActivity.POSITION, position);

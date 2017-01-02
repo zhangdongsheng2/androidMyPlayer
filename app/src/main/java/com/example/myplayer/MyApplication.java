@@ -30,6 +30,7 @@ public class MyApplication extends Application {
         instance = this;
         handler = new Handler();
         mContext = getApplicationContext();
+        DevConfig.init(BuildConfig.BUILD_TYPE);
     }
 
 }

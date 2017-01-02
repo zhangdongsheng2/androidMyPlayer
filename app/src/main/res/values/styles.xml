@@ -3,6 +3,7 @@
     <style name="BaseAppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="android:listDivider">@drawable/item_divider</item>
+
     </style>
 
 
@@ -33,18 +34,6 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">11sp</item>
-    </style>
-
-
-    <!-- 地址选择对话框样式 -->
-    <style name="ShareDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
 

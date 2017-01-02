@@ -11,4 +11,7 @@ public class Const {
 
     public static final String INTENT_ACTION_LOGOUT = "net.action.LOGOUT";
 
+
+    // 初始化首页九宫格布局
+    public static final String ORDER = "1:2:3:4:5:6:7:8:10";
 }

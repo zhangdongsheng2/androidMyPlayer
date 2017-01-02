@@ -21,29 +21,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private long exitTime = 0L;
-
-    @Override
-    protected int getContentView() {
-        return R.layout.activity_main;
-    }
-
-    @Override
-    public void onBackPressed() {
-        doubleExit();
-    }
-
-    /**
-     * 双击退出
-     */
-    private void doubleExit() {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            ToastUtil.showToast("再按一次退出程序");
-            exitTime = System.currentTimeMillis();
-        } else {
-            finish();
-            System.exit(0);
-        }
-    }
+    //-------------------------------------------------------------------------
 
     private void initService() {
         Toast.makeText(this, NativeRuntime.getInstance().stringFromJNI(), Toast.LENGTH_LONG).show();
@@ -66,5 +44,30 @@ public class MainActivity extends BaseActivity {
         })).start();
 //        NativeRuntime.getInstance().stopService();
     }
+
+    @Override
+    protected int getContentView() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void onBackPressed() {
+        doubleExit();
+    }
+
+    /**
+     * 双击退出
+     */
+    private void doubleExit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            ToastUtil.showToast("再按一次退出程序");
+            exitTime = System.currentTimeMillis();
+        } else {
+            finish();
+//            System.exit(0);
+        }
+    }
+
+
 
 }
