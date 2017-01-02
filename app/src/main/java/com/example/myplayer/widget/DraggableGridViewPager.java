@@ -215,14 +215,16 @@ public class DraggableGridViewPager extends ViewGroup {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        removeCallbacks(mEndScrollRunnable);
-        if (mAdapter != null) {
-            mAdapter.unregisterDataSetObserver(mDataSetObserver);
-        }
-        super.onDetachedFromWindow();
+    protected void onAttachedToWindow() {
+
+        super.onAttachedToWindow();
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        removeCallbacks(mEndScrollRunnable);
+        super.onDetachedFromWindow();
+    }
     public int getColCount() {
         return mColCount;
     }

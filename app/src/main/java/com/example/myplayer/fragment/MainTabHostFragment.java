@@ -10,13 +10,11 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.bean.tab.MainTab;
-import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.MyFragmentTabHost;
 import com.nineoldandroids.view.ViewHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import interf.OnTabReselectListener;
 
 /**
  * Created by zhangdongsheng on 16/8/30.
@@ -31,19 +29,18 @@ public class MainTabHostFragment extends BaseFragment {
 
 
     @Override
-    protected View initView() {
-        View view = ViewUtils.inflateView(R.layout.fragment_tabhost_content);
-        ButterKnife.bind(this, view);
+    protected int getLayoutId() {
+        return R.layout.fragment_tabhost_content;
+    }
+
+    @Override
+    protected void initWidget() {
+        ButterKnife.bind(this, mRootView);
         mTabHost.setup(getContext(), getChildFragmentManager(), R.id.realtabcontent);
         if (android.os.Build.VERSION.SDK_INT > 10) {
             mTabHost.getTabWidget().setShowDividers(0);
         }
 
-        return view;
-    }
-
-    @Override
-    protected void initListener() {
         // 中间按键图片触发
         mAddBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,4 +126,10 @@ public class MainTabHostFragment extends BaseFragment {
             });
         }
     }
+
+    public interface OnTabReselectListener {
+
+        void onTabReselect();
+    }
+
 }

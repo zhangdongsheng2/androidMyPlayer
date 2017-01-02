@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.util.ViewUtils;
 import com.socks.library.KLog;
 
 import java.io.IOException;
@@ -31,12 +30,12 @@ public class SixVirtuesFragment extends BaseFragment implements View.OnClickList
     private TextView ip;
 
     @Override
-    protected View initView() {
-        return ViewUtils.inflateView(R.layout.fragment_other);
+    protected int getLayoutId() {
+        return R.layout.fragment_other;
     }
 
     @Override
-    protected void initListener() {
+    protected void initWidget() {
 //        button_getSIMInfo = (Button) mRootView.findViewById(R.id.getSIMInfo);
 //        number = (TextView) mRootView.findViewById(R.id.textView1);
 //        privoid = (TextView) mRootView.findViewById(R.id.textView2);

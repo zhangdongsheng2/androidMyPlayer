@@ -26,12 +26,12 @@ public class MeditationFragment extends BaseFragment {
     private ArrayList<String> objects;
 
     @Override
-    protected View initView() {
-        return ViewUtils.inflateView(R.layout.fragment_audio);
+    protected int getLayoutId() {
+        return R.layout.fragment_audio;
     }
 
     @Override
-    protected void initListener() {
+    protected void initWidget() {
         listview = (RecyclerView) mRootView.findViewById(R.id.listview);
         objects = new ArrayList<String>() {{
             add("str01");
@@ -67,7 +67,7 @@ public class MeditationFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), VitamioPlayActivity.class);
-                        String video = "http://wsqncdn.miaopai.com/stream/qNrXcaFlMAMJfRo0xtCZdg__.mp4?ssig=b3da09b97eddb626c755f9a2057d29ae&time_stamp=1483200284688&f=/qNrXcaFlMAMJfRo0xtCZdg__.mp4?";
+                        String video = "http://us.sinaimg.cn/003LJLe6jx06YIIuX2Wj05040100zlb20k01.mp4?KID=unistore,video&Expires=1483344831&ssig=Nx9Qjl%2FJ2A&KID=unistore,video&Expires=1483344831&ssig=Nx9Qjl%2FJ2A";
                         intent.setDataAndType(Uri.parse(video), "video/*");
                         startActivity(intent);
                     }

@@ -3,14 +3,12 @@ package com.example.myplayer.fragment.play;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.example.myplayer.R;
 import com.example.myplayer.adapter.AudioListAdapter;
 import com.example.myplayer.db.SimpleQueryHandler;
 import com.example.myplayer.fragment.BaseFragment;
 import com.example.myplayer.recyclerview.DividerItemDecoration;
-import com.example.myplayer.util.ViewUtils;
 
 /**
  * Created by Administrator on 2016/3/31.
@@ -20,8 +18,8 @@ public class AudioListFragment extends BaseFragment {
     private AudioListAdapter adapter;
 
     @Override
-    protected View initView() {
-        return ViewUtils.inflateView(R.layout.fragment_video);
+    protected int getLayoutId() {
+        return R.layout.fragment_video;
     }
 
     @Override

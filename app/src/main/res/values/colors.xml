@@ -10,4 +10,5 @@
     <color name="list_pressed">#22ffffff</color>
     <color name="gray_white">#66ffffff</color>
     <color name="trans_gray_white">#66000000</color>
+    <color name="red">#ff0000</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.myplayer.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,26 +21,71 @@ import java.lang.reflect.Field;
  */
 public abstract class BaseFragment extends Fragment {
 
-    protected View mRootView;
 
-    @Nullable
+    protected Context mContext;
+    protected View mRootView;
+    protected Bundle mBundle;
+
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = initView();
-        initListener();
-        initData();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mContext = null;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBundle = getArguments();
+        initBundle(mBundle);
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (mRootView != null) {
+            ViewGroup parent = (ViewGroup) mRootView.getParent();
+            if (parent != null)
+                parent.removeView(mRootView);
+        } else {
+            mRootView = inflater.inflate(getLayoutId(), container, false);
+            // Get savedInstanceState
+            if (savedInstanceState != null)
+                onRestartInstance(savedInstanceState);
+            // Init
+            initWidget();
+            initData();
+        }
         return mRootView;
     }
 
-    protected abstract View initView();
 
-    protected void initListener() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBundle = null;
+    }
+
+    protected abstract int getLayoutId();
+
+    protected void initBundle(Bundle bundle) {
+    }
+
+    protected void initWidget() {
     }
 
     protected void initData() {
     }
 
-
+    protected void onRestartInstance(Bundle bundle) {
+    }
 //========================跳转相关========================================
 
     /**

@@ -10,7 +10,6 @@ import android.widget.RadioGroup;
 
 import com.example.myplayer.R;
 import com.example.myplayer.adapter.baseadapter.MyMainFragmentPagerAdapter;
-import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.LazyViewPager;
 import com.example.myplayer.widget.NoScrollViewPager;
 import com.nineoldandroids.view.ViewHelper;
@@ -28,11 +27,8 @@ public class MainFragment extends BaseFragment {
     private NoScrollViewPager mViewPager;
 
     @Override
-    protected View initView() {
-        View view = ViewUtils.inflateView(R.layout.fragment_content);
-        rgGroup = (RadioGroup) view.findViewById(R.id.rg_group);
-        mViewPager = (NoScrollViewPager) view.findViewById(R.id.vp_content);
-        return view;
+    protected int getLayoutId() {
+        return R.layout.fragment_content;
     }
 
     private void setMargin(View view) {
@@ -44,15 +40,17 @@ public class MainFragment extends BaseFragment {
 
     public void initButton(RadioButton radioBtns) {
         Drawable[] drawables = radioBtns.getCompoundDrawables();//通过RadioButton的getCompoundDrawables()方法，拿到图片的drawables,分别是左上右下的图片
-        drawables[1].setBounds(0, 0, getResources().getDimensionPixelSize(R.dimen._16),
-                getResources().getDimensionPixelSize(R.dimen._16));
+        drawables[1].setBounds(0, 0, getResources().getDimensionPixelSize(R.dimen._16dp),
+                getResources().getDimensionPixelSize(R.dimen._16dp));
 
         radioBtns.setCompoundDrawables(drawables[0], drawables[1], drawables[2],
                 drawables[3]);//将改变了属性的drawable再重新设置回去
     }
 
     @Override
-    protected void initListener() {
+    protected void initWidget() {
+        rgGroup = (RadioGroup) mRootView.findViewById(R.id.rg_group);
+        mViewPager = (NoScrollViewPager) mRootView.findViewById(R.id.vp_content);
         setMargin(rgGroup.findViewById(R.id.rb_home));
         setMargin(rgGroup.findViewById(R.id.rb_news));
         setMargin(rgGroup.findViewById(R.id.rb_smart));

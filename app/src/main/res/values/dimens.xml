@@ -9,7 +9,13 @@
     <dimen name="lyric_row_height">19dp</dimen>
 
 
-    <dimen name="_16">16dp</dimen>
+    <dimen name="_16dp">16dp</dimen>
+    <dimen name="_12dp">12dp</dimen>
+    <dimen name="_8dp">8dp</dimen>
+    <dimen name="_2dp">2dp</dimen>
+
+
+    <dimen name="_10sp">10sp</dimen>
 
 
 </resources>

@@ -1,13 +1,11 @@
 package com.example.myplayer.fragment;
 
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.TextView;
 
 import com.example.myplayer.Const;
 import com.example.myplayer.R;
 import com.example.myplayer.util.SPHelper;
-import com.example.myplayer.util.ViewUtils;
 import com.example.myplayer.widget.DraggableGridAdapter;
 import com.example.myplayer.widget.DraggableGridViewPager;
 
@@ -21,8 +19,8 @@ public class NirvanaFragment extends BaseFragment {
     private DraggableGridViewPager myGridview;
 
     @Override
-    protected View initView() {
-        return ViewUtils.inflateView(R.layout.fragment_nirvana);
+    protected int getLayoutId() {
+        return R.layout.fragment_nirvana;
     }
 
     @Override

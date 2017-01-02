@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 
 import com.example.myplayer.R;
 import com.example.myplayer.util.ExceptionUtil;
-import com.example.myplayer.util.ViewUtils;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -34,15 +33,18 @@ public class SplashFragment extends BaseFragment {
     private RelativeLayout rlsplash;
 
     @Override
-    protected View initView() {
-        View inflate = ViewUtils.inflateView(R.layout.fragment_splash);
-        this.rlsplash = (RelativeLayout) inflate.findViewById(R.id.rl_splash);
-        this.lvanimContainer = (LinearLayout) inflate.findViewById(R.id.lv_animContainer);
-        this.ivsplashright = (ImageView) inflate.findViewById(R.id.iv_splash_right);
-        this.ivsplashleft = (ImageView) inflate.findViewById(R.id.iv_splash_left);
-        this.ivsplashlogo = (ImageView) inflate.findViewById(R.id.iv_splash_logo);
-        this.ivsplashbg = (ImageView) inflate.findViewById(R.id.iv_splash_bg);
-        return inflate;
+    protected int getLayoutId() {
+        return R.layout.fragment_splash;
+    }
+
+    @Override
+    protected void initWidget() {
+        this.rlsplash = (RelativeLayout) mRootView.findViewById(R.id.rl_splash);
+        this.lvanimContainer = (LinearLayout) mRootView.findViewById(R.id.lv_animContainer);
+        this.ivsplashright = (ImageView) mRootView.findViewById(R.id.iv_splash_right);
+        this.ivsplashleft = (ImageView) mRootView.findViewById(R.id.iv_splash_left);
+        this.ivsplashlogo = (ImageView) mRootView.findViewById(R.id.iv_splash_logo);
+        this.ivsplashbg = (ImageView) mRootView.findViewById(R.id.iv_splash_bg);
     }
 
     @Override
@@ -163,7 +165,7 @@ public class SplashFragment extends BaseFragment {
                     beginTransaction.setCustomAnimations(R.anim.my_scale_action,
                             R.anim.my_alpha_action, R.anim.my_scale_action,
                             R.anim.my_translation_out);
-                    Fragment fragment = MainTabHostFragment.class.newInstance();
+                    Fragment fragment = MainThreeFragment.class.newInstance();
                     beginTransaction.add(R.id.content, fragment);
                     new Handler().postDelayed(new Runnable() {
                         @Override
