@@ -1,22 +1,9 @@
-package net1.impl;
+package net1;
 
 import android.widget.Toast;
 
 import com.example.myplayer.MyApplication;
 import com.socks.library.KLog;
-
-import net1.CallBack;
-import net1.INetWork;
-import net1.Url;
-import net1.interfaces.FilterSortMap;
-import net1.interfaces.Page;
-import net1.interfaces.QueryStoreForCRequest;
-import net1.interfaces.StoreViewModel;
-import net1.netutils.BasicRequest;
-import net1.netutils.ClientCommonInfo;
-import net1.netutils.GsonHelper;
-import net1.netutils.HttpUtil;
-import net1.netutils.PageRequest;
 
 public class OkhttpImpl implements INetWork {
 

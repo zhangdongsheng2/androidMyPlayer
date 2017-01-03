@@ -1,8 +1,6 @@
 package net1;
 
 
-import net1.impl.OkhttpImpl;
-
 /**
  * 网络请求的工厂类
  *

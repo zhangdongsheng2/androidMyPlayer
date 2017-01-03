@@ -1,4 +1,4 @@
-package net1.netutils;
+package net1;
 
 /**
  * @Author 冯高远

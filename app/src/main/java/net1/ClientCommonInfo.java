@@ -1,4 +1,4 @@
-package net1.netutils;
+package net1;
 
 import android.os.Build;
 

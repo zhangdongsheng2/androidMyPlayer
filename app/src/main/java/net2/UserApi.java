@@ -1,6 +1,6 @@
 package net2;
 
-import net1.netutils.PageRequest;
+import net1.PageRequest;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import rx.Observable;

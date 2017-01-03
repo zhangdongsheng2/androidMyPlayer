@@ -1,4 +1,4 @@
-package net1.netutils;
+package net1;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

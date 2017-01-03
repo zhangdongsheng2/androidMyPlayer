@@ -1,7 +1,5 @@
-package net1.netutils;
+package net1;
 
-
-import net1.interfaces.Page;
 
 /**
  * @Author 冯高远

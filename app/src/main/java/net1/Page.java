@@ -1,4 +1,4 @@
-package net1.interfaces;
+package net1;
 
 import java.util.List;
 

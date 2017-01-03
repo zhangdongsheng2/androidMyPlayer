@@ -1,7 +1,5 @@
 package net1;
 
-import net1.interfaces.AccountInterface;
-
 /**
  * 返回类型以CallBack的泛型为准
  * **********************************************
