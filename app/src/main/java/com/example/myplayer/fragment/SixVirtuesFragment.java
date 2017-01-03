@@ -5,10 +5,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.myplayer.MyApplication;
 import com.example.myplayer.R;
+import com.example.myplayer.db.DaoMaster;
+import com.example.myplayer.db.DaoSession;
+import com.example.myplayer.db.Memo;
+import com.example.myplayer.db.MemoDao;
 import com.socks.library.KLog;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -43,6 +49,18 @@ public class SixVirtuesFragment extends BaseFragment implements View.OnClickList
 //        ip = (TextView) mRootView.findViewById(R.id.textView4);
 //        button_getSIMInfo.setOnClickListener(new ButtonListener());
         mRootView.findViewById(R.id.btn).setOnClickListener(this);
+
+        mRootView.findViewById(R.id.temp_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(MyApplication.getContext(), "jiji.db", null);
+                DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDatabase());
+                DaoSession daoSession = daoMaster.newSession();
+                MemoDao userDao = daoSession.getMemoDao();
+                List<Memo> list = userDao.queryBuilder().build().list();
+                KLog.e(list);
+            }
+        });
     }
 
     @Override

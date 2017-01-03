@@ -40,7 +40,7 @@ public class ExceptionUtil {
             e.printStackTrace();
         }
         // 导出发生异常的时间
-        pw.println(DateUtil.formatDate(new Date(), "yyyy-MM-dd-HH-mm-ss"));
+        pw.println(DateUtils.formatDate(new Date(), "yyyy-MM-dd-HH-mm-ss"));
         // 导出手机信息
         try {
             // 应用的版本名称和版本号

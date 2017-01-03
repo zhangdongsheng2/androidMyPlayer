@@ -18,7 +18,7 @@ import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.fragment.BaseFragment;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
 import com.example.myplayer.service.PlayService;
-import com.example.myplayer.util.DateUtil;
+import com.example.myplayer.util.DateUtils;
 import com.example.myplayer.util.ViewUtils;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class VideoListAdapter extends RecyclerViewCursorAdapter<VideoListAdapter
     public void onBindViewHolder(MyViewHolder holder, final Cursor cursor, final int position) {
         VideoItem videoItem = VideoItem.fromCursor(cursor);
         holder.tvTitle.setText(videoItem.getTitle());
-        holder.tvDuration.setText(DateUtil.formatVideoDuration(videoItem.getDuration()));
+        holder.tvDuration.setText(DateUtils.formatVideoDuration(videoItem.getDuration()));
         holder.tvSize.setText(Formatter.formatFileSize(mContext, videoItem.getSize()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

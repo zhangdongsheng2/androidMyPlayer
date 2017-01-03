@@ -40,4 +40,10 @@
         custom:ico_left="@drawable/classify125"
         custom:ico_right="@drawable/classify124"
         custom:numTextColor="#fff" />
+
+    <Button
+        android:id="@+id/temp_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="aaaa" />
 </LinearLayout>

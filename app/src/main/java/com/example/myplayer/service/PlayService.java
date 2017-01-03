@@ -144,7 +144,7 @@ public class PlayService extends Service implements View.OnClickListener {
 //     * 更新系统时间  每隔一秒
 //     */
 //    private void updateSystemTime() {
-//        tv_system_time.setText(StringUtil.formatSystemTime());
+//        tv_system_time.setText(StringUtils.formatSystemTime());
 //        handler.sendEmptyMessageDelayed(MSG_UPDATE_SYSTEM_TIME, 1000);
 //    }
 

@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.example.myplayer.R;
 import com.example.myplayer.bean.VideoItem;
-import com.example.myplayer.util.StringUtil;
+import com.example.myplayer.util.StringUtils;
 import com.example.myplayer.util.ToastUtil;
 import com.example.myplayer.widget.VideoView;
 import com.nineoldandroids.animation.Animator;
@@ -135,7 +135,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 更新系统时间
      */
     private void updateSystemTime() {
-        tv_system_time.setText(StringUtil.formatSystemTime());
+        tv_system_time.setText(StringUtils.formatSystemTime());
         handler.sendEmptyMessageDelayed(MSG_UPDATE_SYSTEM_TIME, 1000);
     }
 
@@ -143,7 +143,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 更新播放进度
      */
     private void updatePlayProgress() {
-        tv_current_position.setText(StringUtil.formatVideoDuration(video_view.getCurrentPosition()));
+        tv_current_position.setText(StringUtils.formatVideoDuration(video_view.getCurrentPosition()));
         video_seekbar.setProgress(video_view.getCurrentPosition());
         handler.sendEmptyMessageDelayed(MSG_UPDATE_PLAY_PROGRESS, 500);
     }
@@ -230,7 +230,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                                           boolean fromUser) {
                 if (fromUser) {
                     video_view.seekTo(progress);
-                    tv_current_position.setText(StringUtil.formatVideoDuration(progress));
+                    tv_current_position.setText(StringUtils.formatVideoDuration(progress));
                 }
             }
         });
@@ -344,7 +344,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                 updatePlayProgress();
                 video_seekbar.setMax(video_view.getDuration());
                 tv_current_position.setText("00:00");
-                tv_duration.setText(StringUtil.formatVideoDuration(video_view.getDuration()));
+                tv_duration.setText(StringUtils.formatVideoDuration(video_view.getDuration()));
 
                 btn_play.setImageResource(R.drawable.selector_btn_pause);
             }

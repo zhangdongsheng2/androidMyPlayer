@@ -5,7 +5,14 @@ import android.widget.Toast;
 import com.example.myplayer.R;
 import com.example.myplayer.drop.Cserver.FileUtils;
 import com.example.myplayer.drop.Cserver.NativeRuntime;
+import com.example.myplayer.util.CommonUtil;
 import com.example.myplayer.util.ToastUtil;
+
+import java.io.File;
+import java.io.IOException;
+
+import okio.BufferedSink;
+import okio.Okio;
 
 
 /**
@@ -20,7 +27,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private long exitTime = 0L;
-    //-------------------------------------------------------------------------
+
 
     private void initService() {
         Toast.makeText(this, NativeRuntime.getInstance().stringFromJNI(), Toast.LENGTH_LONG).show();
@@ -44,9 +51,42 @@ public class MainActivity extends BaseActivity {
 //        NativeRuntime.getInstance().stopService();
     }
 
+    //-------------------------------------------------------------------------
     @Override
     protected int getContentView() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initData() {
+        CommonUtil.runOnThread(new Runnable() {
+            @Override
+            public void run() {
+                File file = new File(MainActivity.this.getCacheDir().getParent() + "/databases/jiji.db");
+                if (file.exists()) {
+                    file.delete();
+                }
+                File parentFile = file.getParentFile();
+                if (!parentFile.exists()) {
+                    parentFile.mkdirs();
+                }
+                BufferedSink buffer = null;
+                try {
+                    buffer = Okio.buffer(Okio.sink(file));
+                    buffer.writeAll(Okio.source(getAssets().open("jiji.db")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (buffer != null) {
+                        try {
+                            buffer.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -63,10 +103,8 @@ public class MainActivity extends BaseActivity {
             exitTime = System.currentTimeMillis();
         } else {
             finish();
-//            System.exit(0);
         }
     }
-
 
 
 }

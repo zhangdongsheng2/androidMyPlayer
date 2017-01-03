@@ -15,7 +15,7 @@ import com.example.myplayer.activity.AudioPlayActivity;
 import com.example.myplayer.bean.AudioItem;
 import com.example.myplayer.fragment.BaseFragment;
 import com.example.myplayer.recyclerview.RecyclerViewCursorAdapter;
-import com.example.myplayer.util.DateUtil;
+import com.example.myplayer.util.DateUtils;
 import com.example.myplayer.util.ViewUtils;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class AudioListAdapter extends RecyclerViewCursorAdapter<AudioListAdapter
     public void onBindViewHolder(MyViewHolder holder, final Cursor cursor, final int position) {
         AudioItem audioItem = AudioItem.fromCursor(cursor);
         holder.tvTitle.setText(audioItem.getTitle());
-        holder.tvDuration.setText(DateUtil.formatVideoDuration(audioItem.getDuration()));
+        holder.tvDuration.setText(DateUtils.formatVideoDuration(audioItem.getDuration()));
 //        holder.tvSize.setText(Formatter.formatFileSize(mContext, audioItem.getSize()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,13 +2,47 @@ package com.example.myplayer.util;
 
 import android.annotation.SuppressLint;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by Administrator on 2016/3/29.
  */
-public class DateUtil {
+public class DateUtils {
+
+
+    /**
+     * 将日期字符串转换为Date类型
+     *
+     * @param dateStr 日期字符串
+     * @param type    日期字符串格式
+     * @return Date对象
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static Date transform(String dateStr, String type) {
+        SimpleDateFormat df = new SimpleDateFormat(type);
+        Date date = null;
+        try {
+            date = df.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 将Date类型转换为日期字符串
      *

@@ -22,7 +22,7 @@ import com.example.myplayer.R;
 import com.example.myplayer.bean.AudioItem;
 import com.example.myplayer.bean.Lyric;
 import com.example.myplayer.service.AudioPlayService;
-import com.example.myplayer.util.StringUtil;
+import com.example.myplayer.util.StringUtils;
 import com.example.myplayer.util.ToastUtil;
 import com.example.myplayer.view.LyricView;
 import com.example.myplayer.widget.lyric.LyricLoader;
@@ -78,8 +78,8 @@ public class AudioPlayActivity extends Activity implements View.OnClickListener 
      */
     private void updatePlayProgress() {
         audio_seekbar.setProgress((int) audioServiceBinder.getCurrentPosition());
-        tv_time.setText(StringUtil.formatVideoDuration(audioServiceBinder.getCurrentPosition())
-                + "/" + StringUtil.formatVideoDuration(audioServiceBinder.getDuration()));
+        tv_time.setText(StringUtils.formatVideoDuration(audioServiceBinder.getCurrentPosition())
+                + "/" + StringUtils.formatVideoDuration(audioServiceBinder.getDuration()));
         handler.sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 500);
     }
 
@@ -145,8 +145,8 @@ public class AudioPlayActivity extends Activity implements View.OnClickListener 
                                           boolean fromUser) {
                 if (fromUser) {
                     audioServiceBinder.seekTo(progress);
-                    tv_time.setText(StringUtil.formatVideoDuration(progress)
-                            + "/" + StringUtil.formatVideoDuration(audioServiceBinder.getDuration()));
+                    tv_time.setText(StringUtils.formatVideoDuration(progress)
+                            + "/" + StringUtils.formatVideoDuration(audioServiceBinder.getDuration()));
                 }
             }
         });
@@ -267,7 +267,7 @@ public class AudioPlayActivity extends Activity implements View.OnClickListener 
 
                 audio_seekbar.setMax((int) audioItem.getDuration());
                 iv_play.setBackgroundResource(R.drawable.selector_btn_audio_pause);
-                tv_title.setText(StringUtil.formatAudioName(audioItem.getTitle()));
+                tv_title.setText(StringUtils.formatAudioName(audioItem.getTitle()));
                 tv_artist.setText(audioItem.getArtist());
                 updatePlayModeBg(false);
                 updatePlayProgress();
@@ -279,8 +279,8 @@ public class AudioPlayActivity extends Activity implements View.OnClickListener 
                 updateLyric();//开始滚动歌词
             } else if (AudioPlayService.ACTION_COMPLATION.equals(intent.getAction())) {
                 iv_play.setBackgroundResource(R.drawable.selector_btn_audio_play);
-                tv_time.setText(StringUtil.formatVideoDuration(audioServiceBinder.getDuration())
-                        + "/" + StringUtil.formatVideoDuration(audioServiceBinder.getDuration()));
+                tv_time.setText(StringUtils.formatVideoDuration(audioServiceBinder.getDuration())
+                        + "/" + StringUtils.formatVideoDuration(audioServiceBinder.getDuration()));
 
                 handler.removeMessages(MSG_ROLL_LYRIC);
                 handler.removeMessages(MSG_UPDATE_PROGRESS);
