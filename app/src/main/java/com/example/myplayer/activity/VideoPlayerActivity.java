@@ -31,8 +31,6 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 import java.util.ArrayList;
 
 /*
-         佛祖保佑       永无BUG
-----------------------------------------------
            视频播放页面
            @author ZDS
            create on 2016/4/3 19:18 */

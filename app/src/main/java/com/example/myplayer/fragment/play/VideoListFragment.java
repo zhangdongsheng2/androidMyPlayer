@@ -42,7 +42,7 @@ public class VideoListFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_video;
+        return R.layout.fragment_list_layout;
     }
 
     @Override

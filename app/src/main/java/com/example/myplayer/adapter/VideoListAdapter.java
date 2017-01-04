@@ -24,8 +24,14 @@ import com.example.myplayer.util.ViewUtils;
 import java.util.ArrayList;
 
 /*
-         佛祖保佑       永无BUG
----------------------------------------------
+        播放网络视频跳转方式
+        Intent intent = new Intent(getContext(), VitamioPlayActivity.class);
+      String video = "http://us.sinaimg.cn/003LJLe6jx06YIIuX2Wj05040100zlb20k01.mp4?KID=unistore,video&Expires=1483344831&ssig=Nx9Qjl%2FJ2A&KID=unistore,video&Expires=1483344831&ssig=Nx9Qjl%2FJ2A";
+       intent.setDataAndType(Uri.parse(video), "video/*");
+       startActivity(intent);
+
+
+
           视频列表适配器
           @author ZDS
           create on 2016/4/2  18:32 */

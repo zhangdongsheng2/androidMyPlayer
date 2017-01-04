@@ -11,17 +11,17 @@ import com.example.myplayer.util.ViewUtils;
            @author ZDS
            create on 2016/3/30  22:17 */
 
-public class StatusBarRelativeLayout extends RelativeLayout {
-    public StatusBarRelativeLayout(Context context) {
+public class StatusBarFrameLayout extends RelativeLayout {
+    public StatusBarFrameLayout(Context context) {
         this(context, null);
     }
 
-    public StatusBarRelativeLayout(Context context, AttributeSet attrs) {
+    public StatusBarFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public StatusBarRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public StatusBarFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
