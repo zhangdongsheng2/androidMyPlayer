@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/ll_top_control"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_top_control"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,13 +20,13 @@
             android:layout_weight="1"
             android:text="@string/title_name"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/iv_battery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_battery_0"/>
+            android:src="@drawable/ic_battery_0" />
 
         <TextView
             android:id="@+id/tv_system_time"
@@ -35,7 +35,7 @@
             android:layout_marginLeft="5dp"
             android:text="@string/title_time"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
-            android:src="@drawable/selector_btn_voice"/>
+            android:src="@drawable/selector_btn_voice" />
 
         <SeekBar
             android:id="@+id/voice_seekbar"
@@ -61,8 +61,7 @@
             android:maxHeight="6dp"
             android:minHeight="6dp"
             android:progressDrawable="@drawable/voice_progress_drawable"
-            android:thumb="@drawable/video_progress_thumb"
-            />
+            android:thumb="@drawable/video_progress_thumb" />
     </LinearLayout>
 
 </LinearLayout>

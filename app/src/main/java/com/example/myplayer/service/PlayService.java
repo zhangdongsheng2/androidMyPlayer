@@ -1,5 +1,8 @@
 package com.example.myplayer.service;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +20,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -29,8 +34,6 @@ import com.example.myplayer.activity.VitamioPlayActivity;
 import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.util.ToastUtil;
 import com.example.myplayer.util.ViewUtils;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.socks.library.KLog;
 
 import java.util.ArrayList;
@@ -129,8 +132,6 @@ public class PlayService extends Service implements View.OnClickListener {
                     break;
             }
         }
-
-        ;
     };
     private float downY;
 
@@ -228,14 +229,14 @@ public class PlayService extends Service implements View.OnClickListener {
             @Override
             public void onGlobalLayout() {
                 ll_top_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(0);
+                ll_top_control.setTranslationY(-ll_top_control.getHeight());
             }
         });
         ll_bottom_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 ll_bottom_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(0);
+                ll_bottom_control.setTranslationY(ll_bottom_control.getHeight());
             }
         });
 
@@ -448,24 +449,27 @@ public class PlayService extends Service implements View.OnClickListener {
         video_view.setOnPreparedListener(new io.vov.vitamio.MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(io.vov.vitamio.MediaPlayer mp) {
-                ViewPropertyAnimator.animate(ll_loading).alpha(0).setDuration(1000).setListener(new Animator.AnimatorListener() {
+                AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
+                alphaAnimation.setDuration(1000);
+                alphaAnimation.setFillAfter(true);
+                ll_loading.setAnimation(alphaAnimation);
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animator arg0) {
+                    public void onAnimationStart(Animation animation) {
+
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animator arg0) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator arg0) {
+                    public void onAnimationEnd(Animation animation) {
                         ll_loading.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator arg0) {
+                    public void onAnimationRepeat(Animation animation) {
+
                     }
                 });
+                alphaAnimation.start();
 
                 video_view.start();
 
@@ -570,23 +574,37 @@ public class PlayService extends Service implements View.OnClickListener {
     }
 
     private void showControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(0);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(0);
+        handler.removeMessages(MSG_HIDE_CONTROL);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_top_control, "translationY", -ll_top_control.getHeight(), 0);
+        animator.setDuration(200);
+        animator.start();
+
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(ll_bottom_control, "translationY", ll_bottom_control.getHeight(), 0);
+        animator2.setDuration(200);
+        animator2.start();
         isShowControlLayout = true;
-        new Handler().postDelayed(new Runnable() {
+        animator2.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void run() {
+            public void onAnimationEnd(Animator animation) {
                 wm.updateViewLayout(mView, mParams);
             }
-        }, 500);
+        });
+
         handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
+
     }
 
     private void hideControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(200);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_top_control, "translationY", 0, -ll_top_control.getHeight());
+        animator.setDuration(500);
+        animator.start();
+
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(ll_bottom_control, "translationY", 0, ll_bottom_control.getHeight());
+        animator2.setDuration(500);
+        animator2.start();
         isShowControlLayout = false;
     }
+
 
     /**
      * 根据是否正在播放更改播放按钮的背景图片

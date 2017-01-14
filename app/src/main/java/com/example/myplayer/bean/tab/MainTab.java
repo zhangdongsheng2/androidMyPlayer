@@ -7,7 +7,6 @@ import com.example.myplayer.fragment.NirvanaFragment;
 import com.example.myplayer.fragment.SixVirtuesFragment;
 
 
-
 public enum MainTab {
 
 	/*

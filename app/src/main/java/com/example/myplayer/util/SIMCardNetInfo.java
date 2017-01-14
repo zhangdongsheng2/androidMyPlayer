@@ -24,6 +24,14 @@ import java.util.Enumeration;
  * @version 1.00
  */
 public class SIMCardNetInfo {
+    //=========================== 获取网络信息=========================================
+    public static final String NETWORN_NONE = "没有网络";
+    public static final String NETWORN_WIFI = "WiFi";
+    public static final String NETWORN_2G = "2G网络";
+    public static final String NETWORN_3G = "3G网络";
+    public static final String NETWORN_4G = "4G网络";
+    public static final String NETWORN_MOBILE = "Web网络";
+    private static Context mContext;
     /**
      * TelephonyManager提供设备上获取通讯服务信息的入口。 应用程序可以使用这个类方法确定的电信服务商和国家 以及某些类型的用户访问信息。
      * 应用程序也可以注册一个监听器到电话收状态的变化。不需要直接实例化这个类
@@ -34,87 +42,11 @@ public class SIMCardNetInfo {
      * 国际移动用户识别码
      */
     private String IMSI;
-    private static Context mContext;
-
     public SIMCardNetInfo(Context context) {
         mContext = context;
         telephonyManager = (TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE);
     }
-
-    /**
-     * Role:获取当前设置的电话号码
-     * <BR>Date:2012-3-12
-     * <BR>@author CODYY)peijiangping
-     */
-    public String getNativePhoneNumber() {
-        String NativePhoneNumber = null;
-        NativePhoneNumber = telephonyManager.getLine1Number();
-//        KLog.e(telephonyManager.getPhoneCount());
-//        KLog.e(telephonyManager.getPhoneType());
-//        KLog.e(telephonyManager.getAllCellInfo());
-//        KLog.e(telephonyManager.getCellLocation());
-//        KLog.e(telephonyManager.getSimCountryIso());
-//        KLog.e(telephonyManager.getSimOperator());
-//        KLog.e(telephonyManager.getSimOperatorName());
-//        KLog.e(telephonyManager.getSimSerialNumber());
-//        KLog.e(telephonyManager.getSimState());
-        KLog.e(telephonyManager.getSubscriberId());
-        return NativePhoneNumber;
-    }
-
-    public String getPhone(){
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("\nDeviceId(IMEI) = " + telephonyManager.getDeviceId());
-        sb.append("\nDeviceSoftwareVersion = " + telephonyManager.getDeviceSoftwareVersion());
-        sb.append("\nLine1Number = " + telephonyManager.getLine1Number());
-        sb.append("\nNetworkCountryIso = " + telephonyManager.getNetworkCountryIso());
-        sb.append("\nNetworkOperator = " + telephonyManager.getNetworkOperator());
-        sb.append("\nNetworkOperatorName = " + telephonyManager.getNetworkOperatorName());
-        sb.append("\nNetworkType = " + telephonyManager.getNetworkType());
-        sb.append("\nPhoneType = " + telephonyManager.getPhoneType());
-        sb.append("\nSimCountryIso = " + telephonyManager.getSimCountryIso());
-        sb.append("\nSimOperator = " + telephonyManager.getSimOperator());
-        sb.append("\nSimOperatorName = " + telephonyManager.getSimOperatorName());
-        sb.append("\nSimSerialNumber = " + telephonyManager.getSimSerialNumber());
-        sb.append("\nSimState = " + telephonyManager.getSimState());
-        sb.append("\nSubscriberId(IMSI) = " + telephonyManager.getSubscriberId());
-        sb.append("\nVoiceMailNumber = " + telephonyManager.getVoiceMailNumber());
-        return  sb.toString();
-    }
-
-    /**
-     * Role:Telecom service providers获取手机服务商信息 <BR>
-     * 需要加入权限<uses-permission
-     * android:name="android.permission.READ_PHONE_STATE"/> <BR>
-     * Date:2012-3-12 <BR>
-     *
-     * @author CODYY)peijiangping
-     */
-    public String getProvidersName() {
-        String ProvidersName = null;
-        // 返回唯一的用户ID;就是这张卡的编号神马的
-        IMSI = telephonyManager.getSubscriberId();
-        // IMSI号前面3位460是国家，紧接着后面2位00 02是中国移动，01是中国联通，03是中国电信。
-        System.out.println(IMSI);
-        if (IMSI.startsWith("46000") || IMSI.startsWith("46002")) {
-            ProvidersName = "中国移动";
-        } else if (IMSI.startsWith("46001")) {
-            ProvidersName = "中国联通";
-        } else if (IMSI.startsWith("46003")) {
-            ProvidersName = "中国电信";
-        }
-        return ProvidersName;
-    }
-
-    //=========================== 获取网络信息=========================================
-    public static final String NETWORN_NONE = "没有网络";
-    public static final String NETWORN_WIFI = "WiFi";
-    public static final String NETWORN_2G = "2G网络";
-    public static final String NETWORN_3G = "3G网络";
-    public static final String NETWORN_4G = "4G网络";
-    public static final String NETWORN_MOBILE = "Web网络";
 
     /**
      * 获取当前网络连接类型
@@ -182,6 +114,72 @@ public class SIMCardNetInfo {
                 }
         }
         return NETWORN_NONE;
+    }
+
+    /**
+     * Role:获取当前设置的电话号码
+     * <BR>Date:2012-3-12
+     * <BR>@author CODYY)peijiangping
+     */
+    public String getNativePhoneNumber() {
+        String NativePhoneNumber = null;
+        NativePhoneNumber = telephonyManager.getLine1Number();
+//        KLog.e(telephonyManager.getPhoneCount());
+//        KLog.e(telephonyManager.getPhoneType());
+//        KLog.e(telephonyManager.getAllCellInfo());
+//        KLog.e(telephonyManager.getCellLocation());
+//        KLog.e(telephonyManager.getSimCountryIso());
+//        KLog.e(telephonyManager.getSimOperator());
+//        KLog.e(telephonyManager.getSimOperatorName());
+//        KLog.e(telephonyManager.getSimSerialNumber());
+//        KLog.e(telephonyManager.getSimState());
+        KLog.e(telephonyManager.getSubscriberId());
+        return NativePhoneNumber;
+    }
+
+    public String getPhone() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\nDeviceId(IMEI) = " + telephonyManager.getDeviceId());
+        sb.append("\nDeviceSoftwareVersion = " + telephonyManager.getDeviceSoftwareVersion());
+        sb.append("\nLine1Number = " + telephonyManager.getLine1Number());
+        sb.append("\nNetworkCountryIso = " + telephonyManager.getNetworkCountryIso());
+        sb.append("\nNetworkOperator = " + telephonyManager.getNetworkOperator());
+        sb.append("\nNetworkOperatorName = " + telephonyManager.getNetworkOperatorName());
+        sb.append("\nNetworkType = " + telephonyManager.getNetworkType());
+        sb.append("\nPhoneType = " + telephonyManager.getPhoneType());
+        sb.append("\nSimCountryIso = " + telephonyManager.getSimCountryIso());
+        sb.append("\nSimOperator = " + telephonyManager.getSimOperator());
+        sb.append("\nSimOperatorName = " + telephonyManager.getSimOperatorName());
+        sb.append("\nSimSerialNumber = " + telephonyManager.getSimSerialNumber());
+        sb.append("\nSimState = " + telephonyManager.getSimState());
+        sb.append("\nSubscriberId(IMSI) = " + telephonyManager.getSubscriberId());
+        sb.append("\nVoiceMailNumber = " + telephonyManager.getVoiceMailNumber());
+        return sb.toString();
+    }
+
+    /**
+     * Role:Telecom service providers获取手机服务商信息 <BR>
+     * 需要加入权限<uses-permission
+     * android:name="android.permission.READ_PHONE_STATE"/> <BR>
+     * Date:2012-3-12 <BR>
+     *
+     * @author CODYY)peijiangping
+     */
+    public String getProvidersName() {
+        String ProvidersName = null;
+        // 返回唯一的用户ID;就是这张卡的编号神马的
+        IMSI = telephonyManager.getSubscriberId();
+        // IMSI号前面3位460是国家，紧接着后面2位00 02是中国移动，01是中国联通，03是中国电信。
+        System.out.println(IMSI);
+        if (IMSI.startsWith("46000") || IMSI.startsWith("46002")) {
+            ProvidersName = "中国移动";
+        } else if (IMSI.startsWith("46001")) {
+            ProvidersName = "中国联通";
+        } else if (IMSI.startsWith("46003")) {
+            ProvidersName = "中国电信";
+        }
+        return ProvidersName;
     }
 
     /**

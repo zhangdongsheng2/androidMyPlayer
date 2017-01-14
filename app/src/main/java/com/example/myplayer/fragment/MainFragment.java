@@ -12,7 +12,6 @@ import com.example.myplayer.R;
 import com.example.myplayer.adapter.baseadapter.MyMainFragmentPagerAdapter;
 import com.example.myplayer.widget.LazyViewPager;
 import com.example.myplayer.widget.NoScrollViewPager;
-import com.nineoldandroids.view.ViewHelper;
 
 /**
  * Created by zhangdongsheng on 16/8/11.
@@ -34,8 +33,8 @@ public class MainFragment extends BaseFragment {
     private void setMargin(View view) {
         initButton((RadioButton) view);
         //Button 压边是 放大的效果
-        ViewHelper.setScaleX(view, 1.2f);
-        ViewHelper.setScaleY(view, 1.2f);
+//        ViewHelper.setScaleX(view, 1.2f);
+//        ViewHelper.setScaleY(view, 1.2f);
     }
 
     public void initButton(RadioButton radioBtns) {

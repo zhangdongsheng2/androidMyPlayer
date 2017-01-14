@@ -278,7 +278,8 @@ void check_and_restart_activity(char *service) {
 /**
  * 返回ABI给Java
  */
-jstring Java_com_example_myplayer_drop_Cserver_NativeRuntime_stringFromJNI(JNIEnv *env, jobject thiz) {
+jstring Java_com_example_myplayer_drop_Cserver_NativeRuntime_stringFromJNI(JNIEnv *env,
+                                                                           jobject thiz) {
 #if defined(__arm__)
 #if defined(__ARM_ARCH_7A__)
 #if defined(__ARM_NEON__)
@@ -348,7 +349,8 @@ jstring cchrptr_ProcessName, jstring
 sdpath) {
 char *rtn = jstringTostring(env, cchrptr_ProcessName); // 得到进程名称
 char *sd = jstringTostring(env, sdpath);
-LOGI("Java_com_example_myplayer_drop_Cserver_NativeRuntime_startService run....ProcessName:%s", rtn);
+LOGI("Java_com_example_myplayer_drop_Cserver_NativeRuntime_startService run....ProcessName:%s",
+     rtn);
 a = rtn;
 start(1, rtn, sd);
 }

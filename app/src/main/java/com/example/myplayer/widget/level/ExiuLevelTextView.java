@@ -22,13 +22,6 @@ import java.util.Map;
  *         注：@—皇冠，#—钻石，￥—太阳，%—月亮，&—星星
  */
 public class ExiuLevelTextView extends TextView {
-    private int mCreditSize;
-    private int mCreditAlignment;
-    private int mCreditTextSize;
-    private int mTextStart = 0;
-    private int mTextLength = -1;
-    private Drawable mDrawable;
-
     private static Map<String, Integer> sCreditDrawableMap = new HashMap<>();
 
     //用来匹配的字符
@@ -40,18 +33,18 @@ public class ExiuLevelTextView extends TextView {
         sCreditDrawableMap.put("&", R.drawable.credit_star);
     }
 
-    private static int getSoftbankCreditResource(char c) {
-        if (sCreditDrawableMap.containsKey(String.valueOf(c))) {
-            return sCreditDrawableMap.get(String.valueOf(c));
-        }
-        return 0;
-    }
-
+    private int mCreditSize;
+    private int mCreditAlignment;
+    private int mCreditTextSize;
+    private int mTextStart = 0;
+    private int mTextLength = -1;
+    private Drawable mDrawable;
 
     public ExiuLevelTextView(Context context) {
         super(context);
         init(null);
     }
+
 
     public ExiuLevelTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,6 +54,13 @@ public class ExiuLevelTextView extends TextView {
     public ExiuLevelTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs);
+    }
+
+    private static int getSoftbankCreditResource(char c) {
+        if (sCreditDrawableMap.containsKey(String.valueOf(c))) {
+            return sCreditDrawableMap.get(String.valueOf(c));
+        }
+        return 0;
     }
 
     private void init(AttributeSet attrs) {

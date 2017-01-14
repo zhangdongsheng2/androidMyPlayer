@@ -20,6 +20,7 @@ import java.util.Date;
 public class ExceptionUtil {
     /**
      * 打印异常日志进内存卡 PlayerException 文件夹
+     *
      * @param throwable
      */
     public static void printThrowable(Throwable throwable) {
@@ -45,7 +46,7 @@ public class ExceptionUtil {
         try {
             // 应用的版本名称和版本号
             PackageManager pm = MyApplication.getContext().getPackageManager();
-            PackageInfo pi = pm.getPackageInfo( MyApplication.getContext().getPackageName(), PackageManager.GET_ACTIVITIES);
+            PackageInfo pi = pm.getPackageInfo(MyApplication.getContext().getPackageName(), PackageManager.GET_ACTIVITIES);
             pw.print("App Version: ");
             pw.print(pi.versionName);
             pw.print('_');

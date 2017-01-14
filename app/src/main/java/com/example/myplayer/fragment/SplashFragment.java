@@ -1,5 +1,8 @@
 package com.example.myplayer.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -16,9 +19,7 @@ import android.widget.RelativeLayout;
 
 import com.example.myplayer.R;
 import com.example.myplayer.util.ExceptionUtil;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
+
 
 /**
  * 启动页动画 2016/3/24.

@@ -20,16 +20,15 @@ import com.example.myplayer.R;
 
 
 public class UiSeeKBar extends SeekBar {
+    //构建画笔和文字
+    Paint bmPaint;
     //进度条指示文字后缀
     private String numTextFormat = "%";
-
     private String numText;
     //进度条指示文字的大小吗默认20px
     private int numTextSize = 20;
     //字体指示颜色
     private int numTextColor;
-    //构建画笔和文字
-    Paint bmPaint;
     //文本的宽可能不准
     private float numTextWidth;
     //测量seekbar的规格
@@ -47,6 +46,8 @@ public class UiSeeKBar extends SeekBar {
     private int iconRight;
     private int leftWidth;
     private int rightHeight;
+    private Bitmap leftBtm;
+    private Bitmap rightBtm;
 
     public UiSeeKBar(Context context) {
         this(context, null);
@@ -55,7 +56,6 @@ public class UiSeeKBar extends SeekBar {
     public UiSeeKBar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
     public UiSeeKBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         //初始化属性
@@ -65,9 +65,6 @@ public class UiSeeKBar extends SeekBar {
         //设置预留显示
         initBm();
     }
-
-    private Bitmap leftBtm;
-    private Bitmap rightBtm;
 
     private void initBm() {
         leftBtm = BitmapFactory.decodeResource(getResources(), iconLeft);

@@ -1,5 +1,6 @@
 package com.example.myplayer.activity;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -24,8 +27,6 @@ import com.example.myplayer.bean.VideoItem;
 import com.example.myplayer.service.PlayService;
 import com.example.myplayer.util.StringUtils;
 import com.example.myplayer.util.ToastUtil;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.util.ArrayList;
 
@@ -149,14 +150,14 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
             @Override
             public void onGlobalLayout() {
                 ll_top_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(0);
+                ll_top_control.setTranslationY(-ll_top_control.getHeight());
             }
         });
         ll_bottom_control.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 ll_bottom_control.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(0);
+                ll_bottom_control.setTranslationY(ll_bottom_control.getHeight());
             }
         });
 
@@ -339,24 +340,27 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
         video_view.setOnPreparedListener(new io.vov.vitamio.MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(io.vov.vitamio.MediaPlayer mp) {
-                ViewPropertyAnimator.animate(ll_loading).alpha(0).setDuration(1000).setListener(new Animator.AnimatorListener() {
+                AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
+                alphaAnimation.setDuration(1000);
+                alphaAnimation.setFillAfter(true);
+                ll_loading.setAnimation(alphaAnimation);
+                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animator arg0) {
+                    public void onAnimationStart(Animation animation) {
+
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animator arg0) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator arg0) {
+                    public void onAnimationEnd(Animation animation) {
                         ll_loading.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator arg0) {
+                    public void onAnimationRepeat(Animation animation) {
+
                     }
                 });
+                alphaAnimation.start();
 
                 video_view.start();
 
@@ -500,15 +504,26 @@ public class VitamioPlayActivity extends Activity implements View.OnClickListene
     }
 
     private void showControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(0).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(0).setDuration(200);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_top_control, "translationY", -ll_top_control.getHeight(), 0);
+        animator.setDuration(500);
+        animator.start();
+
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(ll_bottom_control, "translationY", ll_bottom_control.getHeight(), 0);
+        animator2.setDuration(500);
+        animator2.start();
+
         isShowControlLayout = true;
         handler.sendEmptyMessageDelayed(MSG_HIDE_CONTROL, 5000);
     }
 
     private void hideControlLayout() {
-        ViewPropertyAnimator.animate(ll_top_control).translationY(-ll_top_control.getHeight()).setDuration(200);
-        ViewPropertyAnimator.animate(ll_bottom_control).translationY(ll_bottom_control.getHeight()).setDuration(200);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_top_control, "translationY", 0, -ll_top_control.getHeight());
+        animator.setDuration(500);
+        animator.start();
+
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(ll_bottom_control, "translationY", 0, ll_bottom_control.getHeight());
+        animator2.setDuration(500);
+        animator2.start();
         isShowControlLayout = false;
     }
 

@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
@@ -12,7 +13,6 @@ import com.example.myplayer.fragment.play.AudioListFragment;
 import com.example.myplayer.fragment.play.VideoListFragment;
 import com.example.myplayer.widget.StatusBarLinearLayout;
 import com.example.myplayer.widget.ZoomOutPageTransformer;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.socks.library.KLog;
 
 /*
@@ -49,7 +49,7 @@ public class BodhiFragment extends BaseFragment implements View.OnClickListener 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 int targetPosition = position * lineWidth + positionOffsetPixels / fragments.length;
-                ViewPropertyAnimator.animate(indicateline).translationX(targetPosition).setDuration(0);
+                indicateline.setTranslationX(targetPosition);
             }
 
             @Override
@@ -64,10 +64,24 @@ public class BodhiFragment extends BaseFragment implements View.OnClickListener 
         int currentPage = viewpager.getCurrentItem();
         tabvideo.setTextColor(currentPage == 0 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.white));
         tabaudio.setTextColor(currentPage == 1 ? getResources().getColor(R.color.indicate_line) : getResources().getColor(R.color.white));
-        ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200);
-        ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200);
-        ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200);
-        ViewPropertyAnimator.animate(tabaudio).scaleY(currentPage == 1 ? 1.2f : 1).setDuration(200);
+
+
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1f, currentPage == 1 ? 1.2f : 1f, 1, currentPage == 1 ? 1.2f : 1);
+        scaleAnimation.setFillAfter(true);
+        scaleAnimation.setDuration(200);
+        tabaudio.setAnimation(scaleAnimation);
+        scaleAnimation.start();
+
+
+        scaleAnimation = new ScaleAnimation(1f, currentPage == 0 ? 1.2f : 1f, 1, currentPage == 0 ? 1.2f : 1);
+        scaleAnimation.setFillAfter(true);
+        scaleAnimation.setDuration(200);
+        tabvideo.setAnimation(scaleAnimation);
+        scaleAnimation.start();
+//        ViewPropertyAnimator.animate(tabvideo).scaleX(currentPage == 0 ? 1.2f : 1).setDuration(200);
+//        ViewPropertyAnimator.animate(tabvideo).scaleY(currentPage == 0 ? 1.2f : 1).setDuration(200);
+//        ViewPropertyAnimator.animate(tabaudio).scaleX(currentPage == 1 ? 1.2f : 1).setDuration(200);
+//        ViewPropertyAnimator.animate(tabaudio).scaleY(currentPage == 1 ? 1.2f : 1).setDuration(200);
     }
 
     private void calculateIndicateLineWidth() {

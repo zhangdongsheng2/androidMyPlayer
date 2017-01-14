@@ -18,15 +18,16 @@ import java.util.Set;
  */
 public class MyListView extends ListView {
     private Set<View> list = new HashSet<>();
+    private int originalHight;
 
     public MyListView(Context context) {
         super(context);
     }
 
+
     public MyListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
 
     public MyListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -36,9 +37,6 @@ public class MyListView extends ListView {
         int startInt = startValue;
         return (int) (startInt + fraction * (endValue - startInt));
     }
-
-
-    private int originalHight;
 
     /**
      * 当listview 滚动到顶部的时候，还要下拉，还要向上滚动，那么这时就会调用该方法

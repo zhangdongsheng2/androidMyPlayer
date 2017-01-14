@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.example.myplayer.R;
 import com.example.myplayer.bean.tab.MainTab;
 import com.example.myplayer.widget.MyFragmentTabHost;
-import com.nineoldandroids.view.ViewHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,8 +70,8 @@ public class MainTabHostFragment extends BaseFragment {
 
     private void setMargin(View view) {
         //Button 压边是 放大的效果
-        ViewHelper.setScaleX(view, 1.2f);
-        ViewHelper.setScaleY(view, 1.2f);
+        view.setScaleX(1.2f);
+        view.setScaleY(1.2f);
     }
 
     @Override

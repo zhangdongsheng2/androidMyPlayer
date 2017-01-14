@@ -225,6 +225,7 @@ public class DraggableGridViewPager extends ViewGroup {
         removeCallbacks(mEndScrollRunnable);
         super.onDetachedFromWindow();
     }
+
     public int getColCount() {
         return mColCount;
     }
@@ -568,7 +569,7 @@ public class DraggableGridViewPager extends ViewGroup {
         switch (action) {
             case MotionEvent.ACTION_MOVE: {
             /*
-			 * mIsBeingDragged == false, otherwise the shortcut would have
+             * mIsBeingDragged == false, otherwise the shortcut would have
 			 * caught it. Check whether the user has moved far enough from his
 			 * original down touch.
 			 */
