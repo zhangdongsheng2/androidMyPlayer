@@ -2,11 +2,13 @@
 <com.example.myplayer.widget.StatusBarFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/welcome"
     android:orientation="vertical">
 
     <cn.aigestudio.datepicker.views.DatePicker
         android:id="@+id/main_dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:alpha="0.9" />
 
 </com.example.myplayer.widget.StatusBarFrameLayout>

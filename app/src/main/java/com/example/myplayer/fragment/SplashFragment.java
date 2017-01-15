@@ -66,6 +66,28 @@ public class SplashFragment extends BaseFragment {
 
             @Override
             public void onAnimationEnd(Animator animator) {
+                try {
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    final FragmentTransaction beginTransaction = manager.beginTransaction();
+                    beginTransaction.setCustomAnimations(R.anim.my_scale_action,
+                            R.anim.my_alpha_action, R.anim.my_scale_action,
+                            R.anim.my_translation_out);
+                    Fragment fragment = MainThreeFragment.class.newInstance();
+                    beginTransaction.add(R.id.content, fragment);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            beginTransaction.remove(SplashFragment.this);
+                        }
+                    }, 1000);
+                    beginTransaction.commitAllowingStateLoss();
+                    return;
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    ExceptionUtil.printThrowable(e);
+                }
+
+                //TODO 暂时去掉这里 节省时间 =========================
                 // 结束时，做打开的动画
                 // 1.获得 进度容器的图片
                 rlsplash.setDrawingCacheEnabled(true);
@@ -84,6 +106,7 @@ public class SplashFragment extends BaseFragment {
                 lvanimContainer.bringToFront();
                 // 显示动画
                 showOpenAnimtor();
+
             }
 
             @Override
@@ -152,46 +175,6 @@ public class SplashFragment extends BaseFragment {
                 ObjectAnimator.ofFloat(ivsplashleft, "alpha", 1, 0),
                 ObjectAnimator.ofFloat(ivsplashright, "alpha", 1, 0));
         set.setDuration(1000);
-        set.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                try {
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    final FragmentTransaction beginTransaction = manager.beginTransaction();
-                    beginTransaction.setCustomAnimations(R.anim.my_scale_action,
-                            R.anim.my_alpha_action, R.anim.my_scale_action,
-                            R.anim.my_translation_out);
-                    Fragment fragment = MainThreeFragment.class.newInstance();
-                    beginTransaction.add(R.id.content, fragment);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            beginTransaction.remove(SplashFragment.this);
-                        }
-                    }, 1000);
-                    beginTransaction.commitAllowingStateLoss();
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    ExceptionUtil.printThrowable(e);
-                }
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
         set.start();
     }
 }

@@ -20,14 +20,12 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:persistent="true"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- 暂时用不到启动等待 -->
         <activity
             android:name=".activity.LaunchActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,9 +35,9 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".activity.VideoPlayerActivity"
             android:screenOrientation="landscape"
