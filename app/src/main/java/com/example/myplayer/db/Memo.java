@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 import com.example.myplayer.bean.Photo;
-import com.example.myplayer.util.DateUtils;
 import com.example.myplayer.util.StringUtils;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -12,7 +11,6 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,61 +29,39 @@ public class Memo {
     public static final String TAG_SEPARATOR = "\\|";
 
     @NotNull
-    private Date adddate;
+    public String adddate;
 
-    private Integer addday;
+    public Integer addday;
 
-    private Integer addmonth;
+    public Integer addmonth;
 
-    private Integer addyear;
+    public Integer addyear;
 
-    private String at;
+    public String at;
 
-    private String content;
+    public String content;
     @Id
-    private Integer id;
+    public Integer id;
 
-    private Boolean isasynced = Boolean.valueOf(false);
+    public Boolean isasynced = Boolean.valueOf(false);
 
-    private String loc;
+    public String loc;
 
-    private String photo;
+    public String photo;
 
-    private Date updatedate;
+    public String updatedate;
 
-    private String useremail = "0";
+    public String useremail = "0";
 
-    private String uuid = "0";
+    public String uuid = "0";
 
     public Memo() {
     }
 
-    public Memo(String paramString, Date paramDate) {
-        this(paramString, paramDate, null, null, null);
-    }
 
-    public Memo(String paramString1, Date paramDate, String paramString2, String paramString3) {
-        this(paramString1, paramDate, paramString2, paramString3, null);
-    }
-
-    public Memo(String paramString1, Date paramDate, String paramString2, String paramString3, String paramString4) {
-        this.content = paramString1;
-        addDate(paramDate);
-        this.at = paramString2;
-        this.loc = paramString3;
-        this.photo = paramString4;
-        this.updatedate = new Date();
-    }
-
-    public Memo(String paramString1, Date paramDate, String paramString2, String paramString3, String paramString4, String paramString5, String paramString6) {
-        this(paramString1, paramDate, paramString2, paramString3, paramString4);
-        this.useremail = paramString5;
-        this.uuid = paramString6;
-    }
-
-    @Generated(hash = 1295257571)
-    public Memo(@NotNull Date adddate, Integer addday, Integer addmonth, Integer addyear, String at, String content, Integer id, Boolean isasynced, String loc,
-                String photo, Date updatedate, String useremail, String uuid) {
+    @Generated(hash = 810458075)
+    public Memo(@NotNull String adddate, Integer addday, Integer addmonth, Integer addyear, String at, String content, Integer id, Boolean isasynced, String loc,
+                String photo, String updatedate, String useremail, String uuid) {
         this.adddate = adddate;
         this.addday = addday;
         this.addmonth = addmonth;
@@ -126,37 +102,6 @@ public class Memo {
         return Integer.valueOf(paramString.split("\\|").length);
     }
 
-    public void addDate(Date paramDate) {
-        if (paramDate != null) {
-            this.adddate = paramDate;
-            this.addyear = Integer.valueOf(DateUtils.formatDate(paramDate, "yyyy"));
-            this.addmonth = Integer.valueOf(DateUtils.formatDate(paramDate, "MM"));
-            this.addday = Integer.valueOf(DateUtils.formatDate(paramDate, "dd"));
-        }
-    }
-
-    public void addDateFromStr(String paramString) {
-        addDate(DateUtils.transform(paramString, "yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public String getAddDateStr() {
-        if (this.adddate != null) {
-            return DateUtils.formatDate(this.adddate, "yyyy-MM-dd HH:mm:ss");
-        }
-        return DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
-    }
-
-    public Date getAdddate() {
-        return this.adddate;
-    }
-
-    public void setAdddate(Date paramDate) {
-        this.adddate = paramDate;
-    }
-
-    public void setAdddate(String paramString) {
-        this.adddate = DateUtils.transform(paramString, "yyyy-MM-dd HH:mm:ss");
-    }
 
     public Integer getAddday() {
         return this.addday;
@@ -329,9 +274,7 @@ public class Memo {
         return null;
     }
 
-    public Date getTime() {
-        return this.adddate;
-    }
+
 
     public String getTopContent(int paramInt) {
         try {
@@ -342,12 +285,6 @@ public class Memo {
         return this.content;
     }
 
-    public String getUpdatedateStr() {
-        if (this.updatedate != null) {
-            return DateUtils.formatDate(updatedate, "yyyy-MM-dd HH:mm:ss");
-        }
-        return DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
-    }
 
     public String getUseremail() {
         return this.useremail;
@@ -404,9 +341,6 @@ public class Memo {
         return false;
     }
 
-    public void setUpdatedate(String paramString) {
-        this.updatedate = DateUtils.transform(paramString, "yyyy-MM-dd HH:mm:ss");
-    }
 
     public String toString() {
         return this.id + this.content + this.at + this.loc;
@@ -420,21 +354,23 @@ public class Memo {
         this.isasynced = isasynced;
     }
 
-    public Date getUpdatedate() {
+
+    public String getAdddate() {
+        return this.adddate;
+    }
+
+
+    public void setAdddate(String adddate) {
+        this.adddate = adddate;
+    }
+
+
+    public String getUpdatedate() {
         return this.updatedate;
     }
 
-    public void setUpdatedate(Date paramDate) {
-        this.updatedate = paramDate;
+
+    public void setUpdatedate(String updatedate) {
+        this.updatedate = updatedate;
     }
 }
-
-
-
-/* Location:           D:\Program Files\AndroidKiller\projects\base\ProjectSrc\smali\
-
- * Qualified Name:     com.jiji.models.db.Memo
-
- * JD-Core Version:    0.7.0.1
-
- */

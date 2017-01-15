@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -98,5 +99,33 @@ public class DateUtils {
     public static String formatAudioName(String name) {
         int lastDotIndex = name.lastIndexOf(".");
         return name.substring(0, lastDotIndex);
+    }
+
+
+    /**
+     * 获取当前月
+     *
+     * @return
+     */
+    public static int getNowMonth() {
+        return Calendar.getInstance().get(Calendar.MONTH) + 1;
+    }
+
+    /**
+     * 获取当前年
+     *
+     * @return
+     */
+    public static int getNowYear() {
+        return Calendar.getInstance().get(Calendar.YEAR);
+    }
+
+    /**
+     * 获取当前日
+     *
+     * @return
+     */
+    public static int getNowDay() {
+        return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 }
