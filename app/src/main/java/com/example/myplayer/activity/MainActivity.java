@@ -23,9 +23,9 @@ import okio.Okio;
 public class MainActivity extends BaseActivity {
 
     //==================JNI开启服务===================
-    static {
-        System.loadLibrary("moduleName");
-    }
+//    static {
+//        System.loadLibrary("moduleName");
+//    }
 
     private long exitTime = 0L;
 

@@ -39,7 +39,7 @@ android {
     }
 
     greendao {
-        schemaVersion 13
+        schemaVersion 1
         daoPackage 'com.example.myplayer.db'
         targetGenDir 'src/main/java'
     }
