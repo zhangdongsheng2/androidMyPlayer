@@ -21,11 +21,10 @@ public class DialogHelp {
      *
      * @param message         提示文本内容
      * @param rightButtonText 右边的文案
-     * @param leftButtonText  左边的文案
      * @param listener        回调监听
      */
-    public static void showThree(Activity activity, String message, String rightButtonText, String leftButtonText, final RepickClickButtonListener listener) {
-        show(activity, R.layout.dialog_cancel_confirm_three_btn, message, leftButtonText, rightButtonText, listener);
+    public static void showThree(Activity activity, String message, String rightButtonText, final RepickClickButtonListener listener) {
+        show(activity, R.layout.dialog_cancel_confirm_three_btn, message, "取消", rightButtonText, listener);
     }
 
 
@@ -70,14 +69,6 @@ public class DialogHelp {
                 listener.clickLeftButton();
             }
         });
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-            }
-        });
         dialog.show();
 
     }
@@ -91,4 +82,13 @@ public class DialogHelp {
 
         void clickRightButton();
     }
+
+    public abstract static class RepickClickButtonAdapter implements RepickClickButtonListener {
+
+        @Override
+        public void clickLeftButton() {
+
+        }
+    }
+
 }

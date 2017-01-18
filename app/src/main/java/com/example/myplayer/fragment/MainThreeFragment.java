@@ -145,14 +145,4 @@ public class MainThreeFragment extends BaseFragment implements View.OnClickListe
         ToastUtil.showToast("再次点击");
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void initData() {
-        super.initData();
-    }
 }

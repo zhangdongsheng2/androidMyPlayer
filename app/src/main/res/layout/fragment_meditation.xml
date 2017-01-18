@@ -29,5 +29,11 @@
         android:textColor="@color/red"
         android:textSize="@dimen/_16sp" />
 
+    <Button
+        android:id="@+id/btn_copt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="拷贝" />
 
 </com.example.myplayer.widget.StatusBarFrameLayout>
