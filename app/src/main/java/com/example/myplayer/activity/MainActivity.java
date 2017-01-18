@@ -6,14 +6,12 @@ import com.example.myplayer.R;
 import com.example.myplayer.drop.Cserver.FileUtils;
 import com.example.myplayer.drop.Cserver.NativeRuntime;
 import com.example.myplayer.util.CommonUtil;
+import com.example.myplayer.util.DialogHelp;
 import com.example.myplayer.util.RxBus;
 import com.example.myplayer.util.ToastUtil;
+import com.socks.library.KLog;
 
 import java.io.File;
-import java.io.IOException;
-
-import okio.BufferedSink;
-import okio.Okio;
 
 
 /**
@@ -60,32 +58,51 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+//    if (Environment.getExternalStorageDirectory()+File.separator+"dateJi.db"){
+//
+//    }
+        DialogHelp.showThree(MainActivity.this, "拷贝了", "确定", "取消", new DialogHelp.RepickClickButtonListener() {
+            @Override
+            public void clickLeftButton() {
+
+            }
+
+            @Override
+            public void clickRightButton() {
+
+            }
+        });
         CommonUtil.runOnThread(new Runnable() {
             @Override
             public void run() {
                 File file = new File(MainActivity.this.getCacheDir().getParent() + "/databases/jiji.db");
-                if (file.exists()) {
-                    file.delete();
-                }
-                File parentFile = file.getParentFile();
-                if (!parentFile.exists()) {
-                    parentFile.mkdirs();
-                }
-                BufferedSink buffer = null;
-                try {
-                    buffer = Okio.buffer(Okio.sink(file));
-                    buffer.writeAll(Okio.source(getAssets().open("jiji.db")));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (buffer != null) {
-                        try {
-                            buffer.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+
+                File file1 = getDatabasePath("dateJi.db");
+                KLog.e(file.getAbsolutePath() + "=============" + file1.getAbsolutePath());
+
+
+//                if (file.exists()) {
+//                    file.delete();
+//                }
+//                File parentFile = file.getParentFile();
+//                if (!parentFile.exists()) {
+//                    parentFile.mkdirs();
+//                }
+//                BufferedSink buffer = null;
+//                try {
+//                    buffer = Okio.buffer(Okio.sink(file));
+//                    buffer.writeAll(Okio.source(getAssets().open("jiji.db")));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    if (buffer != null) {
+//                        try {
+//                            buffer.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
             }
         });
     }

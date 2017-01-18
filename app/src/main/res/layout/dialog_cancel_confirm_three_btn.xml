@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <com.example.myplayer.widget.StateTextView
+        android:id="@+id/dialog_desc"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:minWidth="200dp"
+        android:padding="10dp"
+        android:text="余额不足,不能使用电话功能"
+        android:textColor="@color/red"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.example.myplayer.widget.StateTextView
+            android:id="@+id/dialog_leftbutton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:normalBackgroundColor="@color/black"
+            app:pressedBackgroundColor="@color/red" />
+
+        <com.example.myplayer.widget.StateTextView
+            android:id="@+id/dialog_rightbutton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:normalBackgroundColor="@color/red"
+            app:pressedBackgroundColor="@color/black" />
+    </LinearLayout>
+
+</LinearLayout>

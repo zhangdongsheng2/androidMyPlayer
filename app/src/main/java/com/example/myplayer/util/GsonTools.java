@@ -4,6 +4,8 @@ package com.example.myplayer.util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ public class GsonTools {
 
     public static <T> List<T> changeGsonToList(String gsonString, Class<T> cls) {
         Gson gson = new Gson();
-        List<T> list = gson.fromJson(gsonString, new TypeToken<List<T>>() {
+        List<T> list = gson.fromJson(gsonString, new TypeToken<ArrayList<T>>() {
         }.getType());
         return list;
     }
@@ -50,4 +52,16 @@ public class GsonTools {
         return map;
     }
 
+    public static <T> T fromJson(String json) {
+        Type type = new TypeToken<ArrayList<Integer>>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(json, type);
+    }
+
+    public static <T> T clone(T mModel) {
+        Gson gson = new Gson();
+        T fromJson = (T) gson.fromJson(gson.toJson(mModel), mModel.getClass());
+        return fromJson;
+    }
 }

@@ -13,14 +13,16 @@ import com.example.myplayer.R;
 import com.example.myplayer.db.DaoMaster;
 import com.example.myplayer.db.DaoSession;
 import com.example.myplayer.db.Memo;
-import com.example.myplayer.db.User;
-import com.example.myplayer.db.UserDao;
+import com.example.myplayer.db.MemoDao;
 import com.example.myplayer.util.CommonUtil;
 import com.example.myplayer.util.DateUtils;
+import com.example.myplayer.util.GsonTools;
+import com.example.myplayer.util.SaveDataHelper;
 import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.aigestudio.datepicker.bizs.calendars.DPCManager;
 import cn.aigestudio.datepicker.bizs.decors.DPDecor;
@@ -33,8 +35,6 @@ import cn.aigestudio.datepicker.views.MonthView;
  * Three
  */
 public class MeditationFragment extends BaseFragment {
-
-
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_meditation;
@@ -51,21 +51,42 @@ public class MeditationFragment extends BaseFragment {
 //        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDatabase());
 //        DaoSession daoSession = daoMaster.newSession();
 //        MemoDao userDao = daoSession.getMemoDao();
+//        final List<Memo_extra> list1 = daoSession.getMemo_extraDao().queryBuilder().build().list();
 //        List<Memo> list = userDao.queryBuilder().build().list();
 //        Observable.from(list)
 //                .subscribe(new Action1<Memo>() {
 //                    @Override
 //                    public void call(Memo memo) {
-//                        daoHashMap.put(memo.addyear + "-" + memo.addmonth + "-" + memo.addday, memo);
+//
+//                        for (Memo_extra extra :
+//                                list1) {
+//                            if (extra.getMemoid().equals(memo.id)) {
+//                                memo.setContent(memo.content + "  -:-Title" + extra.getWextratitle());
+//                            }
+//                        }
+//
+//
+////                        daoHashMap.put(memo.addyear + "-" + memo.addmonth + "-" + memo.addday, memo);
 //                    }
 //                });
+//        Bean bean = new Bean();
+//        bean.memoArrayList = list;
+//        SaveDataHelper.put("MeditationFragment", GsonHelper.toJson(bean));
 
+
+        String meditationFragment = SaveDataHelper.get("MeditationFragment");
+        Bean memos = GsonTools.changeGsonToBean(meditationFragment, Bean.class);
 
         DaoMaster.DevOpenHelper devOpenHelperTwo = new DaoMaster.DevOpenHelper(getContext(), "dateJi.db");
         DaoMaster daoMasterTwo = new DaoMaster(new DBHelper(getContext()).getWritableDatabase());
         DaoSession daoSessionTwo = daoMasterTwo.newSession();
-        UserDao userDaoTwo = daoSessionTwo.getUserDao();
-        userDaoTwo.insert(new User((long) 2, "anye3"));
+        final MemoDao userDaoTwo = daoSessionTwo.getMemoDao();
+
+
+        for (Memo memo : memos.memoArrayList) {
+            userDaoTwo.insert(memo);
+
+        }
 
 //
 //        devOpenHelperTwo.onCreate(devOpenHelperTwo.getWritableDatabase());
@@ -119,6 +140,11 @@ public class MeditationFragment extends BaseFragment {
     @Override
     protected void initData() {
 
+    }
+
+    public static class Bean {
+        public String a = "aaa";
+        public List<Memo> memoArrayList;
     }
 
     public class DBHelper extends DaoMaster.OpenHelper {
