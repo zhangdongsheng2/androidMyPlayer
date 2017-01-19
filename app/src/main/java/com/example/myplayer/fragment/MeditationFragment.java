@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.example.myplayer.MyApplication;
 import com.example.myplayer.R;
 import com.example.myplayer.activity.second.DateRiJiMemoEditActivity;
-import com.example.myplayer.db.DaoMaster;
 import com.example.myplayer.db.Memo;
 import com.example.myplayer.db.MemoDao;
 import com.example.myplayer.util.CommonUtil;
@@ -32,6 +31,7 @@ import cn.aigestudio.datepicker.views.MonthView;
 import rx.Observable;
 import rx.functions.Action1;
 
+import static com.example.myplayer.util.APPUtil.getDaoSession;
 import static com.example.myplayer.util.FileUtil.copyFile;
 import static com.example.myplayer.util.FileUtil.getFileDirectory;
 
@@ -46,7 +46,7 @@ public class MeditationFragment extends BaseFragment {
     private TextView tvContent;
     private Memo currentMemo;
     private HashMap<String, Memo> daoHashMap = new HashMap<>();
-    private MemoDao userDao = new DaoMaster(new DaoMaster.DevOpenHelper(MyApplication.getContext(), "dateJi.db").getWritableDatabase()).newSession().getMemoDao();
+    private MemoDao userDao = getDaoSession().getMemoDao();
 
     @Override
     protected int getLayoutId() {

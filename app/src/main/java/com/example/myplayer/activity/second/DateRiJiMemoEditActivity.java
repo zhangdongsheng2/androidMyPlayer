@@ -47,7 +47,7 @@ public class DateRiJiMemoEditActivity extends BaseActivity {
         mIconBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                saveMemo();
             }
         });
     }
@@ -55,6 +55,15 @@ public class DateRiJiMemoEditActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        saveMemo();
+    }
+
+    private void saveMemo() {
+        if (mEtContent.getText().toString().equals(memo.content)) {
+            finish();
+            return;
+        }
+
         CommonUtil.runOnThread(new Runnable() {
             @Override
             public void run() {
