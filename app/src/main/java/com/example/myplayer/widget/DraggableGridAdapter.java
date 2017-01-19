@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
-import com.example.myplayer.activity.leonids.HeartActivity;
+import com.example.myplayer.activity.second.HeartActivity;
 import com.example.myplayer.util.SPHelper;
 import com.example.myplayer.util.ToastUtil;
 

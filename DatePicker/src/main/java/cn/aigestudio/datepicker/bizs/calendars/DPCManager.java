@@ -83,7 +83,9 @@ public final class DPCManager {
      * @param date 日期列表 List of date
      */
     public void setDecorTL(List<String> date) {
+        DECOR_CACHE_TL.clear();
         setDecor(date, DECOR_CACHE_TL);
+        DATE_CACHE.clear();
     }
 
     /**

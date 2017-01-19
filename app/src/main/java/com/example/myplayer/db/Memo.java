@@ -1,41 +1,49 @@
 package com.example.myplayer.db;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.example.myplayer.util.DateUtils;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 
 @Entity
-public class Memo {
+public class Memo implements Parcelable {
+    public static final Parcelable.Creator<Memo> CREATOR = new Parcelable.Creator<Memo>() {
+        @Override
+        public Memo createFromParcel(Parcel source) {
+            return new Memo(source);
+        }
+
+        @Override
+        public Memo[] newArray(int size) {
+            return new Memo[size];
+        }
+    };
     @Id(autoincrement = true)
     public Long id;
-
     @NotNull
     public String adddate;
-
     public Integer addday;
-
     public Integer addmonth;
-
     public Integer addyear;
-
     public String at;
-
     public String content;
-
     public Boolean isasynced = Boolean.valueOf(false);
-
     public String loc;
-
     public String photo;
-
     public String updatedate;
-
     public String useremail = "0";
-
     public String uuid = "0";
 
     public Memo() {
+        adddate = DateUtils.formatSystemDate();
+        addday = DateUtils.getNowDay();
+        addmonth = DateUtils.getNowMonth();
+        addyear = DateUtils.getNowYear();
     }
 
     @Generated(hash = 1757184403)
@@ -56,6 +64,22 @@ public class Memo {
         this.updatedate = updatedate;
         this.useremail = useremail;
         this.uuid = uuid;
+    }
+
+    protected Memo(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.adddate = in.readString();
+        this.addday = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.addmonth = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.addyear = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.at = in.readString();
+        this.content = in.readString();
+        this.isasynced = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.loc = in.readString();
+        this.photo = in.readString();
+        this.updatedate = in.readString();
+        this.useremail = in.readString();
+        this.uuid = in.readString();
     }
 
     public Long getId() {
@@ -162,5 +186,25 @@ public class Memo {
         this.uuid = uuid;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.adddate);
+        dest.writeValue(this.addday);
+        dest.writeValue(this.addmonth);
+        dest.writeValue(this.addyear);
+        dest.writeString(this.at);
+        dest.writeString(this.content);
+        dest.writeValue(this.isasynced);
+        dest.writeString(this.loc);
+        dest.writeString(this.photo);
+        dest.writeString(this.updatedate);
+        dest.writeString(this.useremail);
+        dest.writeString(this.uuid);
+    }
 }

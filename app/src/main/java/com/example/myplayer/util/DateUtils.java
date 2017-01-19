@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by Administrator on 2016/3/29.
  */
 public class DateUtils {
-
+    public static final String yyyyMMDD = "yyyy-MM-dd";
 
     /**
      * 将日期字符串转换为Date类型
@@ -90,6 +90,15 @@ public class DateUtils {
         return format.format(new Date());
     }
 
+    /**
+     * 格式化当前时间
+     *
+     * @return
+     */
+    public static String formatSystemDate() {
+        SimpleDateFormat format = new SimpleDateFormat(yyyyMMDD);
+        return format.format(new Date());
+    }
     /**
      * 去掉音乐名称的后缀名
      *

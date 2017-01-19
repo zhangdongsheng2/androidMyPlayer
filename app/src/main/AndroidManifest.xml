@@ -71,7 +71,8 @@
 
         <activity android:name="io.vov.vitamio.activity.InitActivity" />
 
-        <activity android:name=".activity.leonids.HeartActivity" />
+        <activity android:name=".activity.second.HeartActivity" />
+        <activity android:name=".activity.second.DateRiJiMemoEditActivity" />
 
 
         <activity

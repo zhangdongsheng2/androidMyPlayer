@@ -49,6 +49,9 @@ public class FileUtil {
     }
 
     public static void copyFile(File oldFile, File newFile) {
+        if (!oldFile.exists()) {
+            return;
+        }
         if (newFile.exists()) {
             newFile.delete();
         }
@@ -58,8 +61,9 @@ public class FileUtil {
         }
         BufferedSink buffer = null;
         try {
-            buffer = Okio.buffer(Okio.sink(oldFile));
-            buffer.writeAll(Okio.source(newFile));
+            buffer = Okio.buffer(Okio.sink(newFile));
+            buffer.writeAll(Okio.source(oldFile));
+            ToastUtil.showToast("拷贝成功");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

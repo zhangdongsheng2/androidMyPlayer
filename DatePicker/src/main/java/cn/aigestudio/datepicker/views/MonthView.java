@@ -507,6 +507,8 @@ public class MonthView extends View {
         computeDate();
         requestLayout();
         invalidate();
+        smoothScrollTo(0, 0);
+        lastMoveX = 0;
     }
 
     void setFestivalDisplay(boolean isFestivalDisplay) {

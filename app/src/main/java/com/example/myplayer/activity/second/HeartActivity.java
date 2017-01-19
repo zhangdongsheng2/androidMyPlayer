@@ -1,4 +1,4 @@
-package com.example.myplayer.activity.leonids;
+package com.example.myplayer.activity.second;
 
 import android.app.Activity;
 import android.os.Bundle;

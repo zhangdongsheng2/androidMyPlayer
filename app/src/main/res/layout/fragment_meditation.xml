@@ -24,8 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/main_dp"
         android:layout_marginTop="10dp"
+        android:gravity="center"
         android:padding="@dimen/_12dp"
-        android:text="你好你好你好你好你好你好你好你好你好你好你好你好"
+        android:text="点击填写"
         android:textColor="@color/red"
         android:textSize="@dimen/_16sp" />
 
