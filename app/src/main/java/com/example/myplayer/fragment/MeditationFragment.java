@@ -114,7 +114,12 @@ public class MeditationFragment extends BaseFragment {
                 }
             }
         });
-
+        picker.setOnDateScrollChangeListener(new MonthView.OnDateScrollChangeListener() {
+            @Override
+            public void onDataCurrent(int year, int month) {
+                KLog.e(year + "============" + month);
+            }
+        });
     }
 
     @Override
