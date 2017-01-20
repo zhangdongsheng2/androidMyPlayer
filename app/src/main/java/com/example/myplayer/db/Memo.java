@@ -3,8 +3,6 @@ package com.example.myplayer.db;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.myplayer.util.DateUtils;
-
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -40,10 +38,6 @@ public class Memo implements Parcelable {
     public String uuid = "0";
 
     public Memo() {
-        adddate = DateUtils.formatSystemDate();
-        addday = DateUtils.getNowDay();
-        addmonth = DateUtils.getNowMonth();
-        addyear = DateUtils.getNowYear();
     }
 
     @Generated(hash = 1757184403)

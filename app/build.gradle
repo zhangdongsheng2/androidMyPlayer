@@ -63,6 +63,8 @@ dependencies {
     //Rx系列
     compile 'io.reactivex:rxjava:1.1.8'
     compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.trello:rxlifecycle:1.0'
+    compile 'com.trello:rxlifecycle-components:1.0'
     //Retrofit2所需要的包
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'

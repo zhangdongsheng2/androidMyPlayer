@@ -10,8 +10,8 @@ import com.example.myplayer.activity.BaseActivity;
 import com.example.myplayer.db.Memo;
 import com.example.myplayer.db.MemoDao;
 import com.example.myplayer.util.APPUtil;
-import com.example.myplayer.util.CommonUtil;
 import com.example.myplayer.util.DateUtils;
+import com.example.myplayer.util.RxBus;
 
 /**
  * 编辑文档页面
@@ -63,19 +63,14 @@ public class DateRiJiMemoEditActivity extends BaseActivity {
             finish();
             return;
         }
-
-        CommonUtil.runOnThread(new Runnable() {
-            @Override
-            public void run() {
-                memo.content = mEtContent.getText().toString();
-                memo.updatedate = DateUtils.formatSystemDate();
-                if (memo.id == null) {
-                    memoDao.insert(memo);
-                } else {
-                    memoDao.update(memo);
-                }
-                finish();
-            }
-        });
+        memo.content = mEtContent.getText().toString();
+        memo.updatedate = DateUtils.formatSystemDate();
+        if (memo.id == null) {
+            memoDao.insert(memo);
+        } else {
+            memoDao.update(memo);
+        }
+        RxBus.getInstance().send(memo, "Memo_Save");
+        finish();
     }
 }

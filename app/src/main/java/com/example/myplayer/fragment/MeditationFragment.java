@@ -5,11 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.myplayer.MyApplication;
 import com.example.myplayer.R;
 import com.example.myplayer.activity.second.DateRiJiMemoEditActivity;
 import com.example.myplayer.db.Memo;
@@ -17,9 +17,10 @@ import com.example.myplayer.db.MemoDao;
 import com.example.myplayer.util.CommonUtil;
 import com.example.myplayer.util.DateUtils;
 import com.example.myplayer.util.FormatHelper;
+import com.example.myplayer.util.RxBus;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,8 +33,8 @@ import rx.Observable;
 import rx.functions.Action1;
 
 import static com.example.myplayer.util.APPUtil.getDaoSession;
-import static com.example.myplayer.util.FileUtil.copyFile;
-import static com.example.myplayer.util.FileUtil.getFileDirectory;
+import static com.example.myplayer.util.FileUtil.backDB;
+import static com.example.myplayer.util.FileUtil.copyDB;
 
 /**
  * Created by Administrator on 2016/3/31.
@@ -64,13 +65,12 @@ public class MeditationFragment extends BaseFragment {
     @Override
     protected void initData() {
         initPicker();
+        registEditMemo();
         //点击还原备份
         mRootView.findViewById(R.id.btn_copt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File oldFile = new File(getFileDirectory(), "dateJi.db");
-                File file = MyApplication.getContext().getDatabasePath("dateJi.db");
-                copyFile(oldFile, file);
+                copyDB();
             }
         });
         //点击回到今日
@@ -84,8 +84,21 @@ public class MeditationFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), DateRiJiMemoEditActivity.class);
-                intent.putExtra(DateRiJiMemoEditActivity.MODEL, currentMemo == null ? new Memo() : currentMemo);
+                intent.putExtra(DateRiJiMemoEditActivity.MODEL, currentMemo);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void registEditMemo() {
+        RxBus.getInstance().toObservable(Memo.class, "Memo_Save").subscribe(new Action1<Memo>() {
+            @Override
+            public void call(Memo memo) {
+                String day = memo.addyear + "-" + memo.addmonth + "-" + memo.addday;
+                daoHashMap.put(day, memo);
+                DPCManager.getInstance().setDecorTL(new ArrayList<String>(daoHashMap.keySet()));
+                setContentText(day);
+                backDB();
             }
         });
     }
@@ -112,8 +125,7 @@ public class MeditationFragment extends BaseFragment {
         picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
             @Override
             public void onDatePicked(String date) {
-                currentMemo = daoHashMap.get(date);
-                tvContent.setText(currentMemo == null ? "点击填写" : currentMemo.content);
+                setContentText(date);
             }
         });
         picker.setOnDateScrollChangeListener(new MonthView.OnDateScrollChangeListener() {
@@ -123,6 +135,22 @@ public class MeditationFragment extends BaseFragment {
                 monthView.postInvalidate();
             }
         });
+        setContentText(DateUtils.getNowYear() + "-" + DateUtils.getNowMonth() + "-" + DateUtils.getNowDay());
+    }
+
+    private void setContentText(String date) {
+        currentMemo = daoHashMap.get(date);
+        if (currentMemo == null) {
+            currentMemo = new Memo();
+            Calendar c = Calendar.getInstance();
+            c.setTime(DateUtils.transform(date, DateUtils.yyyyMMDD));
+            currentMemo.addmonth = c.get(Calendar.MONTH) + 1;
+            currentMemo.addday = c.get(Calendar.DAY_OF_MONTH);
+            currentMemo.addyear = c.get(Calendar.YEAR);
+            currentMemo.adddate = currentMemo.addyear + "-" + FormatHelper.formatIntTwo(currentMemo.addmonth) + "-" + FormatHelper.formatIntTwo(currentMemo.addday);
+        }
+
+        tvContent.setText(TextUtils.isEmpty(currentMemo.content) ? "点击填写" : currentMemo.content);
     }
 
     //数据库查询数据

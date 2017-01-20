@@ -3,6 +3,8 @@ package com.example.myplayer.util;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.example.myplayer.MyApplication;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -214,5 +216,19 @@ public class FileUtil {
         }
         return false;
     }
-    //==========================================================
+
+    //========================APP相关==================================
+    public static void copyDB() {
+        File oldFile = new File(getFileDirectory(), "dateJi.db");
+        File file = MyApplication.getContext().getDatabasePath("dateJi.db");
+        copyFile(oldFile, file);
+    }
+
+    public static void backDB() {
+        File oldFile = MyApplication.getContext().getDatabasePath("dateJi.db");
+        File file = new File(getFileDirectory(), "dateJi.db");
+        copyFile(oldFile, file);
+    }
+
+
 }

@@ -70,6 +70,7 @@ public class MainActivity extends BaseActivity {
         } else {
             RxBus.getInstance().send(new Object(), "finish");
             finish();
+            System.exit(0);
         }
     }
 
