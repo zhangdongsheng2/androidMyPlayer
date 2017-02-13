@@ -66,3 +66,7 @@ InitActivity/build/
 /app/src/main/java/com/example/myplayer/db/DaoMaster.java
 /app/src/main/java/com/example/myplayer/db/Memo_extraDao.java
 /app/src/main/java/com/example/myplayer/db/MemoDao.java
+freeline/
+freeline_core/
+freeline.py
+freeline_project_description.json
