@@ -22,6 +22,4 @@ android {
         }
 
     }
-
-    buildToolsVersion '24.0.3'
 }
