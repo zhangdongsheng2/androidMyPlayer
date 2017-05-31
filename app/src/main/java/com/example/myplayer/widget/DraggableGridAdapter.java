@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
+import com.example.myplayer.activity.second.CommentBarActivity;
 import com.example.myplayer.activity.second.HeartActivity;
 import com.example.myplayer.util.SPHelper;
 import com.example.myplayer.util.ToastUtil;
@@ -48,7 +49,7 @@ public class DraggableGridAdapter extends BaseAdapter {
     }
 
     private void initData() {
-        map.put("1", new DraggableGridModule(1, "模块编号", R.drawable.ic_nav_tweet_actived));
+        map.put("1", new DraggableGridModule(1, "评论表情", R.drawable.ic_nav_tweet_actived));
         map.put("2", new DraggableGridModule(2, "模块编号", R.drawable.ic_nav_tweet_actived));
         map.put("3", new DraggableGridModule(3, "模块编号", R.drawable.ic_nav_tweet_actived));
         map.put("4", new DraggableGridModule(4, "模块编号", R.drawable.ic_nav_tweet_actived));
@@ -177,7 +178,7 @@ public class DraggableGridAdapter extends BaseAdapter {
                 // 点击跳转
                 switch (i) {
                     case 1:
-
+                        mContext.startActivity(new Intent(mContext, CommentBarActivity.class));
                         break;
                     case 2:
 

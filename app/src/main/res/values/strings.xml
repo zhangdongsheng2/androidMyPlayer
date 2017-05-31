@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">MyPlayer</string>
-    <string name="app_name2">mmmmmmmmm</string>
     <string name="main_video">视频</string>
     <string name="main_audio">音乐</string>
     <!-- 视频播放页面 -->
@@ -14,7 +13,6 @@
     <string name="main_tab_name_news">菩提</string>
     <string name="main_tab_name_quick">解脱</string>
     <string name="main_tab_name_tweet">涅盘</string>
-    <string name="main_tab_name_question">寂灭</string>
     <string name="main_tab_name_explore">禅定</string>
     <string name="main_tab_name_my">六度</string>
 

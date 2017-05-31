@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <View style="@style/h_line" />
+
+    <com.example.myplayer.widget.RichEditText
+        android:id="@+id/et_comment"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:elevation="0dp"
+        android:focusable="true"
+        android:gravity="top"
+        android:hint="请输入评论"
+        android:outlineProvider="none"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        android:textSize="16sp"
+        tools:targetApi="lollipop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageButton
+            android:id="@+id/ib_mention"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/ic_material_ripple"
+            android:contentDescription="@null"
+            android:padding="4dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_tweet_mention_normal"
+            tools:ignore="RtlHardcoded" />
+
+        <ImageButton
+            android:id="@+id/ib_face"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/ic_material_ripple"
+            android:contentDescription="@null"
+            android:padding="4dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_tweet_expression_normal"
+            tools:ignore="RtlHardcoded" />
+
+
+        <CheckBox
+            android:id="@+id/cb_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:checked="false"
+            android:contentDescription="@null"
+            android:text="转发到动弹"
+            android:textColor="#9d9d9d"
+            android:textSize="12sp"
+            tools:visibility="visible" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_comment"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:background="@drawable/selector_comment"
+            android:elevation="0dp"
+            android:outlineProvider="none"
+            android:text="发送"
+            tools:targetApi="lollipop" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorPrimaryDark" />
+
+    <FrameLayout
+        android:id="@+id/fl_face"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:visibility="gone" />
+</LinearLayout>

@@ -49,4 +49,12 @@
         <attr name="roundBtn" format="boolean|reference" />
         <attr name="animationDuration" format="integer|reference" />
     </declare-styleable>
+
+    <declare-styleable name="SquareLayout">
+        <attr name="oscAccordTo" format="integer">
+            <enum name="width" value="1" />
+            <enum name="height" value="2" />
+            <enum name="useMin" value="3" />
+        </attr>
+    </declare-styleable>
 </resources>

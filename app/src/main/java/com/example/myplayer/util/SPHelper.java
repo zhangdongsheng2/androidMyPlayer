@@ -16,6 +16,7 @@ import java.util.Set;
  */
 public class SPHelper {
     private static final Map<String, SPHelper> map = new HashMap<>();
+    private static final String KEY_SOFT_KEYBOARD_HEIGHT = "softKeyboardHeight";
     private String name;
 
     private SPHelper(String name) {
@@ -50,6 +51,13 @@ public class SPHelper {
         return map.get(name);
     }
 
+    public static boolean updateSoftKeyboardHeight(int height) {
+        return getInstance().putInt(KEY_SOFT_KEYBOARD_HEIGHT, height);
+    }
+
+    public static int getSoftKeyboardHeight() {
+        return getInstance().getInt(KEY_SOFT_KEYBOARD_HEIGHT, 0);
+    }
 
     public boolean putBoolean(String key, boolean value) {
         return MyApplication.getContext().getSharedPreferences(name, Context.MODE_PRIVATE).edit()
@@ -118,5 +126,4 @@ public class SPHelper {
         return MyApplication.getContext().getSharedPreferences(name, Context.MODE_PRIVATE).getStringSet(key,
                 defValue);
     }
-
 }
