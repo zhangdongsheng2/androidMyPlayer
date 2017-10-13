@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myplayer.R;
+import com.example.myplayer.activity.second.BlowingBubblesActivity;
 import com.example.myplayer.activity.second.CommentBarActivity;
 import com.example.myplayer.activity.second.HeartActivity;
 import com.example.myplayer.util.SPHelper;
@@ -50,7 +51,7 @@ public class DraggableGridAdapter extends BaseAdapter {
 
     private void initData() {
         map.put("1", new DraggableGridModule(1, "评论表情", R.drawable.ic_nav_tweet_actived));
-        map.put("2", new DraggableGridModule(2, "模块编号", R.drawable.ic_nav_tweet_actived));
+        map.put("2", new DraggableGridModule(2, "飘动泡泡", R.drawable.ic_nav_tweet_actived));
         map.put("3", new DraggableGridModule(3, "模块编号", R.drawable.ic_nav_tweet_actived));
         map.put("4", new DraggableGridModule(4, "模块编号", R.drawable.ic_nav_tweet_actived));
         map.put("5", new DraggableGridModule(5, "模块编号", R.drawable.ic_nav_tweet_actived));
@@ -181,6 +182,7 @@ public class DraggableGridAdapter extends BaseAdapter {
                         mContext.startActivity(new Intent(mContext, CommentBarActivity.class));
                         break;
                     case 2:
+                        mContext.startActivity(new Intent(mContext, BlowingBubblesActivity.class));
 
                         break;
                     case 3:

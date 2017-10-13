@@ -74,6 +74,7 @@
         <activity android:name=".activity.second.HeartActivity" />
         <activity android:name=".activity.second.DateRiJiMemoEditActivity" />
         <activity android:name=".activity.second.CommentBarActivity" />
+        <activity android:name=".activity.second.BlowingBubblesActivity" />
 
 
         <activity

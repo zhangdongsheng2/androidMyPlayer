@@ -14,6 +14,7 @@ import butterknife.BindView;
 
 /**
  * Created by zhangdongsheng on 2017/5/31.
+ * 表情
  */
 
 public class CommentBarActivity extends BaseActivity {
